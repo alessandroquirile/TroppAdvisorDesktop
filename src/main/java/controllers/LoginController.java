@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import models.Account;
 import utils.ConfigFileReader;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,12 +24,11 @@ public class LoginController {
     public Button buttonLogin;
     @FXML
     public PasswordField passwordField;
-
     private DAOFactory daoFactory;
     private AccountDAO accountDAO;
 
     @FXML
-    public void doLogin() {
+    public void doLogin() throws IOException {
         String email, password;
         email = textFieldEmail.getText();
         password = passwordField.getText();
@@ -43,7 +43,7 @@ public class LoginController {
                 if (!accountDAO.login(account)) {
                     System.out.println("Qualcosa è andato storto durante il login (oppure metodo non ancora implementato");
                 } else {
-                    // TODO: mostrare l'interfaccia seguente per scegliere su quale tabella operare (ristorante, hotel o attrazione)
+                    showSelectTypeScene();
                 }
             } else {
                 System.out.println("Pattern email non valido");
@@ -51,6 +51,10 @@ public class LoginController {
         } else {
             System.out.println("Riempire tutti i campi");
         }
+    }
+
+    public void showSelectTypeScene() {
+        // TODO: Mostare la scena per scegliere la tabella su cui operare
     }
 
     public static boolean isValid(String email) {
