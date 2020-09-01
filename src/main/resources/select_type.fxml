@@ -18,19 +18,20 @@
         <Image url="images/3156482.jpg"/>
     </ImageView>
     <Pane layoutX="440.0" layoutY="307.0" opacity="0.8" prefHeight="200.0" prefWidth="400.0"
-          style="-fx-background-color: #06BCAD; -fx-background-radius: 20;">
+          style="-fx-background-color: #06BCAD; -fx-background-radius: 20;"/>
     <Pane layoutX="336.0" layoutY="206.0" prefHeight="336.0" prefWidth="608.0">
         <Label layoutX="200.0" layoutY="29.0" text="Seleziona una tipologia">
             <font>
                 <Font size="20.0"/>
             </font>
         </Label>
-        <Button fx:id="buttonVai" layoutX="169.0" layoutY="160.0" mnemonicParsing="false"
+        <Button fx:id="buttonVai" layoutX="260.0" layoutY="250.0" mnemonicParsing="false"
                 onMouseClicked="#showSelection"
-                style="-fx-background-color: #0078D7;" text="Login" textFill="white"/>
+                style="-fx-background-color: #0078D7;" text="Vai" textFill="white"/>
     </Pane>
     <ComboBox fx:id="comboBox" layoutX="512.0" layoutY="371.0" prefHeight="30.0" prefWidth="292.0"
               promptText="Seleziona una tipologia"
               onAction="#comboChanged"/>
+
 </AnchorPane>
 

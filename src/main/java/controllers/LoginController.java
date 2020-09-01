@@ -3,9 +3,11 @@ package controllers;
 import dao_interfaces.AccountDAO;
 import factories.DAOFactory;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import models.Account;
 import utils.ConfigFileReader;
 
@@ -19,11 +21,13 @@ import java.util.regex.Pattern;
 public class LoginController {
 
     @FXML
-    public TextField textFieldEmail;
+    private TextField textFieldEmail;
     @FXML
-    public Button buttonLogin;
+    private Button buttonLogin;
     @FXML
-    public PasswordField passwordField;
+    private PasswordField passwordField;
+    @FXML
+    private AnchorPane rootPane;
     private DAOFactory daoFactory;
     private AccountDAO accountDAO;
 
@@ -41,7 +45,7 @@ public class LoginController {
                 daoFactory = DAOFactory.getInstance();
                 accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                 if (!accountDAO.login(account)) {
-                    System.out.println("Qualcosa è andato storto durante il login (oppure metodo non ancora implementato");
+                    System.out.println("Qualcosa è andato storto durante il login");
                 } else {
                     showSelectTypeScene();
                 }
@@ -53,8 +57,9 @@ public class LoginController {
         }
     }
 
-    public void showSelectTypeScene() {
-        // TODO: Mostare la scena per scegliere la tabella su cui operare
+    public void showSelectTypeScene() throws IOException {
+        AnchorPane pane = FXMLLoader.load(LoginController.class.getResource("/select_type.fxml"));
+        rootPane.getChildren().setAll(pane);
     }
 
     public static boolean isValid(String email) {

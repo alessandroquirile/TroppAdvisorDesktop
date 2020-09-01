@@ -22,8 +22,8 @@ public class SelectTypeController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<String> observableList = FXCollections.observableArrayList("Attrazioni", "Hotel", "Ristoranti");
-        comboBox.setItems(observableList);
+        ObservableList<String> observableListOfAccomodations = FXCollections.observableArrayList("Attrazioni", "Hotel", "Ristoranti");
+        comboBox.setItems(observableListOfAccomodations);
         buttonVai.setDisable(true);
     }
 

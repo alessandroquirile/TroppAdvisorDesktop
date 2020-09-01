@@ -10,7 +10,7 @@ public class AccountDAO_Cognito implements AccountDAO {
 
     @Override
     public boolean login(Account account) {
-        return false;
+        return true;
         // codice per il login
     }
 }
