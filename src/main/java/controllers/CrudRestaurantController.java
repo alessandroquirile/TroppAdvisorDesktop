@@ -59,7 +59,7 @@ public class CrudRestaurantController {
     @FXML
     public void buttonInserisciClicked(MouseEvent mouseEvent) {
         enableAllTextFields();
-        enableAllChoiceBox();
+        enableAllChoiceBoxes();
         disableCrudButtons();
         buttonConferma.setDisable(false);
         buttonAnnulla.setDisable(false);
@@ -75,7 +75,7 @@ public class CrudRestaurantController {
         textFieldNome.setDisable(false);
     }
 
-    private void enableAllChoiceBox() {
+    private void enableAllChoiceBoxes() {
         choiceBoxRangePrezzo.setDisable(false);
         checkBoxCertificatoDiEccellenza.setDisable(false);
         choiceBoxTipoDiCucina.setDisable(false);
