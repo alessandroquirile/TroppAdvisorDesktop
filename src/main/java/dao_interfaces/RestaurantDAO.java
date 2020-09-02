@@ -7,4 +7,8 @@ import models.Restaurant;
  */
 public interface RestaurantDAO {
     boolean add(Restaurant restaurant);
+
+    boolean delete(Restaurant restaurant);
+
+    boolean update(Restaurant restaurant);
 }

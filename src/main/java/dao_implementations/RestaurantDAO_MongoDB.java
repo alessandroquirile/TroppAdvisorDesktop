@@ -12,4 +12,16 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         // codice per inserire un ristorante su mongodb
         return true;
     }
+
+    @Override
+    public boolean delete(Restaurant restaurant) {
+        // codice per eliminare un ristorante su mongodb
+        return true;
+    }
+
+    @Override
+    public boolean update(Restaurant restaurant) {
+        // codice per aggiornare un ristorante su mongodb
+        return true;
+    }
 }
