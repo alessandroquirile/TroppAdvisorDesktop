@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 
 /**
@@ -34,7 +33,6 @@ public class CrudRestaurantController {
     public ChoiceBox choiceBoxTipoDiCucina;
     public javafx.scene.control.Button buttonIndietro;
     public javafx.scene.control.Button buttonInserisci;
-    public Label labelDescription;
     public AnchorPane rootPane;
     public javafx.scene.control.TextField textFieldTipoDiCucina;
     public javafx.scene.control.TextField textFieldCap;
