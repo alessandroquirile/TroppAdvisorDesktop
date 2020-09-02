@@ -1,7 +1,9 @@
 package factories;
 
 import dao_implementations.AccountDAO_Cognito;
+import dao_implementations.RestaurantDAO_MongoDB;
 import dao_interfaces.AccountDAO;
+import dao_interfaces.RestaurantDAO;
 import my_exceptions.TechnologyNotSupportedYetException;
 
 /**
@@ -26,5 +28,12 @@ public class DAOFactory {
             return new AccountDAO_Cognito();
         else
             throw new TechnologyNotSupportedYetException(accountStorageTechnology);
+    }
+
+    public RestaurantDAO getRestaurantDAO(String restaurantStorageTechnology) {
+        if (restaurantStorageTechnology.equals("mongodb"))
+            return new RestaurantDAO_MongoDB();
+        else
+            throw new TechnologyNotSupportedYetException(restaurantStorageTechnology);
     }
 }

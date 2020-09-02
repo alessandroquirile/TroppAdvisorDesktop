@@ -1,5 +1,7 @@
 package controllers;
 
+import dao_interfaces.RestaurantDAO;
+import factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -55,6 +57,8 @@ public class CrudRestaurantController {
     private javafx.scene.control.TextField textFieldTipoDiCucina;
     @FXML
     private javafx.scene.control.TextField textFieldCAP;
+    private DAOFactory daoFactory;
+    private RestaurantDAO restaurantDAO;
 
     @FXML
     public void showSelectTypeStage(MouseEvent mouseEvent) {
@@ -152,6 +156,11 @@ public class CrudRestaurantController {
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
         System.out.println("Cliccato conferma"); //dbg
+        /*Restaurant restaurant = new Restaurant();
+        // setter su restaurant coi dati presi dal form
+        daoFactory = DAOFactory.getInstance();
+        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+        restaurantDAO.add(restaurant);*/
     }
 
     @FXML
