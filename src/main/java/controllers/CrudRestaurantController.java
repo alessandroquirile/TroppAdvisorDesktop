@@ -4,38 +4,57 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
 public class CrudRestaurantController {
-    public javafx.scene.control.Button buttonElimina;
-    public javafx.scene.control.Button buttonConferma;
-    public javafx.scene.control.Button buttonAnnulla;
-    public javafx.scene.control.Button buttonAiuto;
-    public TableView tableView;
-    public javafx.scene.control.Button buttonModifica;
-    public javafx.scene.control.TextField textFieldNome;
-    public javafx.scene.control.TextField textFieldDescrizione;
-    public javafx.scene.control.TextField textFieldIndirizzo;
-    public ChoiceBox choiceBoxIndirizzo;
-    public javafx.scene.control.TextField textFieldCittà;
-    public ChoiceBox choiceBoxRangePrezzo;
-    public CheckBox checkBoxCertificatoDiEccellenza;
-    public ChoiceBox choiceBoxTipoDiCucina;
-    public javafx.scene.control.Button buttonIndietro;
-    public javafx.scene.control.Button buttonInserisci;
-    public AnchorPane rootPane;
-    public javafx.scene.control.TextField textFieldTipoDiCucina;
-    public javafx.scene.control.TextField textFieldCap;
+    @FXML
+    private AnchorPane rootPane;
+    @FXML
+    private javafx.scene.control.Button buttonElimina;
+    @FXML
+    private javafx.scene.control.Button buttonConferma;
+    @FXML
+    private javafx.scene.control.Button buttonAnnulla;
+    @FXML
+    private javafx.scene.control.Button buttonAiuto;
+    @FXML
+    private TableView<Object> tableView;
+    @FXML
+    private javafx.scene.control.Button buttonModifica;
+    @FXML
+    private javafx.scene.control.TextField textFieldNome;
+    @FXML
+    private javafx.scene.control.TextField textFieldDescrizione;
+    @FXML
+    private javafx.scene.control.TextField textFieldIndirizzo;
+    @FXML
+    private ChoiceBox<String> choiceBoxIndirizzo;
+    @FXML
+    private javafx.scene.control.TextField textFieldCittà;
+    @FXML
+    private ChoiceBox<Integer> choiceBoxRangePrezzo;
+    @FXML
+    private CheckBox checkBoxCertificatoDiEccellenza;
+    @FXML
+    private ChoiceBox<String> choiceBoxTipoDiCucina;
+    @FXML
+    private javafx.scene.control.Button buttonIndietro;
+    @FXML
+    private javafx.scene.control.Button buttonInserisci;
+    @FXML
+    private javafx.scene.control.TextField textFieldTipoDiCucina;
+    @FXML
+    private javafx.scene.control.TextField textFieldCAP;
 
     @FXML
     public void showSelectTypeStage(MouseEvent mouseEvent) {
@@ -69,7 +88,7 @@ public class CrudRestaurantController {
     private void enableAllTextFields() {
         textFieldDescrizione.setDisable(false);
         textFieldIndirizzo.setDisable(false);
-        textFieldCap.setDisable(false);
+        textFieldCAP.setDisable(false);
         textFieldCittà.setDisable(false);
         textFieldTipoDiCucina.setDisable(false);
         textFieldNome.setDisable(false);
@@ -90,8 +109,24 @@ public class CrudRestaurantController {
 
     @FXML
     public void buttonAnnullaClicked(MouseEvent mouseEvent) {
-        // TODO: mostrare popup di conferma. Se conferma...
-        enableAndDisableAsDefault();
+        showConfirmationDialogPopup();
+    }
+
+    private void showConfirmationDialogPopup() {
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        Alert.AlertType alertType = Alert.AlertType.CONFIRMATION;
+        Alert alert = new Alert(alertType, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        alert.setTitle("Attenzione");
+        alert.getDialogPane().setHeaderText("Sei sicuro di voler annullare l'operazione?");
+        alert.getDialogPane().setContentText("Cliccando su OK annullerai l'operazione corrente");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == ButtonType.OK) {
+                enableAndDisableAsDefault();
+            }
+        }
     }
 
     private void enableAndDisableAsDefault() {
@@ -106,7 +141,7 @@ public class CrudRestaurantController {
         textFieldDescrizione.setDisable(true);
         textFieldIndirizzo.setDisable(true);
         choiceBoxIndirizzo.setDisable(true);
-        textFieldCap.setDisable(true);
+        textFieldCAP.setDisable(true);
         textFieldCittà.setDisable(true);
         choiceBoxRangePrezzo.setDisable(true);
         checkBoxCertificatoDiEccellenza.setDisable(true);
@@ -121,6 +156,24 @@ public class CrudRestaurantController {
 
     @FXML
     public void buttonAiutoClicked(MouseEvent mouseEvent) {
-        System.out.println("Cliccato aiuto"); //dbg
+        showInformationHelperDialogPopup();
+    }
+
+    private void showInformationHelperDialogPopup() {
+        Stage stage = (Stage) rootPane.getScene().getWindow();
+        Alert.AlertType alertType = Alert.AlertType.INFORMATION;
+        Alert alert = new Alert(alertType, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        alert.setTitle("Come usare l'interfaccia?");
+        alert.getDialogPane().setHeaderText("Seleziona un'operazione CRUD in alto a sinistra " +
+                "e poi conferma la tua scelta dopo aver inserito i dati nel form");
+        alert.getDialogPane().setContentText("Per aggiornare o eliminare un record già esistente, selezionarlo dapprima dalla tabella");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == ButtonType.OK) {
+                enableAndDisableAsDefault();
+            }
+        }
     }
 }
