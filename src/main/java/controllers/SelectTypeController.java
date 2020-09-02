@@ -59,6 +59,7 @@ public class SelectTypeController implements Initializable {
 
     public void showCrudPageRestaurantStage() {
         try {
+            closeCurrentStage();
             Parent parent = FXMLLoader.load(SelectTypeController.class.getResource("/crud_restaurant.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(parent);
@@ -71,7 +72,6 @@ public class SelectTypeController implements Initializable {
             stage.setResizable(false);
             stage.setScene(scene);
             stage.show();
-            closeCurrentStage();
         } catch (IOException e) {
             e.printStackTrace();
         }
