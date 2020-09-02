@@ -2,38 +2,62 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CrudRestaurantController">
+<AnchorPane
+        xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
+        xmlns="http://javafx.com/javafx/11.0.1" fx:controller="controllers.CrudRestaurantController">
    <children>
-      <Button layoutX="166.0" layoutY="27.0" mnemonicParsing="false" style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Inserisci" AnchorPane.leftAnchor="166.0" />
-      <Button disable="true" layoutX="327.0" layoutY="26.0" mnemonicParsing="false" text="Elimina" />
-      <Button disable="true" layoutX="541.0" layoutY="28.0" mnemonicParsing="false" text="Conferma" />
-      <Button disable="true" layoutX="629.0" layoutY="28.0" mnemonicParsing="false" text="Annulla" />
-      <Button layoutX="800.0" layoutY="28.0" mnemonicParsing="false"
-              style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Aiuto"/>
-      <TableView layoutX="41.0" layoutY="474.0" prefHeight="586.0" prefWidth="1900.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="484.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
+      <Button
+              onMouseClicked="#buttonInserisciClicked"
+              fx:id="buttonInserisci" layoutX="166.0" layoutY="27.0" mnemonicParsing="false"
+              style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Inserisci"
+              AnchorPane.leftAnchor="166.0"/>
+      <Button fx:id="buttonElimina" disable="true" layoutX="327.0" layoutY="26.0" mnemonicParsing="false"
+              text="Elimina"/>
+      <Button fx:id="buttonConferma" disable="true" layoutX="541.0" layoutY="28.0" mnemonicParsing="false"
+              text="Conferma"
+              onMouseClicked="#buttonConfermaClicked"/>
+      <Button fx:id="buttonAnnulla" disable="true" layoutX="629.0" layoutY="28.0" mnemonicParsing="false" text="Annulla"
+              onMouseClicked="#buttonAnnullaClicked"/>
+      <Button fx:id="buttonAiuto" layoutX="800.0" layoutY="28.0" mnemonicParsing="false"
+              style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Aiuto"
+              onMouseClicked="#buttonAiutoClicked"/>
+      <TableView fx:id="tableView" layoutX="41.0" layoutY="474.0" prefHeight="586.0" prefWidth="1900.0"
+                 AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0"
+                 AnchorPane.topAnchor="484.0">
+         <columns>
+            <TableColumn prefWidth="75.0" text="C1"/>
+            <TableColumn prefWidth="75.0" text="C2"/>
+         </columns>
       </TableView>
-      <Button disable="true" layoutX="244.0" layoutY="27.0" mnemonicParsing="false" text="Modifica" AnchorPane.topAnchor="27.0" />
-      <Label layoutX="29.0" layoutY="73.0" text="Nome" />
-      <TextField disable="true" layoutX="29.0" layoutY="91.0" prefHeight="26.0" prefWidth="701.0" />
-      <Label layoutX="29.0" layoutY="127.0" text="Descrizione" />
-      <TextField disable="true" layoutX="29.0" layoutY="145.0" prefHeight="26.0" prefWidth="701.0" />
-      <Label layoutX="29.0" layoutY="181.0" text="Indirizzo" />
-      <TextField disable="true" layoutX="202.0" layoutY="199.0" prefHeight="26.0" prefWidth="403.0" />
-      <ChoiceBox disable="true" layoutX="29.0" layoutY="200.0" prefWidth="150.0" />
-      <TextField disable="true" layoutX="642.0" layoutY="201.0" prefHeight="26.0" prefWidth="88.0" />
-      <Label layoutX="29.0" layoutY="238.0" text="Città" />
-      <TextField disable="true" layoutX="29.0" layoutY="256.0" prefHeight="26.0" prefWidth="701.0" />
-      <Label layoutX="29.0" layoutY="292.0" text="Range prezzo" />
-      <ChoiceBox disable="true" layoutX="29.0" layoutY="310.0" prefWidth="150.0" />
-      <Label layoutX="30.0" layoutY="348.0" text="Certificato d'eccellenza" />
-      <CheckBox disable="true" layoutX="179.0" layoutY="346.0" mnemonicParsing="false" />
-      <Label layoutX="30.0" layoutY="380.0" text="Tipo di cucina" />
-      <ChoiceBox disable="true" layoutX="29.0" layoutY="398.0" prefWidth="150.0" />
-      <TextField disable="true" layoutX="202.0" layoutY="399.0" prefWidth="532.0" />
-      <Button layoutX="29.0" layoutY="28.0" mnemonicParsing="false" style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Indietro" />
+      <Button fx:id="buttonModifica" disable="true" layoutX="244.0" layoutY="27.0" mnemonicParsing="false"
+              text="Modifica" AnchorPane.topAnchor="27.0"/>
+      <Label layoutX="29.0" layoutY="73.0" text="Nome"/>
+      <TextField fx:id="textFieldNome" disable="true" layoutX="29.0" layoutY="91.0" prefHeight="26.0"
+                 prefWidth="701.0"/>
+      <Label layoutX="29.0" layoutY="127.0" text="Descrizione"/>
+      <TextField fx:id="textFieldDescrizione" disable="true" layoutX="29.0" layoutY="145.0" prefHeight="26.0"
+                 prefWidth="701.0"/>
+      <Label layoutX="29.0" layoutY="181.0" text="Indirizzo"/>
+      <TextField fx:id="textFieldIndirizzo" disable="true" layoutX="202.0" layoutY="199.0" prefHeight="26.0"
+                 prefWidth="403.0"/>
+      <ChoiceBox fx:id="choiceBoxIndirizzo" disable="true" layoutX="29.0" layoutY="200.0" prefWidth="150.0"/>
+      <TextField fx:id="textFieldCap" disable="true" layoutX="642.0" layoutY="201.0" prefHeight="26.0"
+                 prefWidth="88.0"/>
+      <Label layoutX="29.0" layoutY="238.0" text="Città"/>
+      <TextField fx:id="textFieldCittà" disable="true" layoutX="29.0" layoutY="256.0" prefHeight="26.0"
+                 prefWidth="701.0"/>
+      <Label layoutX="29.0" layoutY="292.0" text="Range prezzo"/>
+      <ChoiceBox fx:id="choiceBoxRangePrezzo" disable="true" layoutX="29.0" layoutY="310.0" prefWidth="150.0"/>
+      <Label layoutX="30.0" layoutY="348.0" text="Certificato d'eccellenza"/>
+      <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="179.0" layoutY="346.0"
+                mnemonicParsing="false"/>
+      <Label layoutX="30.0" layoutY="380.0" text="Tipo di cucina"/>
+      <ChoiceBox fx:id="choiceBoxTipoDiCucina" disable="true" layoutX="29.0" layoutY="398.0" prefWidth="150.0"/>
+      <TextField fx:id="textFieldTipoDiCucina" disable="true" layoutX="202.0" layoutY="399.0" prefWidth="532.0"/>
+      <Button fx:id="buttonIndietro" layoutX="29.0" layoutY="28.0" mnemonicParsing="false"
+              style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;"
+              text="Indietro"
+              onMouseClicked="#showSelectTypeStage"/>
    </children>
 </AnchorPane>
