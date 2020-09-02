@@ -20,6 +20,7 @@ public class Main extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setTitle("Gestione Back-Office");
         root.requestFocus(); // rimuove il focus dal campo email, per comodità
     }
 }

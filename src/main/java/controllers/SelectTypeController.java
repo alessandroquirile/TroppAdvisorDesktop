@@ -71,6 +71,7 @@ public class SelectTypeController implements Initializable {
             stage.setHeight(rectangle2D.getHeight());
             stage.setResizable(false);
             stage.setScene(scene);
+            stage.setTitle("CRUD Ristorante");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

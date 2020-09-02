@@ -2,8 +2,11 @@ package controllers;
 
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,12 +16,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class CrudRestaurantController {
+public class CrudRestaurantController implements Initializable {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -59,6 +64,24 @@ public class CrudRestaurantController {
     private javafx.scene.control.TextField textFieldCAP;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initializeChoiceBoxIndirizzo();
+        initializeChoiceBoxTypeOfCuisine();
+    }
+
+    private void initializeChoiceBoxIndirizzo() {
+        ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
+        choiceBoxIndirizzo.setItems(observableList);
+        choiceBoxIndirizzo.getSelectionModel().selectFirst();
+    }
+
+    private void initializeChoiceBoxTypeOfCuisine() {
+        ObservableList<String> listOfTypeOfCuisine = FXCollections.observableArrayList("Pizzeria", "Rosticceria", "Vegana");
+        choiceBoxTipoDiCucina.setItems(listOfTypeOfCuisine);
+        choiceBoxTipoDiCucina.getSelectionModel().selectFirst();
+    }
 
     @FXML
     public void showSelectTypeStage(MouseEvent mouseEvent) {
@@ -128,12 +151,12 @@ public class CrudRestaurantController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == ButtonType.OK) {
-                enableAndDisableAsDefault();
+                setAsDefault();
             }
         }
     }
 
-    private void enableAndDisableAsDefault() {
+    private void setAsDefault() {
         buttonIndietro.setDisable(false);
         buttonInserisci.setDisable(false);
         buttonModifica.setDisable(true);
@@ -151,6 +174,13 @@ public class CrudRestaurantController {
         checkBoxCertificatoDiEccellenza.setDisable(true);
         choiceBoxTipoDiCucina.setDisable(true);
         textFieldTipoDiCucina.setDisable(true);
+        textFieldNome.setText("Nome ristorante");
+        textFieldDescrizione.setText("Descrizione ristorante");
+        textFieldIndirizzo.setText("Indirizzo");
+        textFieldCAP.setText("CAP");
+        textFieldTipoDiCucina.setText("");
+        initializeChoiceBoxIndirizzo();
+        initializeChoiceBoxTypeOfCuisine();
     }
 
     @FXML
@@ -181,7 +211,7 @@ public class CrudRestaurantController {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == ButtonType.OK) {
-                enableAndDisableAsDefault();
+                setAsDefault();
             }
         }
     }
