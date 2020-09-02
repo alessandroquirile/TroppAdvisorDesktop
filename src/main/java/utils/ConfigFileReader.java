@@ -1,6 +1,5 @@
 package utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -13,7 +12,7 @@ public class ConfigFileReader {
     public static String getProperty(String key) {
         Properties properties = new Properties();
         try {
-            InputStream inputStream = new FileInputStream("/config.properties");
+            InputStream inputStream = ConfigFileReader.class.getResourceAsStream("/config.properties");
             properties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
