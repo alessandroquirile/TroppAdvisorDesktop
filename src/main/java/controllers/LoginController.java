@@ -47,7 +47,7 @@ public class LoginController {
                 if (!accountDAO.login(account)) {
                     System.out.println("Qualcosa è andato storto durante il login");
                 } else {
-                    showSelectTypeScene();
+                    loadSelectTypeScene();
                 }
             } else {
                 System.out.println("Pattern email non valido");
@@ -57,7 +57,7 @@ public class LoginController {
         }
     }
 
-    public void showSelectTypeScene() throws IOException {
+    public void loadSelectTypeScene() throws IOException {
         AnchorPane pane = FXMLLoader.load(LoginController.class.getResource("/select_type.fxml"));
         rootPane.getChildren().setAll(pane);
     }
