@@ -13,7 +13,7 @@ public class ConfigFileReader {
     public static String getProperty(String key) {
         Properties properties = new Properties();
         try {
-            InputStream inputStream = new FileInputStream("/home/alessandroquirile/Desktop/TroppAdvisorDesktop/src/main/resources/config.properties");
+            InputStream inputStream = new FileInputStream("/config.properties");
             properties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
