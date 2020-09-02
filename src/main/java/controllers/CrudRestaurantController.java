@@ -174,10 +174,11 @@ public class CrudRestaurantController implements Initializable {
         checkBoxCertificatoDiEccellenza.setDisable(true);
         choiceBoxTipoDiCucina.setDisable(true);
         textFieldTipoDiCucina.setDisable(true);
-        textFieldNome.setText("Nome ristorante");
-        textFieldDescrizione.setText("Descrizione ristorante");
-        textFieldIndirizzo.setText("Indirizzo");
-        textFieldCAP.setText("CAP");
+        textFieldNome.setText("");
+        textFieldDescrizione.setText("");
+        textFieldIndirizzo.setText("");
+        textFieldCAP.setText("");
+        textFieldCittà.setText("");
         textFieldTipoDiCucina.setText("");
         initializeChoiceBoxIndirizzo();
         initializeChoiceBoxTypeOfCuisine();
