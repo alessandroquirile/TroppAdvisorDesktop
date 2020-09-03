@@ -56,8 +56,6 @@ public class CrudRestaurantController implements Initializable {
     @FXML
     private javafx.scene.control.TextField textFieldCittà;
     @FXML
-    private ChoiceBox<Integer> choiceBoxRangePrezzo;
-    @FXML
     private CheckBox checkBoxCertificatoDiEccellenza;
     @FXML
     private javafx.scene.control.Button buttonIndietro;
@@ -77,21 +75,11 @@ public class CrudRestaurantController implements Initializable {
     private TableColumn<TableSettersGetters, CheckBox> typeOfCuisineSelectColumn;
     @FXML
     private TableView<TableSettersGetters> tableViewTypeOfCuisine;
-
-
+    @FXML
+    private TextField textFieldPrezzoMedio;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
 
-    public static boolean isValid(String telephoneNumber) {
-        String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
-        if (telephoneNumber.length() == 10) {
-            Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
-            return matcher.find();
-        } else {
-            return false;
-        }
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -104,34 +92,15 @@ public class CrudRestaurantController implements Initializable {
         choiceBoxIndirizzo.getSelectionModel().selectFirst();
     }
 
-    private void setViewsAsDefault() {
-        buttonIndietro.setDisable(false);
-        buttonInserisci.setDisable(false);
-        buttonModifica.setDisable(true);
-        textFieldNumeroDiTelefono.setDisable(true);
-        buttonElimina.setDisable(true);
-        buttonConferma.setDisable(true);
-        buttonAnnulla.setDisable(true);
-        buttonAiuto.setDisable(false);
-        textFieldNome.setDisable(true);
-        textFieldDescrizione.setDisable(true);
-        textFieldIndirizzo.setDisable(true);
-        choiceBoxIndirizzo.setDisable(true);
-        textFieldCAP.setDisable(true);
-        textFieldCittà.setDisable(true);
-        choiceBoxRangePrezzo.setDisable(true);
-        checkBoxCertificatoDiEccellenza.setDisable(true);
-        tableViewTypeOfCuisine.setDisable(true);
-        textFieldNome.setText("");
-        textFieldDescrizione.setText("");
-        textFieldIndirizzo.setText("");
-        textFieldCAP.setText("");
-        textFieldCittà.setText("");
-        textFieldNumeroDiTelefono.setText("");
-        initializeChoiceBoxIndirizzo();
-        initializeTableViewTypeOfCuisine();
-        buttonCaricaFoto.setDisable(true);
-        listViewFotoPath.setDisable(true);
+    public static boolean isValid(String telephoneNumber) {
+        String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
+        if (telephoneNumber.length() == 10) {
+            Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
+            return matcher.find();
+        } else {
+            return false;
+        }
     }
 
     @FXML
@@ -166,17 +135,37 @@ public class CrudRestaurantController implements Initializable {
         typeOfCuisineSelectColumn.setCellValueFactory(new PropertyValueFactory<>("checkBox"));
     }
 
-    private void enableAllTextFields() {
-        textFieldDescrizione.setDisable(false);
-        textFieldIndirizzo.setDisable(false);
-        textFieldCAP.setDisable(false);
-        textFieldCittà.setDisable(false);
-        textFieldNome.setDisable(false);
-        textFieldNumeroDiTelefono.setDisable(false);
+    private void setViewsAsDefault() {
+        buttonIndietro.setDisable(false);
+        buttonInserisci.setDisable(false);
+        buttonModifica.setDisable(true);
+        textFieldNumeroDiTelefono.setDisable(true);
+        buttonElimina.setDisable(true);
+        buttonConferma.setDisable(true);
+        buttonAnnulla.setDisable(true);
+        buttonAiuto.setDisable(false);
+        textFieldNome.setDisable(true);
+        textFieldDescrizione.setDisable(true);
+        textFieldPrezzoMedio.setDisable(true);
+        textFieldIndirizzo.setDisable(true);
+        choiceBoxIndirizzo.setDisable(true);
+        textFieldCAP.setDisable(true);
+        textFieldCittà.setDisable(true);
+        checkBoxCertificatoDiEccellenza.setDisable(true);
+        tableViewTypeOfCuisine.setDisable(true);
+        textFieldNome.setText("");
+        textFieldDescrizione.setText("");
+        textFieldIndirizzo.setText("");
+        textFieldCAP.setText("");
+        textFieldCittà.setText("");
+        textFieldNumeroDiTelefono.setText("");
+        initializeChoiceBoxIndirizzo();
+        initializeTableViewTypeOfCuisine();
+        buttonCaricaFoto.setDisable(true);
+        listViewFotoPath.setDisable(true);
     }
 
     private void enableAllChoiceBoxes() {
-        choiceBoxRangePrezzo.setDisable(false);
         checkBoxCertificatoDiEccellenza.setDisable(false);
         choiceBoxIndirizzo.setDisable(false);
     }
@@ -237,6 +226,16 @@ public class CrudRestaurantController implements Initializable {
                 System.out.println("Telefono non valido");
             }
         }
+    }
+
+    private void enableAllTextFields() {
+        textFieldDescrizione.setDisable(false);
+        textFieldIndirizzo.setDisable(false);
+        textFieldCAP.setDisable(false);
+        textFieldCittà.setDisable(false);
+        textFieldNome.setDisable(false);
+        textFieldNumeroDiTelefono.setDisable(false);
+        textFieldPrezzoMedio.setDisable(false);
     }
 
     @FXML

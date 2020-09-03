@@ -43,8 +43,7 @@
       <Label layoutX="29.0" layoutY="238.0" text="Città"/>
       <TextField fx:id="textFieldCittà" disable="true" layoutX="29.0" layoutY="256.0" prefHeight="26.0"
                  prefWidth="701.0" promptText="Città"/>
-      <Label layoutX="29.0" layoutY="292.0" text="Range prezzo"/>
-      <ChoiceBox fx:id="choiceBoxRangePrezzo" disable="true" layoutX="29.0" layoutY="310.0" prefWidth="150.0"/>
+      <Label layoutX="29.0" layoutY="292.0" text="Prezzo medio"/>
       <Label layoutX="14.0" layoutY="357.0" text="Certificato d'eccellenza"/>
       <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="193.0" layoutY="356.0"
                 mnemonicParsing="false"/>
@@ -64,5 +63,7 @@
          </columns>
       </TableView>
       <Label layoutX="1496.0" layoutY="127.0" text="Tipologia di cucina proposta"/>
+      <TextField fx:id="textFieldPrezzoMedio" layoutX="29.0" layoutY="321.0" prefHeight="26.0" prefWidth="701.0"
+                 promptText="Prezzo medio (numero intero)"/>
    </children>
 </AnchorPane>
