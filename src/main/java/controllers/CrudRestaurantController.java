@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
@@ -195,15 +197,30 @@ public class CrudRestaurantController implements Initializable {
         initializeChoiceBoxTypeOfCuisine();
     }
 
+    public static boolean isValid(String telephoneNumber) {
+        String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
+        if (telephoneNumber.length() == 10) {
+            Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
+            return matcher.find();
+        } else
+            return false;
+    }
+
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
-        System.out.println("Cliccato conferma"); //dbg
-        // TODO: importante - verificare la correttezza degli input nei textfield, in particolare il numero di telefono (10 cifre solo numeri)
-        /*Restaurant restaurant = new Restaurant();
+        System.out.println("Cliccato conferma");
+        if (/*controlli vari sugli input*/true) {
+            if (isValid(textFieldNumeroDiTelefono.getText())) {
+                /*Restaurant restaurant = new Restaurant();
         // setter su restaurant coi dati presi dal form
         daoFactory = DAOFactory.getInstance();
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         restaurantDAO.add(restaurant);*/
+            } else {
+                System.out.println("Telefono non valido");
+            }
+        }
     }
 
     @FXML
