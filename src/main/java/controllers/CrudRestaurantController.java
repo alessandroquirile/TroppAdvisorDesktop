@@ -12,11 +12,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -218,6 +221,20 @@ public class CrudRestaurantController implements Initializable {
             if (result.get() == ButtonType.OK) {
                 setViewsAsDefault();
             }
+        }
+    }
+
+    // Questo metodo sarà usato per selezionare i file dal file system
+    public void multiFileSelection() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+        if (selectedFiles != null) {
+            for (File selectedFile : selectedFiles) {
+                System.out.println(selectedFile.getAbsolutePath());
+            }
+        } else {
+            System.out.println("Selected files are not valid");
         }
     }
 }
