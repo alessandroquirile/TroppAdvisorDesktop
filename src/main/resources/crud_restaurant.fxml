@@ -57,5 +57,8 @@
       <Label layoutX="29.0" layoutY="447.0" text="Numero di telefono"/>
       <TextField fx:id="textFieldNumeroDiTelefono" disable="true" layoutX="29.0" layoutY="465.0" prefHeight="26.0"
                  prefWidth="701.0" promptText="Numero di telefono"/>
+      <Button fx:id="buttonCaricaFoto" layoutX="1034.0" layoutY="76.0" mnemonicParsing="false" text="Carica foto"
+              onMouseClicked="#buttonCaricaFotoClicked"/>
+      <ListView fx:id="listViewFotoPath" layoutX="883.0" layoutY="125.0" prefHeight="355.0" prefWidth="393.0"/>
    </children>
 </AnchorPane>

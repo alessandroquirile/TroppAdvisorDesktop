@@ -67,6 +67,10 @@ public class CrudRestaurantController implements Initializable {
     private javafx.scene.control.TextField textFieldCAP;
     @FXML
     private TextField textFieldNumeroDiTelefono;
+    @FXML
+    private Button buttonCaricaFoto;
+    @FXML
+    private ListView<String> listViewFotoPath;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
 
@@ -224,14 +228,21 @@ public class CrudRestaurantController implements Initializable {
         }
     }
 
-    // Questo metodo sarà usato per selezionare i file dal file system
+    @FXML
+    public void buttonCaricaFotoClicked(MouseEvent mouseEvent) {
+        multiFileSelection();
+    }
+
     public void multiFileSelection() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        FileChooser.ExtensionFilter imageFilter =
+                new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png", "*.jpeg");
+        fileChooser.getExtensionFilters().add(imageFilter);
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         if (selectedFiles != null) {
             for (File selectedFile : selectedFiles) {
-                System.out.println(selectedFile.getAbsolutePath());
+                listViewFotoPath.getItems().add(selectedFile.getAbsolutePath());
             }
         } else {
             System.out.println("Selected files are not valid");
