@@ -32,16 +32,14 @@ public class LoginController {
     private AccountDAO accountDAO;
 
     @FXML
-    public void doLogin() throws IOException {
+    public void doLogin() throws IOException, InterruptedException {
         String email, password;
         email = textFieldEmail.getText();
         password = passwordField.getText();
 
         if (!areEmpty(email, password)) {
             if (isValid(email)) {
-                Account account = new Account();
-                account.setEmail(email);
-                account.setPassword(password);
+                Account account = new Account(email, password);
                 daoFactory = DAOFactory.getInstance();
                 accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                 if (!accountDAO.login(account)) {
@@ -53,7 +51,7 @@ public class LoginController {
                 System.out.println("Pattern email non valido");
             }
         } else {
-            System.out.println("Riempire tutti i campi");
+            System.out.println("Riempi tutti i campi");
         }
     }
 
