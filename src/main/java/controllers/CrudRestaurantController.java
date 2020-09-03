@@ -198,6 +198,7 @@ public class CrudRestaurantController implements Initializable {
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
         System.out.println("Cliccato conferma"); //dbg
+        // TODO: importante - verificare la correttezza degli input nei textfield, in particolare il numero di telefono (10 cifre solo numeri)
         /*Restaurant restaurant = new Restaurant();
         // setter su restaurant coi dati presi dal form
         daoFactory = DAOFactory.getInstance();
