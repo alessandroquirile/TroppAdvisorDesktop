@@ -62,6 +62,8 @@ public class CrudRestaurantController implements Initializable {
     private javafx.scene.control.TextField textFieldTipoDiCucina;
     @FXML
     private javafx.scene.control.TextField textFieldCAP;
+    @FXML
+    private TextField textFieldNumeroDiTelefono;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
 
@@ -106,7 +108,7 @@ public class CrudRestaurantController implements Initializable {
     public void buttonInserisciClicked(MouseEvent mouseEvent) {
         enableAllTextFields();
         enableAllChoiceBoxes();
-        disableCrudButtons();
+        disableCRUDButtons();
         buttonConferma.setDisable(false);
         buttonAnnulla.setDisable(false);
         buttonIndietro.setDisable(true);
@@ -119,6 +121,7 @@ public class CrudRestaurantController implements Initializable {
         textFieldCittà.setDisable(false);
         textFieldTipoDiCucina.setDisable(false);
         textFieldNome.setDisable(false);
+        textFieldNumeroDiTelefono.setDisable(false);
     }
 
     private void enableAllChoiceBoxes() {
@@ -128,7 +131,7 @@ public class CrudRestaurantController implements Initializable {
         choiceBoxIndirizzo.setDisable(false);
     }
 
-    private void disableCrudButtons() {
+    private void disableCRUDButtons() {
         buttonInserisci.setDisable(true);
         buttonModifica.setDisable(true);
         buttonElimina.setDisable(true);
@@ -151,12 +154,12 @@ public class CrudRestaurantController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == ButtonType.OK) {
-                setAsDefault();
+                setViewsAsDefault();
             }
         }
     }
 
-    private void setAsDefault() {
+    private void setViewsAsDefault() {
         buttonIndietro.setDisable(false);
         buttonInserisci.setDisable(false);
         buttonModifica.setDisable(true);
@@ -180,6 +183,7 @@ public class CrudRestaurantController implements Initializable {
         textFieldCAP.setText("");
         textFieldCittà.setText("");
         textFieldTipoDiCucina.setText("");
+        textFieldNumeroDiTelefono.setText("");
         initializeChoiceBoxIndirizzo();
         initializeChoiceBoxTypeOfCuisine();
     }
@@ -212,7 +216,7 @@ public class CrudRestaurantController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == ButtonType.OK) {
-                setAsDefault();
+                setViewsAsDefault();
             }
         }
     }
