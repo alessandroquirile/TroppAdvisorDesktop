@@ -45,20 +45,24 @@
                  prefWidth="701.0" promptText="Città"/>
       <Label layoutX="29.0" layoutY="292.0" text="Range prezzo"/>
       <ChoiceBox fx:id="choiceBoxRangePrezzo" disable="true" layoutX="29.0" layoutY="310.0" prefWidth="150.0"/>
-      <Label layoutX="30.0" layoutY="348.0" text="Certificato d'eccellenza"/>
-      <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="202.0" layoutY="347.0"
+      <Label layoutX="14.0" layoutY="357.0" text="Certificato d'eccellenza"/>
+      <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="193.0" layoutY="356.0"
                 mnemonicParsing="false"/>
-      <Label layoutX="30.0" layoutY="380.0" text="Tipo di cucina"/>
-      <ChoiceBox fx:id="choiceBoxTipoDiCucina" disable="true" layoutX="29.0" layoutY="398.0" prefWidth="150.0"/>
-      <TextField fx:id="textFieldTipoDiCucina" disable="true" layoutX="202.0" layoutY="399.0" prefWidth="532.0"/>
       <Button fx:id="buttonIndietro" layoutX="29.0" layoutY="28.0" mnemonicParsing="false"
               onMouseClicked="#showSelectTypeStage" style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;"
               text="Indietro"/>
-      <Label layoutX="29.0" layoutY="447.0" text="Numero di telefono"/>
-      <TextField fx:id="textFieldNumeroDiTelefono" disable="true" layoutX="29.0" layoutY="465.0" prefHeight="26.0"
+      <Label layoutX="21.0" layoutY="405.0" text="Numero di telefono"/>
+      <TextField fx:id="textFieldNumeroDiTelefono" disable="true" layoutX="21.0" layoutY="435.0" prefHeight="26.0"
                  prefWidth="701.0" promptText="Numero di telefono"/>
-      <Button fx:id="buttonCaricaFoto" layoutX="1034.0" layoutY="76.0" mnemonicParsing="false" text="Carica foto"
-              onMouseClicked="#buttonCaricaFotoClicked"/>
+      <Button fx:id="buttonCaricaFoto" layoutX="1034.0" layoutY="76.0" mnemonicParsing="false"
+              onMouseClicked="#buttonCaricaFotoClicked" text="Carica foto"/>
       <ListView fx:id="listViewFotoPath" layoutX="883.0" layoutY="125.0" prefHeight="355.0" prefWidth="393.0"/>
+      <TableView fx:id="tableViewTypeOfCuisine" layoutX="1454.0" layoutY="162.0" prefHeight="273.0" prefWidth="302.0">
+         <columns>
+            <TableColumn fx:id="typeOfCuisineSelectColumn" text="Seleziona"/>
+            <TableColumn fx:id="typeOfCuisineNameColumn" prefWidth="221.0" text="Tipologia"/>
+         </columns>
+      </TableView>
+      <Label layoutX="1496.0" layoutY="127.0" text="Tipologia di cucina proposta"/>
    </children>
 </AnchorPane>

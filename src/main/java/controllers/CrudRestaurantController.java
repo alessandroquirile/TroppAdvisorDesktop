@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers_utils.TableSettersGetters;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -58,13 +60,9 @@ public class CrudRestaurantController implements Initializable {
     @FXML
     private CheckBox checkBoxCertificatoDiEccellenza;
     @FXML
-    private ChoiceBox<String> choiceBoxTipoDiCucina;
-    @FXML
     private javafx.scene.control.Button buttonIndietro;
     @FXML
     private javafx.scene.control.Button buttonInserisci;
-    @FXML
-    private javafx.scene.control.TextField textFieldTipoDiCucina;
     @FXML
     private javafx.scene.control.TextField textFieldCAP;
     @FXML
@@ -73,13 +71,31 @@ public class CrudRestaurantController implements Initializable {
     private Button buttonCaricaFoto;
     @FXML
     private ListView<String> listViewFotoPath;
+    @FXML
+    private TableColumn<TableSettersGetters, String> typeOfCuisineNameColumn;
+    @FXML
+    private TableColumn<TableSettersGetters, CheckBox> typeOfCuisineSelectColumn;
+    @FXML
+    private TableView<TableSettersGetters> tableViewTypeOfCuisine;
+
+
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
 
+    public static boolean isValid(String telephoneNumber) {
+        String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
+        if (telephoneNumber.length() == 10) {
+            Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
+            return matcher.find();
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initializeChoiceBoxIndirizzo();
-        initializeChoiceBoxTypeOfCuisine();
+        setViewsAsDefault();
     }
 
     private void initializeChoiceBoxIndirizzo() {
@@ -88,10 +104,34 @@ public class CrudRestaurantController implements Initializable {
         choiceBoxIndirizzo.getSelectionModel().selectFirst();
     }
 
-    private void initializeChoiceBoxTypeOfCuisine() {
-        ObservableList<String> listOfTypeOfCuisine = FXCollections.observableArrayList("Pizzeria", "Rosticceria", "Vegana");
-        choiceBoxTipoDiCucina.setItems(listOfTypeOfCuisine);
-        choiceBoxTipoDiCucina.getSelectionModel().selectFirst();
+    private void setViewsAsDefault() {
+        buttonIndietro.setDisable(false);
+        buttonInserisci.setDisable(false);
+        buttonModifica.setDisable(true);
+        textFieldNumeroDiTelefono.setDisable(true);
+        buttonElimina.setDisable(true);
+        buttonConferma.setDisable(true);
+        buttonAnnulla.setDisable(true);
+        buttonAiuto.setDisable(false);
+        textFieldNome.setDisable(true);
+        textFieldDescrizione.setDisable(true);
+        textFieldIndirizzo.setDisable(true);
+        choiceBoxIndirizzo.setDisable(true);
+        textFieldCAP.setDisable(true);
+        textFieldCittà.setDisable(true);
+        choiceBoxRangePrezzo.setDisable(true);
+        checkBoxCertificatoDiEccellenza.setDisable(true);
+        tableViewTypeOfCuisine.setDisable(true);
+        textFieldNome.setText("");
+        textFieldDescrizione.setText("");
+        textFieldIndirizzo.setText("");
+        textFieldCAP.setText("");
+        textFieldCittà.setText("");
+        textFieldNumeroDiTelefono.setText("");
+        initializeChoiceBoxIndirizzo();
+        initializeTableViewTypeOfCuisine();
+        buttonCaricaFoto.setDisable(true);
+        listViewFotoPath.setDisable(true);
     }
 
     @FXML
@@ -113,14 +153,17 @@ public class CrudRestaurantController implements Initializable {
         thisStage.close();
     }
 
-    @FXML
-    public void buttonInserisciClicked(MouseEvent mouseEvent) {
-        enableAllTextFields();
-        enableAllChoiceBoxes();
-        disableCRUDButtons();
-        buttonConferma.setDisable(false);
-        buttonAnnulla.setDisable(false);
-        buttonIndietro.setDisable(true);
+    private void initializeTableViewTypeOfCuisine() {
+        tableViewTypeOfCuisine.setDisable(true);
+        ObservableList<TableSettersGetters> list = FXCollections.observableArrayList();
+        list.add(new TableSettersGetters("Mediterranea", new CheckBox()));
+        list.add(new TableSettersGetters("Pizzeria", new CheckBox()));
+        list.add(new TableSettersGetters("Ristorante", new CheckBox()));
+        list.add(new TableSettersGetters("Rosticceria", new CheckBox()));
+        list.add(new TableSettersGetters("Vegana", new CheckBox()));
+        tableViewTypeOfCuisine.setItems(list);
+        typeOfCuisineNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        typeOfCuisineSelectColumn.setCellValueFactory(new PropertyValueFactory<>("checkBox"));
     }
 
     private void enableAllTextFields() {
@@ -128,7 +171,6 @@ public class CrudRestaurantController implements Initializable {
         textFieldIndirizzo.setDisable(false);
         textFieldCAP.setDisable(false);
         textFieldCittà.setDisable(false);
-        textFieldTipoDiCucina.setDisable(false);
         textFieldNome.setDisable(false);
         textFieldNumeroDiTelefono.setDisable(false);
     }
@@ -136,7 +178,6 @@ public class CrudRestaurantController implements Initializable {
     private void enableAllChoiceBoxes() {
         choiceBoxRangePrezzo.setDisable(false);
         checkBoxCertificatoDiEccellenza.setDisable(false);
-        choiceBoxTipoDiCucina.setDisable(false);
         choiceBoxIndirizzo.setDisable(false);
     }
 
@@ -168,43 +209,18 @@ public class CrudRestaurantController implements Initializable {
         }
     }
 
-    private void setViewsAsDefault() {
-        buttonIndietro.setDisable(false);
-        buttonInserisci.setDisable(false);
-        buttonModifica.setDisable(true);
-        buttonElimina.setDisable(true);
-        buttonConferma.setDisable(true);
-        buttonAnnulla.setDisable(true);
-        buttonAiuto.setDisable(false);
-        textFieldNome.setDisable(true);
-        textFieldDescrizione.setDisable(true);
-        textFieldIndirizzo.setDisable(true);
-        choiceBoxIndirizzo.setDisable(true);
-        textFieldCAP.setDisable(true);
-        textFieldCittà.setDisable(true);
-        choiceBoxRangePrezzo.setDisable(true);
-        checkBoxCertificatoDiEccellenza.setDisable(true);
-        choiceBoxTipoDiCucina.setDisable(true);
-        textFieldTipoDiCucina.setDisable(true);
-        textFieldNome.setText("");
-        textFieldDescrizione.setText("");
-        textFieldIndirizzo.setText("");
-        textFieldCAP.setText("");
-        textFieldCittà.setText("");
-        textFieldTipoDiCucina.setText("");
-        textFieldNumeroDiTelefono.setText("");
-        initializeChoiceBoxIndirizzo();
-        initializeChoiceBoxTypeOfCuisine();
-    }
-
-    public static boolean isValid(String telephoneNumber) {
-        String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
-        if (telephoneNumber.length() == 10) {
-            Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
-            return matcher.find();
-        } else
-            return false;
+    @FXML
+    public void buttonInserisciClicked(MouseEvent mouseEvent) {
+        enableAllTextFields();
+        enableAllChoiceBoxes();
+        disableCRUDButtons();
+        buttonConferma.setDisable(false);
+        buttonAnnulla.setDisable(false);
+        buttonIndietro.setDisable(true);
+        tableViewTypeOfCuisine.setDisable(false);
+        buttonCaricaFoto.setDisable(false);
+        textFieldNumeroDiTelefono.setDisable(false);
+        listViewFotoPath.setDisable(false);
     }
 
     @FXML
@@ -213,10 +229,10 @@ public class CrudRestaurantController implements Initializable {
         if (/*controlli vari sugli input*/true) {
             if (isValid(textFieldNumeroDiTelefono.getText())) {
                 /*Restaurant restaurant = new Restaurant();
-        // setter su restaurant coi dati presi dal form
-        daoFactory = DAOFactory.getInstance();
-        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-        restaurantDAO.add(restaurant);*/
+                // setter su restaurant coi dati presi dal form
+                daoFactory = DAOFactory.getInstance();
+                restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                restaurantDAO.add(restaurant);*/
             } else {
                 System.out.println("Telefono non valido");
             }

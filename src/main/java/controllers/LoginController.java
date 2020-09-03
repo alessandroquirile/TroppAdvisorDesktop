@@ -28,11 +28,9 @@ public class LoginController {
     private PasswordField passwordField;
     @FXML
     private AnchorPane rootPane;
-    private DAOFactory daoFactory;
-    private AccountDAO accountDAO;
 
     @FXML
-    public void doLogin() throws IOException, InterruptedException {
+    public void buttonLoginClicked() throws IOException, InterruptedException {
         String email, password;
         email = textFieldEmail.getText();
         password = passwordField.getText();
@@ -40,8 +38,8 @@ public class LoginController {
         if (!areEmpty(email, password)) {
             if (isValid(email)) {
                 Account account = new Account(email, password);
-                daoFactory = DAOFactory.getInstance();
-                accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
+                DAOFactory daoFactory = DAOFactory.getInstance();
+                AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                 if (!accountDAO.login(account)) {
                     System.out.println("Qualcosa è andato storto durante il login");
                 } else {
