@@ -215,6 +215,8 @@ public class CrudRestaurantController implements Initializable {
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
         System.out.println("Cliccato conferma");
+        // Verificare dapprima se tutti i campi (obbligatori) sono stati riempiti, poi...
+        // verificare che l'input su CAP e prezzo medio siano n. naturali
         if (/*controlli vari sugli input*/true) {
             if (isValid(textFieldNumeroDiTelefono.getText())) {
                 /*Restaurant restaurant = new Restaurant();
