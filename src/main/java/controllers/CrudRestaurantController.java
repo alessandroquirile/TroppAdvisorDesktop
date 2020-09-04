@@ -3,6 +3,7 @@ package controllers;
 import controllers_utils.TableSettersGetters;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
+import geocoding.Geocoder;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,14 +21,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Address;
 import models.Restaurant;
+import models_helpers.Point;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -228,15 +227,6 @@ public class CrudRestaurantController implements Initializable {
         listViewFotoPath.setDisable(false);
     }
 
-    private boolean formHasSomeEmptyFields() {
-        return textFieldNome.getText().isEmpty() || textFieldStrada.getText().isEmpty() ||
-                txtFieldNumeroCivico.getText().isEmpty() || textFieldProvincia.getText().isEmpty() ||
-                textFieldProvincia.getText().isEmpty() || textFieldCAP.getText().isEmpty() ||
-                textFieldCittà.getText().isEmpty() || textFieldPrezzoMedio.getText().isEmpty() ||
-                textFieldNumeroDiTelefono.getText().isEmpty() || Bindings.isEmpty(listViewFotoPath.getItems()).get() ||
-                !hasAtLeastOneTypeOfCuisineSelected();
-    }
-
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
         // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina
@@ -260,33 +250,61 @@ public class CrudRestaurantController implements Initializable {
             } else {
                 System.out.println("Telefono non valido");
             }
-
         }
     }
 
+    private boolean formHasSomeEmptyFields() {
+        return textFieldNome.getText().isEmpty() || textFieldStrada.getText().isEmpty() ||
+                txtFieldNumeroCivico.getText().isEmpty() || textFieldProvincia.getText().isEmpty() ||
+                textFieldProvincia.getText().isEmpty() || textFieldCAP.getText().isEmpty() ||
+                textFieldCittà.getText().isEmpty() || textFieldPrezzoMedio.getText().isEmpty() ||
+                textFieldNumeroDiTelefono.getText().isEmpty() || Bindings.isEmpty(listViewFotoPath.getItems()).get() ||
+                !hasAtLeastOneTypeOfCuisineSelected();
+    }
 
     private Restaurant createRestaurantWithFormData() {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(textFieldNome.getText());
-        restaurant.setAddress(new Address(
+        restaurant.setAddress(createAddressWithFormData());
+        restaurant.setAvaragePrice(Integer.parseInt(textFieldPrezzoMedio.getText()));
+        restaurant.setPhoneNumber(textFieldNumeroDiTelefono.getText());
+        restaurant.setHasCertificateOfExcellence(checkBoxCertificatoDiEccellenza.isSelected());
+        restaurant.setImages(listViewFotoPath.getItems());
+        restaurant.setTypeOfCuisine(createTypeOfCuisineWithFormData());
+        restaurant.setPoint(new Point(Geocoder.reverseGeocoding(createEligibleAddressForGeocoding()).getLat(),
+                Geocoder.reverseGeocoding(createEligibleAddressForGeocoding()).getLng()));
+        restaurant.setAddedDate(getCurrentDate());
+        return restaurant;
+    }
+
+    private Address createAddressWithFormData() {
+        return new Address(
                 choiceBoxIndirizzo.getValue(),
                 textFieldStrada.getText(),
                 txtFieldNumeroCivico.getText(),
                 textFieldCittà.getText(),
                 textFieldProvincia.getText(),
-                textFieldCAP.getText()
-        ));
-        restaurant.setAvaragePrice(Integer.parseInt(textFieldPrezzoMedio.getText()));
-        restaurant.setPhoneNumber(textFieldNumeroDiTelefono.getText());
-        restaurant.setHasCertificateOfExcellence(checkBoxCertificatoDiEccellenza.isSelected());
-        restaurant.setImages(listViewFotoPath.getItems());
+                textFieldCAP.getText());
+    }
+
+    private List<String> createTypeOfCuisineWithFormData() {
         List<String> cuisineSelected = new ArrayList<>();
         for (TableSettersGetters tableSettersGetters : tableViewTypeOfCuisine.getItems()) {
             if (tableSettersGetters.getCheckBox().isSelected())
                 cuisineSelected.add(tableSettersGetters.getName());
         }
-        restaurant.setTypeOfCuisine(cuisineSelected);
-        return restaurant;
+        return cuisineSelected;
+    }
+
+    private String createEligibleAddressForGeocoding() {
+        return choiceBoxIndirizzo.getValue() + " " + textFieldStrada.getText() + ", " +
+                txtFieldNumeroCivico.getText() + ", " + textFieldCittà.getText() + ", " + textFieldCAP.getText() +
+                ", " + textFieldCittà.getText();
+    }
+
+    private String getCurrentDate() {
+        Date date = new Date();
+        return date.toString();
     }
 
     private boolean hasAtLeastOneTypeOfCuisineSelected() {

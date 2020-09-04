@@ -37,4 +37,15 @@ public class Geocoder {
 
         System.out.println(firstResultLatLng.getLat() + ", " + firstResultLatLng.getLng());
     }
+
+    public static JOpenCageLatLng reverseGeocoding(String address) {
+        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("dba40429c8ae43b78ae293bc0d221fb5");
+        JOpenCageForwardRequest request = new JOpenCageForwardRequest(address);
+
+        JOpenCageResponse response = jOpenCageGeocoder.forward(request);
+
+        //System.out.println(firstResultLatLng.getLat() + ", " + firstResultLatLng.getLng());
+
+        return response.getFirstPosition();
+    }
 }
