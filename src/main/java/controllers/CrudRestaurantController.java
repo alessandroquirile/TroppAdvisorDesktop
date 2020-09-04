@@ -83,9 +83,13 @@ public class CrudRestaurantController implements Initializable {
     @FXML
     private TextField textFieldStrada;
     @FXML
-    private TextField textFieldOrarioApertura;
+    private ComboBox<String> comboBoxOrarioAperturaMattutina;
     @FXML
-    private TextField textFieldOrarioChiusura;
+    private ComboBox<String> comboBoxOrarioChiusuraMattutina;
+    @FXML
+    private ComboBox<String> comboBoxOrarioAperturaSerale;
+    @FXML
+    private ComboBox<String> comboBoxOrarioChiusuraSerale;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
 
@@ -107,11 +111,12 @@ public class CrudRestaurantController implements Initializable {
         return matcher.find();
     }
 
-    public static boolean isValidHour(String hour) {
-        String hourRegExp = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+    public static boolean isValidHour(String orarioApertura, String orarioChiusura) {
+        /*String hourRegExp = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
         Pattern isValidHourPattern = Pattern.compile(hourRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = isValidHourPattern.matcher(hour);
-        return matcher.find();
+        return matcher.find();*/
+        return true;
     }
 
     @Override
@@ -174,8 +179,6 @@ public class CrudRestaurantController implements Initializable {
         choiceBoxIndirizzo.setDisable(true);
         textFieldCAP.setDisable(true);
         textFieldCittà.setDisable(true);
-        textFieldOrarioApertura.setDisable(true);
-        textFieldOrarioChiusura.setDisable(true);
         checkBoxCertificatoDiEccellenza.setDisable(true);
         tableViewTypeOfCuisine.setDisable(true);
         textFieldNome.setText("");
@@ -186,13 +189,30 @@ public class CrudRestaurantController implements Initializable {
         textFieldStrada.setText("");
         txtFieldNumeroCivico.setText("");
         textFieldProvincia.setText("");
-        textFieldOrarioApertura.setText("");
-        textFieldOrarioChiusura.setText("");
         initializeChoiceBoxIndirizzo();
+        initializeComboBoxOrariMattutini();
+        initializeComboBoxOrariSerali();
         initializeTableViewTypeOfCuisine();
         buttonCaricaFoto.setDisable(true);
         listViewFotoPath.setDisable(true);
         listViewFotoPath.getItems().clear();
+    }
+
+    private void initializeComboBoxOrariMattutini() {
+        ObservableList<String> orariMattutini = FXCollections.observableArrayList(
+                "7:00", "7:30", "8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00",
+                "11:30", "12:00", "12:30", "13:00", "13.30", "14:00", "14:30");
+        comboBoxOrarioAperturaMattutina.setItems(orariMattutini);
+        comboBoxOrarioChiusuraMattutina.setItems(orariMattutini);
+    }
+
+    private void initializeComboBoxOrariSerali() {
+        ObservableList<String> orariSerali = FXCollections.observableArrayList(
+                "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00",
+                "19:30", "20:00", "20:30", "21:00", "21.30", "22:00", "22:30",
+                "23:00", "23.30", "00:00", "00:30", "01:00", "01:30", "02:00", "02.30", "03:00");
+        comboBoxOrarioAperturaSerale.setItems(orariSerali);
+        comboBoxOrarioChiusuraSerale.setItems(orariSerali);
     }
 
     private void enableAllChoiceBoxes() {
@@ -251,17 +271,12 @@ public class CrudRestaurantController implements Initializable {
             if (isValid(textFieldNumeroDiTelefono.getText())) {
                 if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
                     if (isValidNumberGreaterOrEqualToZero(txtFieldNumeroCivico.getText())) {
-                        System.out.println(textFieldOrarioApertura.getText() + " - " + textFieldOrarioChiusura.getText());
-                        if (isValidHour(textFieldOrarioApertura.getText()) && isValidHour(textFieldOrarioChiusura.getText())) {
-                            // Controllo sull'orario di chiusura post quello di apertura?
-                            Restaurant restaurant = createRestaurantWithFormData();
-                            System.out.println(restaurant.toString()); // dbg
-                            /*daoFactory = DAOFactory.getInstance();
-                            restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                            restaurantDAO.add(restaurant);*/
-                        } else {
-                            System.out.println("Orario non valido (inserire nella forma hh:mm)");
-                        }
+                        // Controllo sull'orario di chiusura post quello di apertura?
+                        Restaurant restaurant = createRestaurantWithFormData();
+                        System.out.println(restaurant.toString()); // dbg
+                                /*daoFactory = DAOFactory.getInstance();
+                                restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                restaurantDAO.add(restaurant);*/
                     } else {
                         System.out.println("Civico non valido");
                     }
@@ -279,7 +294,6 @@ public class CrudRestaurantController implements Initializable {
                 txtFieldNumeroCivico.getText().isEmpty() || textFieldProvincia.getText().isEmpty() ||
                 textFieldProvincia.getText().isEmpty() || textFieldCAP.getText().isEmpty() ||
                 textFieldCittà.getText().isEmpty() || textFieldPrezzoMedio.getText().isEmpty() ||
-                textFieldOrarioApertura.getText().isEmpty() || textFieldOrarioChiusura.getText().isEmpty() ||
                 textFieldNumeroDiTelefono.getText().isEmpty() || Bindings.isEmpty(listViewFotoPath.getItems()).get() ||
                 !hasAtLeastOneTypeOfCuisineSelected();
     }
@@ -331,7 +345,8 @@ public class CrudRestaurantController implements Initializable {
     }
 
     private String getOpeningTimeWithFormData() {
-        return textFieldOrarioApertura.getText() + " - " + textFieldOrarioChiusura.getText();
+        return comboBoxOrarioAperturaMattutina.getValue() + " - " + comboBoxOrarioChiusuraMattutina.getValue() +
+                " " + comboBoxOrarioAperturaSerale.getValue() + " - " + comboBoxOrarioChiusuraSerale.getValue();
     }
 
     private boolean hasAtLeastOneTypeOfCuisineSelected() {
@@ -358,8 +373,6 @@ public class CrudRestaurantController implements Initializable {
         textFieldStrada.setDisable(false);
         txtFieldNumeroCivico.setDisable(false);
         textFieldProvincia.setDisable(false);
-        textFieldOrarioChiusura.setDisable(false);
-        textFieldOrarioApertura.setDisable(false);
     }
 
     @FXML

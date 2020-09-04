@@ -3,7 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
+            minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
             xmlns="http://javafx.com/javafx/11.0.1" fx:controller="controllers.CrudRestaurantController">
     <children>
         <Button fx:id="buttonInserisci" layoutX="166.0" layoutY="27.0" mnemonicParsing="false"
@@ -42,8 +43,8 @@
         <TextField fx:id="textFieldCittà" disable="true" layoutX="430.0" layoutY="201.0" prefHeight="26.0"
                    prefWidth="204.0" promptText="Città"/>
         <Label layoutX="24.0" layoutY="303.0" text="Prezzo medio"/>
-        <Label layoutX="19.0" layoutY="377.0" text="Certificato d'eccellenza"/>
-        <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="198.0" layoutY="376.0"
+        <Label layoutX="14.0" layoutY="368.0" text="Certificato d'eccellenza"/>
+        <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="193.0" layoutY="367.0"
                   mnemonicParsing="false"/>
         <Button fx:id="buttonIndietro" layoutX="29.0" layoutY="28.0" mnemonicParsing="false"
                 onMouseClicked="#showSelectTypeStage" style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;"
@@ -67,10 +68,15 @@
                    promptText="Civico"/>
         <TextField fx:id="textFieldProvincia" layoutX="27.0" layoutY="266.0" prefHeight="26.0" prefWidth="701.0"
                    promptText="Provincia  di"/>
-        <Label layoutX="19.0" layoutY="413.0" text="Orario"/>
-        <TextField fx:id="textFieldOrarioApertura" disable="true" layoutX="19.0" layoutY="431.0" prefHeight="26.0"
-                   prefWidth="89.0" promptText="Apertura"/>
-        <TextField fx:id="textFieldOrarioChiusura" disable="true" layoutX="127.0" layoutY="431.0" prefHeight="26.0"
-                   prefWidth="89.0" promptText="Chiusura"/>
+        <Label layoutX="19.0" layoutY="413.0" text="Orario mattutino"/>
+        <ComboBox fx:id="comboBoxOrarioAperturaMattutina" layoutX="155.0" layoutY="408.0" prefHeight="26.0"
+                  prefWidth="101.0"/>
+        <ComboBox fx:id="comboBoxOrarioChiusuraMattutina" layoutX="261.0" layoutY="408.0" prefHeight="26.0"
+                  prefWidth="101.0"/>
+        <ComboBox fx:id="comboBoxOrarioAperturaSerale" layoutX="155.0" layoutY="444.0" prefHeight="26.0"
+                  prefWidth="101.0"/>
+        <ComboBox fx:id="comboBoxOrarioChiusuraSerale" layoutX="261.0" layoutY="444.0" prefHeight="26.0"
+                  prefWidth="101.0"/>
+        <Label layoutX="19.0" layoutY="449.0" text="Orario serale"/>
     </children>
 </AnchorPane>
