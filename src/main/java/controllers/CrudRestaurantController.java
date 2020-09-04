@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import models.Address;
 import models.Restaurant;
 import models_helpers.Point;
+import utils.ConfigFileReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +96,7 @@ public class CrudRestaurantController implements Initializable {
 
     public static boolean isValid(String telephoneNumber) {
         String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
-        if (telephoneNumber.length() == 10) {
+        if (telephoneNumber.length() == 10 || telephoneNumber.length() == 9) {
             Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
             Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
             return matcher.find();
@@ -189,6 +190,14 @@ public class CrudRestaurantController implements Initializable {
         textFieldStrada.setText("");
         txtFieldNumeroCivico.setText("");
         textFieldProvincia.setText("");
+        comboBoxOrarioAperturaMattutina.setDisable(true);
+        comboBoxOrarioChiusuraMattutina.setDisable(true);
+        comboBoxOrarioAperturaSerale.setDisable(true);
+        comboBoxOrarioChiusuraSerale.setDisable(true);
+        comboBoxOrarioAperturaMattutina.getSelectionModel().selectFirst();
+        comboBoxOrarioChiusuraMattutina.getSelectionModel().selectFirst();
+        comboBoxOrarioAperturaSerale.getSelectionModel().selectFirst();
+        comboBoxOrarioChiusuraSerale.getSelectionModel().selectFirst();
         initializeChoiceBoxIndirizzo();
         initializeComboBoxOrariMattutini();
         initializeComboBoxOrariSerali();
@@ -260,10 +269,14 @@ public class CrudRestaurantController implements Initializable {
         buttonCaricaFoto.setDisable(false);
         textFieldNumeroDiTelefono.setDisable(false);
         listViewFotoPath.setDisable(false);
+        comboBoxOrarioAperturaMattutina.setDisable(false);
+        comboBoxOrarioChiusuraMattutina.setDisable(false);
+        comboBoxOrarioAperturaSerale.setDisable(false);
+        comboBoxOrarioChiusuraSerale.setDisable(false);
     }
 
     @FXML
-    public void buttonConfermaClicked(MouseEvent mouseEvent) {
+    public void buttonConfermaClicked(MouseEvent mouseEvent) throws IOException, InterruptedException {
         // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina, orario
         if (formHasSomeEmptyFields()) {
             System.out.println("Riempire tutti i campi");
@@ -273,10 +286,16 @@ public class CrudRestaurantController implements Initializable {
                     if (isValidNumberGreaterOrEqualToZero(txtFieldNumeroCivico.getText())) {
                         // Controllo sull'orario di chiusura post quello di apertura?
                         Restaurant restaurant = createRestaurantWithFormData();
-                        System.out.println(restaurant.toString()); // dbg
-                                /*daoFactory = DAOFactory.getInstance();
-                                restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                restaurantDAO.add(restaurant);*/
+                        System.out.println("DBG: " + restaurant.toString()); // dbg
+                        daoFactory = DAOFactory.getInstance();
+                        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                        if (!restaurantDAO.add(restaurant)) {
+                            System.out.println("Qualcosa è andato storto durante l'inserimento");
+                        } else {
+                            // TODO: implementare l'aggiunta di foto su S3
+                            System.out.println("Ristorante inserito correttamente");
+                            setViewsAsDefault();
+                        }
                     } else {
                         System.out.println("Civico non valido");
                     }
@@ -340,8 +359,7 @@ public class CrudRestaurantController implements Initializable {
     }
 
     private String getCurrentDate() {
-        Date date = new Date();
-        return date.toString();
+        return new Date().toString();
     }
 
     private String getOpeningTimeWithFormData() {

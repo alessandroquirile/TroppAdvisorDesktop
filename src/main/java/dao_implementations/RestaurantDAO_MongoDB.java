@@ -45,8 +45,8 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.body());
-        return true;
+        //System.out.println("Response body: " + response.body() + " " + response.statusCode());
+        return response.statusCode() == 200;
     }
 
     private String getUrlInsertFor(Restaurant restaurant) {
