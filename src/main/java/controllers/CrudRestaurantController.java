@@ -82,6 +82,10 @@ public class CrudRestaurantController implements Initializable {
     private TextField textFieldProvincia;
     @FXML
     private TextField textFieldStrada;
+    @FXML
+    private TextField textFieldOrarioApertura;
+    @FXML
+    private TextField textFieldOrarioChiusura;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
 
@@ -100,6 +104,13 @@ public class CrudRestaurantController implements Initializable {
         String numberRegExp = "^[0-9]+$";
         Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);
+        return matcher.find();
+    }
+
+    public static boolean isValidHour(String hour) {
+        String hourRegExp = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+        Pattern isValidHourPattern = Pattern.compile(hourRegExp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = isValidHourPattern.matcher(hour);
         return matcher.find();
     }
 
@@ -163,6 +174,8 @@ public class CrudRestaurantController implements Initializable {
         choiceBoxIndirizzo.setDisable(true);
         textFieldCAP.setDisable(true);
         textFieldCittà.setDisable(true);
+        textFieldOrarioApertura.setDisable(true);
+        textFieldOrarioChiusura.setDisable(true);
         checkBoxCertificatoDiEccellenza.setDisable(true);
         tableViewTypeOfCuisine.setDisable(true);
         textFieldNome.setText("");
@@ -173,6 +186,8 @@ public class CrudRestaurantController implements Initializable {
         textFieldStrada.setText("");
         txtFieldNumeroCivico.setText("");
         textFieldProvincia.setText("");
+        textFieldOrarioApertura.setText("");
+        textFieldOrarioChiusura.setText("");
         initializeChoiceBoxIndirizzo();
         initializeTableViewTypeOfCuisine();
         buttonCaricaFoto.setDisable(true);
@@ -229,18 +244,24 @@ public class CrudRestaurantController implements Initializable {
 
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
-        // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina
+        // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina, orario
         if (formHasSomeEmptyFields()) {
             System.out.println("Riempire tutti i campi");
         } else {
             if (isValid(textFieldNumeroDiTelefono.getText())) {
                 if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
                     if (isValidNumberGreaterOrEqualToZero(txtFieldNumeroCivico.getText())) {
-                        Restaurant restaurant = createRestaurantWithFormData();
-                        System.out.println(restaurant.toString()); // dbg
-                        /*daoFactory = DAOFactory.getInstance();
-                        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                        restaurantDAO.add(restaurant);*/
+                        System.out.println(textFieldOrarioApertura.getText() + " - " + textFieldOrarioChiusura.getText());
+                        if (isValidHour(textFieldOrarioApertura.getText()) && isValidHour(textFieldOrarioChiusura.getText())) {
+                            // Controllo sull'orario di chiusura post quello di apertura?
+                            Restaurant restaurant = createRestaurantWithFormData();
+                            System.out.println(restaurant.toString()); // dbg
+                            /*daoFactory = DAOFactory.getInstance();
+                            restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                            restaurantDAO.add(restaurant);*/
+                        } else {
+                            System.out.println("Orario non valido (inserire nella forma hh:mm)");
+                        }
                     } else {
                         System.out.println("Civico non valido");
                     }
@@ -258,6 +279,7 @@ public class CrudRestaurantController implements Initializable {
                 txtFieldNumeroCivico.getText().isEmpty() || textFieldProvincia.getText().isEmpty() ||
                 textFieldProvincia.getText().isEmpty() || textFieldCAP.getText().isEmpty() ||
                 textFieldCittà.getText().isEmpty() || textFieldPrezzoMedio.getText().isEmpty() ||
+                textFieldOrarioApertura.getText().isEmpty() || textFieldOrarioChiusura.getText().isEmpty() ||
                 textFieldNumeroDiTelefono.getText().isEmpty() || Bindings.isEmpty(listViewFotoPath.getItems()).get() ||
                 !hasAtLeastOneTypeOfCuisineSelected();
     }
@@ -274,6 +296,7 @@ public class CrudRestaurantController implements Initializable {
         restaurant.setPoint(new Point(Geocoder.reverseGeocoding(createEligibleAddressForGeocoding()).getLat(),
                 Geocoder.reverseGeocoding(createEligibleAddressForGeocoding()).getLng()));
         restaurant.setAddedDate(getCurrentDate());
+        restaurant.setOpeningTime(getOpeningTimeWithFormData());
         return restaurant;
     }
 
@@ -307,6 +330,10 @@ public class CrudRestaurantController implements Initializable {
         return date.toString();
     }
 
+    private String getOpeningTimeWithFormData() {
+        return textFieldOrarioApertura.getText() + " - " + textFieldOrarioChiusura.getText();
+    }
+
     private boolean hasAtLeastOneTypeOfCuisineSelected() {
         for (TableSettersGetters tableSettersGetters : tableViewTypeOfCuisine.getItems()) {
             if (tableSettersGetters.getCheckBox().isSelected()) {
@@ -331,6 +358,8 @@ public class CrudRestaurantController implements Initializable {
         textFieldStrada.setDisable(false);
         txtFieldNumeroCivico.setDisable(false);
         textFieldProvincia.setDisable(false);
+        textFieldOrarioChiusura.setDisable(false);
+        textFieldOrarioApertura.setDisable(false);
     }
 
     @FXML

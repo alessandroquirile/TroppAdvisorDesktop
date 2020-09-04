@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class Restaurant extends Accomodation {
     private List<String> typeOfCuisine;
+    private String openingTime;
 
     public List<String> getTypeOfCuisine() {
         return typeOfCuisine;
@@ -16,10 +17,19 @@ public class Restaurant extends Accomodation {
         this.typeOfCuisine = typeOfCuisine;
     }
 
+    public String getOpeningTime() {
+        return openingTime;
+    }
+
+    public void setOpeningTime(String openingTime) {
+        this.openingTime = openingTime;
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
                 "typeOfCuisine=" + typeOfCuisine +
+                ", openingTime='" + openingTime + '\'' +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", avarageRating=" + avarageRating +

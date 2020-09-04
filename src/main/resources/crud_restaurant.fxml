@@ -38,10 +38,10 @@
                    prefWidth="66.0"/>
         <TextField fx:id="textFieldCAP" disable="true" layoutX="642.0" layoutY="201.0" prefHeight="26.0"
                    prefWidth="88.0" promptText="CAP"/>
-        <Label layoutX="29.0" layoutY="238.0" text="Città"/>
-        <TextField fx:id="textFieldCittà" disable="true" layoutX="29.0" layoutY="256.0" prefHeight="26.0"
-                   prefWidth="701.0" promptText="Città"/>
-        <Label layoutX="29.0" layoutY="292.0" text="Prezzo medio"/>
+        <Label layoutX="29.0" layoutY="238.0" text="Provincia di"/>
+        <TextField fx:id="textFieldCittà" disable="true" layoutX="430.0" layoutY="201.0" prefHeight="26.0"
+                   prefWidth="204.0" promptText="Città"/>
+        <Label layoutX="24.0" layoutY="303.0" text="Prezzo medio"/>
         <Label layoutX="19.0" layoutY="377.0" text="Certificato d'eccellenza"/>
         <CheckBox fx:id="checkBoxCertificatoDiEccellenza" disable="true" layoutX="198.0" layoutY="376.0"
                   mnemonicParsing="false"/>
@@ -65,7 +65,12 @@
                    promptText="Prezzo medio (numero intero)"/>
         <TextField fx:id="txtFieldNumeroCivico" layoutX="359.0" layoutY="201.0" prefHeight="26.0" prefWidth="69.0"
                    promptText="Civico"/>
-        <TextField fx:id="textFieldProvincia" layoutX="451.0" layoutY="201.0" prefHeight="26.0" prefWidth="173.0"
+        <TextField fx:id="textFieldProvincia" layoutX="27.0" layoutY="266.0" prefHeight="26.0" prefWidth="701.0"
                    promptText="Provincia  di"/>
+        <Label layoutX="19.0" layoutY="413.0" text="Orario"/>
+        <TextField fx:id="textFieldOrarioApertura" disable="true" layoutX="19.0" layoutY="431.0" prefHeight="26.0"
+                   prefWidth="89.0" promptText="Apertura"/>
+        <TextField fx:id="textFieldOrarioChiusura" disable="true" layoutX="127.0" layoutY="431.0" prefHeight="26.0"
+                   prefWidth="89.0" promptText="Chiusura"/>
     </children>
 </AnchorPane>

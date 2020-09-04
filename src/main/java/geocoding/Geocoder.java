@@ -10,7 +10,7 @@ import com.byteowls.jopencage.model.JOpenCageReverseRequest;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class Geocoder {
-    public static void forwardGeocoding() {
+    public static void forwardGeocodingDemo() {
         JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("dba40429c8ae43b78ae293bc0d221fb5");
 
         JOpenCageReverseRequest request = new JOpenCageReverseRequest(41.40015, 2.15765);
@@ -28,7 +28,7 @@ public class Geocoder {
         System.out.println(formattedAddress);
     }
 
-    public static void reverseGeocoding() {
+    public static void reverseGeocodingDemo() {
         JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("dba40429c8ae43b78ae293bc0d221fb5");
         JOpenCageForwardRequest request = new JOpenCageForwardRequest("Via Salvo D'Acquisto, 25, San Giorgio a Cremano, 80046, Napoli, Italia");
 
