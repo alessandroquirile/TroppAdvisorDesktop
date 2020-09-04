@@ -224,52 +224,60 @@ public class CrudRestaurantController implements Initializable {
 
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
-        if (!textFieldsAreEmpty()) {
-            if (!Bindings.isEmpty(listViewFotoPath.getItems()).get()) {
-                if (hasAtLeastOneTypeOfCuisineSelected()) {
-                    if (isValid(textFieldNumeroDiTelefono.getText())) {
-                        if (isValidNumberGreaterOrEqualToZero(textFieldCAP.getText())) {
-                            if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
-                                /*Restaurant restaurant = new Restaurant();
-                                 // setter su restaurant coi dati presi dal form
-                                 daoFactory = DAOFactory.getInstance();
-                                 restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                 restaurantDAO.add(restaurant);*/
-                                System.out.println("Tutto ok");
+        if (!textFieldNome.getText().isEmpty()) {
+            if (!textFieldDescrizione.getText().isEmpty()) {
+                if (!textFieldIndirizzo.getText().isEmpty()) {
+                    if (!textFieldCAP.getText().isEmpty()) {
+                        if (!textFieldCittà.getText().isEmpty()) {
+                            if (!textFieldPrezzoMedio.getText().isEmpty()) {
+                                if (!textFieldNumeroDiTelefono.getText().isEmpty()) {
+                                    if (!Bindings.isEmpty(listViewFotoPath.getItems()).get()) {
+                                        if (hasAtLeastOneTypeOfCuisineSelected()) {
+                                            if (isValid(textFieldNumeroDiTelefono.getText())) {
+                                                if (isValidNumberGreaterOrEqualToZero(textFieldCAP.getText())) {
+                                                    if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
+                                                        /*Restaurant restaurant = new Restaurant();
+                                                         // setter su restaurant coi dati presi dal form
+                                                         daoFactory = DAOFactory.getInstance();
+                                                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                                         restaurantDAO.add(restaurant);*/
+                                                        System.out.println("Tutto ok");
+                                                    } else {
+                                                        System.out.println("Prezzo medio non valido");
+                                                    }
+                                                } else {
+                                                    System.out.println("CAP non valido");
+                                                }
+                                            } else {
+                                                System.out.println("Numero di telefono non valido");
+                                            }
+                                        } else {
+                                            System.out.println("Inserire almeno un tipo di cucina");
+                                        }
+                                    } else {
+                                        System.out.println("Inserire almeno una foto");
+                                    }
+                                } else {
+                                    System.out.println("Inserire telefono");
+                                }
                             } else {
-                                System.out.println("Prezzo medio non valido");
+                                System.out.println("Inserire prezzo medio");
                             }
                         } else {
-                            System.out.println("CAP non valido");
+                            System.out.println("Inserire città");
                         }
                     } else {
-                        System.out.println("Numero di telefono non valido");
+                        System.out.println("Inserire CAP");
                     }
                 } else {
-                    System.out.println("Inserire almeno un tipo di cucina");
+                    System.out.println("Inserire indirizzo");
                 }
             } else {
-                System.out.println("Inserire almeno una foto");
+                System.out.println("Inserire descrizione");
             }
         } else {
-            System.out.println("Riempire tutti i campi");
+            System.out.println("Inserire nome");
         }
-    }
-
-    /*private boolean textFieldsAreValid() {
-        return isValid(textFieldNumeroDiTelefono.getText()) &&
-                isValidNumberGreaterOrEqualToZero(textFieldCAP.getText()) &&
-                isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText());
-    }*/
-
-    private boolean textFieldsAreEmpty() {
-        return textFieldNome.getText().isEmpty() &&
-                textFieldDescrizione.getText().isEmpty() &&
-                textFieldIndirizzo.getText().isEmpty() &&
-                textFieldCAP.getText().isEmpty() &&
-                textFieldCittà.getText().isEmpty() &&
-                textFieldPrezzoMedio.getText().isEmpty() &&
-                textFieldNumeroDiTelefono.getText().isEmpty();
     }
 
     private boolean hasAtLeastOneTypeOfCuisineSelected() {
