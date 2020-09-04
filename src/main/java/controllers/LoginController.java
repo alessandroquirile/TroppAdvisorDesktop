@@ -29,6 +29,20 @@ public class LoginController {
     @FXML
     private AnchorPane rootPane;
 
+    public static boolean isValid(String email) {
+        String emailRegExp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+        Pattern emailPattern = Pattern.compile(emailRegExp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = emailPattern.matcher(email);
+        return matcher.find();
+    }
+
+    public static boolean areEmpty(String... strings) {
+        for (String string : strings)
+            if (string.equals(""))
+                return true;
+        return false;
+    }
+
     @FXML
     public void buttonLoginClicked() throws IOException, InterruptedException {
         String email, password;
@@ -56,19 +70,5 @@ public class LoginController {
     public void loadSelectTypeScene() throws IOException {
         AnchorPane pane = FXMLLoader.load(LoginController.class.getResource("/select_type.fxml"));
         rootPane.getChildren().setAll(pane);
-    }
-
-    public static boolean isValid(String email) {
-        String emailRegExp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
-        Pattern emailPattern = Pattern.compile(emailRegExp, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = emailPattern.matcher(email);
-        return matcher.find();
-    }
-
-    public static boolean areEmpty(String... strings) {
-        for (String string : strings)
-            if (string.equals(""))
-                return true;
-        return false;
     }
 }

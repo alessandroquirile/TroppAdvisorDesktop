@@ -13,6 +13,15 @@ public class Address implements Serializable {
     private String province;
     private String postalCode;
 
+    public Address(String type, String street, String houseNumber, String city, String province, String postalCode) {
+        this.type = type;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+    }
+
     public String getType() {
         return type;
     }
@@ -59,5 +68,17 @@ public class Address implements Serializable {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "type='" + type + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber='" + houseNumber + '\'' +
+                ", city='" + city + '\'' +
+                ", province='" + province + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

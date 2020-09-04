@@ -15,4 +15,23 @@ public class Restaurant extends Accomodation {
     public void setTypeOfCuisine(List<String> typeOfCuisine) {
         this.typeOfCuisine = typeOfCuisine;
     }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "typeOfCuisine=" + typeOfCuisine +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", avarageRating=" + avarageRating +
+                ", avaragePrice=" + avaragePrice +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address=" + address +
+                ", point=" + point +
+                ", reviews=" + reviews +
+                ", images=" + images +
+                ", hasCertificateOfExcellence=" + hasCertificateOfExcellence +
+                ", addedDate='" + addedDate + '\'' +
+                ", lastModificationDate='" + lastModificationDate + '\'' +
+                '}';
+    }
 }

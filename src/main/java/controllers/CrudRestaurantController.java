@@ -18,10 +18,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.Address;
+import models.Restaurant;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -49,10 +52,6 @@ public class CrudRestaurantController implements Initializable {
     @FXML
     private javafx.scene.control.TextField textFieldNome;
     @FXML
-    private javafx.scene.control.TextField textFieldDescrizione;
-    @FXML
-    private javafx.scene.control.TextField textFieldIndirizzo;
-    @FXML
     private ChoiceBox<String> choiceBoxIndirizzo;
     @FXML
     private javafx.scene.control.TextField textFieldCittà;
@@ -78,20 +77,14 @@ public class CrudRestaurantController implements Initializable {
     private TableView<TableSettersGetters> tableViewTypeOfCuisine;
     @FXML
     private TextField textFieldPrezzoMedio;
+    @FXML
+    private TextField txtFieldNumeroCivico;
+    @FXML
+    private TextField textFieldProvincia;
+    @FXML
+    private TextField textFieldStrada;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
-
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setViewsAsDefault();
-    }
-
-    private void initializeChoiceBoxIndirizzo() {
-        ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
-        choiceBoxIndirizzo.setItems(observableList);
-        choiceBoxIndirizzo.getSelectionModel().selectFirst();
-    }
 
     public static boolean isValid(String telephoneNumber) {
         String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
@@ -102,6 +95,24 @@ public class CrudRestaurantController implements Initializable {
         } else {
             return false;
         }
+    }
+
+    public static boolean isValidNumberGreaterOrEqualToZero(String number) {
+        String numberRegExp = "^[0-9]+$";
+        Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);
+        return matcher.find();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setViewsAsDefault();
+    }
+
+    private void initializeChoiceBoxIndirizzo() {
+        ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
+        choiceBoxIndirizzo.setItems(observableList);
+        choiceBoxIndirizzo.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -141,26 +152,28 @@ public class CrudRestaurantController implements Initializable {
         buttonInserisci.setDisable(false);
         buttonModifica.setDisable(true);
         textFieldNumeroDiTelefono.setDisable(true);
+        textFieldStrada.setDisable(true);
+        txtFieldNumeroCivico.setDisable(true);
+        textFieldProvincia.setDisable(true);
         buttonElimina.setDisable(true);
         buttonConferma.setDisable(true);
         buttonAnnulla.setDisable(true);
         buttonAiuto.setDisable(false);
         textFieldNome.setDisable(true);
-        textFieldDescrizione.setDisable(true);
         textFieldPrezzoMedio.setDisable(true);
-        textFieldIndirizzo.setDisable(true);
         choiceBoxIndirizzo.setDisable(true);
         textFieldCAP.setDisable(true);
         textFieldCittà.setDisable(true);
         checkBoxCertificatoDiEccellenza.setDisable(true);
         tableViewTypeOfCuisine.setDisable(true);
         textFieldNome.setText("");
-        textFieldDescrizione.setText("");
-        textFieldIndirizzo.setText("");
         textFieldCAP.setText("");
         textFieldCittà.setText("");
         textFieldPrezzoMedio.setText("");
         textFieldNumeroDiTelefono.setText("");
+        textFieldStrada.setText("");
+        txtFieldNumeroCivico.setText("");
+        textFieldProvincia.setText("");
         initializeChoiceBoxIndirizzo();
         initializeTableViewTypeOfCuisine();
         buttonCaricaFoto.setDisable(true);
@@ -215,69 +228,65 @@ public class CrudRestaurantController implements Initializable {
         listViewFotoPath.setDisable(false);
     }
 
-    public static boolean isValidNumberGreaterOrEqualToZero(String number) {
-        String numberRegExp = "^[0-9]+$";
-        Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);
-        return matcher.find();
+    private boolean formHasSomeEmptyFields() {
+        return textFieldNome.getText().isEmpty() || textFieldStrada.getText().isEmpty() ||
+                txtFieldNumeroCivico.getText().isEmpty() || textFieldProvincia.getText().isEmpty() ||
+                textFieldProvincia.getText().isEmpty() || textFieldCAP.getText().isEmpty() ||
+                textFieldCittà.getText().isEmpty() || textFieldPrezzoMedio.getText().isEmpty() ||
+                textFieldNumeroDiTelefono.getText().isEmpty() || Bindings.isEmpty(listViewFotoPath.getItems()).get() ||
+                !hasAtLeastOneTypeOfCuisineSelected();
     }
 
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
-        if (!textFieldNome.getText().isEmpty()) {
-            if (!textFieldDescrizione.getText().isEmpty()) {
-                if (!textFieldIndirizzo.getText().isEmpty()) {
-                    if (!textFieldCAP.getText().isEmpty()) {
-                        if (!textFieldCittà.getText().isEmpty()) {
-                            if (!textFieldPrezzoMedio.getText().isEmpty()) {
-                                if (!textFieldNumeroDiTelefono.getText().isEmpty()) {
-                                    if (!Bindings.isEmpty(listViewFotoPath.getItems()).get()) {
-                                        if (hasAtLeastOneTypeOfCuisineSelected()) {
-                                            if (isValid(textFieldNumeroDiTelefono.getText())) {
-                                                if (isValidNumberGreaterOrEqualToZero(textFieldCAP.getText())) {
-                                                    if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
-                                                        /*Restaurant restaurant = new Restaurant();
-                                                         // setter su restaurant coi dati presi dal form
-                                                         daoFactory = DAOFactory.getInstance();
-                                                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                                         restaurantDAO.add(restaurant);*/
-                                                        System.out.println("Tutto ok");
-                                                    } else {
-                                                        System.out.println("Prezzo medio non valido");
-                                                    }
-                                                } else {
-                                                    System.out.println("CAP non valido");
-                                                }
-                                            } else {
-                                                System.out.println("Numero di telefono non valido");
-                                            }
-                                        } else {
-                                            System.out.println("Inserire almeno un tipo di cucina");
-                                        }
-                                    } else {
-                                        System.out.println("Inserire almeno una foto");
-                                    }
-                                } else {
-                                    System.out.println("Inserire telefono");
-                                }
-                            } else {
-                                System.out.println("Inserire prezzo medio");
-                            }
-                        } else {
-                            System.out.println("Inserire città");
-                        }
+        // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina
+        if (formHasSomeEmptyFields()) {
+            System.out.println("Riempire tutti i campi");
+        } else {
+            if (isValid(textFieldNumeroDiTelefono.getText())) {
+                if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
+                    if (isValidNumberGreaterOrEqualToZero(txtFieldNumeroCivico.getText())) {
+                        Restaurant restaurant = createRestaurantWithFormData();
+                        System.out.println(restaurant.toString()); // dbg
+                        /*daoFactory = DAOFactory.getInstance();
+                        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                        restaurantDAO.add(restaurant);*/
                     } else {
-                        System.out.println("Inserire CAP");
+                        System.out.println("Civico non valido");
                     }
                 } else {
-                    System.out.println("Inserire indirizzo");
+                    System.out.println("Prezzo medio non valido");
                 }
             } else {
-                System.out.println("Inserire descrizione");
+                System.out.println("Telefono non valido");
             }
-        } else {
-            System.out.println("Inserire nome");
+
         }
+    }
+
+
+    private Restaurant createRestaurantWithFormData() {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(textFieldNome.getText());
+        restaurant.setAddress(new Address(
+                choiceBoxIndirizzo.getValue(),
+                textFieldStrada.getText(),
+                txtFieldNumeroCivico.getText(),
+                textFieldCittà.getText(),
+                textFieldProvincia.getText(),
+                textFieldCAP.getText()
+        ));
+        restaurant.setAvaragePrice(Integer.parseInt(textFieldPrezzoMedio.getText()));
+        restaurant.setPhoneNumber(textFieldNumeroDiTelefono.getText());
+        restaurant.setHasCertificateOfExcellence(checkBoxCertificatoDiEccellenza.isSelected());
+        restaurant.setImages(listViewFotoPath.getItems());
+        List<String> cuisineSelected = new ArrayList<>();
+        for (TableSettersGetters tableSettersGetters : tableViewTypeOfCuisine.getItems()) {
+            if (tableSettersGetters.getCheckBox().isSelected())
+                cuisineSelected.add(tableSettersGetters.getName());
+        }
+        restaurant.setTypeOfCuisine(cuisineSelected);
+        return restaurant;
     }
 
     private boolean hasAtLeastOneTypeOfCuisineSelected() {
@@ -296,13 +305,14 @@ public class CrudRestaurantController implements Initializable {
     }
 
     private void enableAllTextFields() {
-        textFieldDescrizione.setDisable(false);
-        textFieldIndirizzo.setDisable(false);
         textFieldCAP.setDisable(false);
         textFieldCittà.setDisable(false);
         textFieldNome.setDisable(false);
         textFieldNumeroDiTelefono.setDisable(false);
         textFieldPrezzoMedio.setDisable(false);
+        textFieldStrada.setDisable(false);
+        txtFieldNumeroCivico.setDisable(false);
+        textFieldProvincia.setDisable(false);
     }
 
     @FXML

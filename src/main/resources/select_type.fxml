@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <AnchorPane
-        fx:id="rootPane"
-        xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SelectTypeController" maxHeight="-Infinity"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:id="rootPane" fx:controller="controllers.SelectTypeController" maxHeight="-Infinity"
         maxWidth="-Infinity"
         minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0"
         xmlns="http://javafx.com/javafx/11.0.1">
