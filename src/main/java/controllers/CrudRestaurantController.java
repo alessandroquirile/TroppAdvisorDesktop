@@ -159,11 +159,13 @@ public class CrudRestaurantController implements Initializable {
         textFieldIndirizzo.setText("");
         textFieldCAP.setText("");
         textFieldCittà.setText("");
+        textFieldPrezzoMedio.setText("");
         textFieldNumeroDiTelefono.setText("");
         initializeChoiceBoxIndirizzo();
         initializeTableViewTypeOfCuisine();
         buttonCaricaFoto.setDisable(true);
         listViewFotoPath.setDisable(true);
+        listViewFotoPath.getItems().clear();
     }
 
     private void enableAllChoiceBoxes() {
@@ -261,16 +263,14 @@ public class CrudRestaurantController implements Initializable {
     }*/
 
     private boolean textFieldsAreEmpty() {
-        return textFieldNome.getText().equals("") &&
-                textFieldDescrizione.getText().equals("") &&
-                textFieldIndirizzo.getText().equals("") &&
-                textFieldCAP.getText().equals("") &&
-                textFieldCittà.getText().equals("") &&
-                textFieldPrezzoMedio.getText().equals("") &&
-                textFieldNumeroDiTelefono.getText().equals("");
+        return textFieldNome.getText().isEmpty() &&
+                textFieldDescrizione.getText().isEmpty() &&
+                textFieldIndirizzo.getText().isEmpty() &&
+                textFieldCAP.getText().isEmpty() &&
+                textFieldCittà.getText().isEmpty() &&
+                textFieldPrezzoMedio.getText().isEmpty() &&
+                textFieldNumeroDiTelefono.getText().isEmpty();
     }
-
-    /
 
     private boolean hasAtLeastOneTypeOfCuisineSelected() {
         for (TableSettersGetters tableSettersGetters : tableViewTypeOfCuisine.getItems()) {
