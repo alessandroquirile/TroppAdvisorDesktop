@@ -3,6 +3,7 @@ package controllers;
 import controllers_utils.TableSettersGetters;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -212,22 +213,78 @@ public class CrudRestaurantController implements Initializable {
         listViewFotoPath.setDisable(false);
     }
 
+    public static boolean isValidNumberGreaterOrEqualToZero(String number) {
+        String numberRegExp = "^[0-9]+$";
+        Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);
+        return matcher.find();
+    }
+
     @FXML
     public void buttonConfermaClicked(MouseEvent mouseEvent) {
-        System.out.println("Cliccato conferma");
-        // Verificare dapprima se tutti i campi (obbligatori) sono stati riempiti, poi...
-        // verificare che l'input su CAP e prezzo medio siano n. naturali
-        if (/*controlli vari sugli input*/true) {
-            if (isValid(textFieldNumeroDiTelefono.getText())) {
-                /*Restaurant restaurant = new Restaurant();
-                // setter su restaurant coi dati presi dal form
-                daoFactory = DAOFactory.getInstance();
-                restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                restaurantDAO.add(restaurant);*/
+        if (!textFieldsAreEmpty()) {
+            if (!Bindings.isEmpty(listViewFotoPath.getItems()).get()) {
+                if (hasAtLeastOneTypeOfCuisineSelected()) {
+                    if (isValid(textFieldNumeroDiTelefono.getText())) {
+                        if (isValidNumberGreaterOrEqualToZero(textFieldCAP.getText())) {
+                            if (isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText())) {
+                                /*Restaurant restaurant = new Restaurant();
+                                 // setter su restaurant coi dati presi dal form
+                                 daoFactory = DAOFactory.getInstance();
+                                 restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                 restaurantDAO.add(restaurant);*/
+                                System.out.println("Tutto ok");
+                            } else {
+                                System.out.println("Prezzo medio non valido");
+                            }
+                        } else {
+                            System.out.println("CAP non valido");
+                        }
+                    } else {
+                        System.out.println("Numero di telefono non valido");
+                    }
+                } else {
+                    System.out.println("Inserire almeno un tipo di cucina");
+                }
             } else {
-                System.out.println("Telefono non valido");
+                System.out.println("Inserire almeno una foto");
+            }
+        } else {
+            System.out.println("Riempire tutti i campi");
+        }
+    }
+
+    /*private boolean textFieldsAreValid() {
+        return isValid(textFieldNumeroDiTelefono.getText()) &&
+                isValidNumberGreaterOrEqualToZero(textFieldCAP.getText()) &&
+                isValidNumberGreaterOrEqualToZero(textFieldPrezzoMedio.getText());
+    }*/
+
+    private boolean textFieldsAreEmpty() {
+        return textFieldNome.getText().equals("") &&
+                textFieldDescrizione.getText().equals("") &&
+                textFieldIndirizzo.getText().equals("") &&
+                textFieldCAP.getText().equals("") &&
+                textFieldCittà.getText().equals("") &&
+                textFieldPrezzoMedio.getText().equals("") &&
+                textFieldNumeroDiTelefono.getText().equals("");
+    }
+
+    /
+
+    private boolean hasAtLeastOneTypeOfCuisineSelected() {
+        for (TableSettersGetters tableSettersGetters : tableViewTypeOfCuisine.getItems()) {
+            if (tableSettersGetters.getCheckBox().isSelected()) {
+                return true;
             }
         }
+        return false;
+    }
+
+    private void printSelectedTypeOfCuisine() {
+        for (TableSettersGetters tableSettersGetters : tableViewTypeOfCuisine.getItems())
+            if (tableSettersGetters.getCheckBox().isSelected())
+                System.out.println(tableSettersGetters.getName() + " selected");
     }
 
     private void enableAllTextFields() {
