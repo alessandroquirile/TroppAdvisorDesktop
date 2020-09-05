@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface RestaurantDAO {
     boolean add(Restaurant restaurant) throws IOException, InterruptedException;
 
-    boolean delete(Restaurant restaurant);
+    boolean delete(Restaurant restaurant) throws IOException, InterruptedException;
 
     boolean update(Restaurant restaurant);
 }

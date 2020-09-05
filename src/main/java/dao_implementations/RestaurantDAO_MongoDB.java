@@ -60,7 +60,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
             for (String imagePath : restaurant.getImages()) {
                 File file = new File(imagePath);
                 String endpoint = loadImageOnS3(file);
-                Restaurant parsedRestaurant = parseJsonRestaurant(objectMapper, response);
+                Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
                 if (!updateRestaurantImage(parsedRestaurant, endpoint))
                     return false;
             }
@@ -98,7 +98,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8); // response.body
     }
 
-    private Restaurant parseJsonRestaurant(ObjectMapper objectMapper, HttpResponse<String> response) throws IOException {
+    private Restaurant getParsedRestaurantFromJson(ObjectMapper objectMapper, HttpResponse<String> response) throws IOException {
         return objectMapper.readValue(response.body(), new TypeReference<Restaurant>() {
         });
     }
@@ -130,9 +130,24 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     }
 
     @Override
-    public boolean delete(Restaurant restaurant) {
+    public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
         // codice per eliminare un ristorante su mongodb
-        return true;
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
+        URL += "/" + restaurant.getId();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .DELETE()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = httpClient.send(httpRequest,
+                HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println(response.body()); // dbg
+        return response.statusCode() == 200;
     }
 
     @Override
