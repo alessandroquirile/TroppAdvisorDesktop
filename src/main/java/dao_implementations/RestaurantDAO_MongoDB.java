@@ -64,8 +64,10 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 if (!updateRestaurantImage(parsedRestaurant, endpoint))
                     return false;
             }
+            return true;
+        } else {
+            return false;
         }
-        return true;
     }
 
     private String getUrlInsertFor(Restaurant restaurant) {
