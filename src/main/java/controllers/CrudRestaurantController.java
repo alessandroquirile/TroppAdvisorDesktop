@@ -286,13 +286,12 @@ public class CrudRestaurantController implements Initializable {
                     if (isValidNumberGreaterOrEqualToZero(txtFieldNumeroCivico.getText())) {
                         // Controllo sull'orario di chiusura post quello di apertura?
                         Restaurant restaurant = createRestaurantWithFormData();
-                        System.out.println("DBG: " + restaurant.toString()); // dbg
+                        // System.out.println("DBG: " + restaurant.toString()); // dbg
                         daoFactory = DAOFactory.getInstance();
                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
                         if (!restaurantDAO.add(restaurant)) {
                             System.out.println("Qualcosa è andato storto durante l'inserimento");
                         } else {
-                            // TODO: implementare l'aggiunta di foto su S3
                             System.out.println("Ristorante inserito correttamente");
                             setViewsAsDefault();
                         }

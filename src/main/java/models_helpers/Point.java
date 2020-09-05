@@ -9,6 +9,10 @@ public class Point implements Serializable {
     private Double x;
     private Double y;
 
+    public Point() {
+
+    }
+
     public Point(Double x, Double y) {
         this.x = x;
         this.y = y;

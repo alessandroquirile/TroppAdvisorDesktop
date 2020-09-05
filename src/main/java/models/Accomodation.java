@@ -1,6 +1,5 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import models_helpers.Point;
 
 import java.io.Serializable;
@@ -10,7 +9,6 @@ import java.util.List;
  * @author Alessandro Quirile, Mauro Telese
  */
 public abstract class Accomodation implements Serializable {
-    @JsonProperty("_id")
     protected String id;
     protected String name;
     protected Integer avarageRating;

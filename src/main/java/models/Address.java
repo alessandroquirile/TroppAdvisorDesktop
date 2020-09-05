@@ -13,6 +13,9 @@ public class Address implements Serializable {
     private String province;
     private String postalCode;
 
+    public Address() {
+    }
+
     public Address(String type, String street, String houseNumber, String city, String province, String postalCode) {
         this.type = type;
         this.street = street;
