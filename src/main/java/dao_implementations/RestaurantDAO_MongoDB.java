@@ -42,7 +42,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("typeOfCuisine", restaurant.getTypeOfCuisine());
         values.put("openingTime", restaurant.getOpeningTime());
 
-        ObjectMapper objectMapper = createNewObjectMapper();
+        ObjectMapper objectMapper = getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -64,10 +64,33 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 if (!updateRestaurantImage(parsedRestaurant, endpoint))
                     return false;
             }
-            return true;
+            return insertRestaurantIntoCity(getParsedRestaurantFromJson(objectMapper, response));
         } else {
             return false;
         }
+    }
+
+    private boolean insertRestaurantIntoCity(Restaurant restaurant) throws IOException, InterruptedException {
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/" +
+                "insert-city-restaurant?";
+
+        // restaurant.getCity() NON viola la Legge di Demetra
+        URL += "city=" + restaurant.getCity() + "&nation=Italia" + "&id=" + restaurant.getId();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString("")) // empty body
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println("Debugging: " + response.headers() + "\n" + response.body()); // dbg
+
+        return response.statusCode() == 200;
     }
 
     private String getUrlInsertFor(Restaurant restaurant) {
@@ -77,7 +100,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         return URL;
     }
 
-    private ObjectMapper createNewObjectMapper() {
+    private ObjectMapper getNewObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
@@ -110,7 +133,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         final Map<String, Object> values = new HashMap<>();
         values.put("url", endpoint);
 
-        ObjectMapper objectMapper = createNewObjectMapper();
+        ObjectMapper objectMapper = getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
         HttpClient httpClient = HttpClient.newHttpClient();

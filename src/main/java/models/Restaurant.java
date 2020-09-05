@@ -25,6 +25,10 @@ public class Restaurant extends Accomodation {
         this.openingTime = openingTime;
     }
 
+    public String getCity() {
+        return this.address.getCity();
+    }
+
     @Override
     public String toString() {
         return "Restaurant{" +
