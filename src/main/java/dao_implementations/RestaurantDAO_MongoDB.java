@@ -70,6 +70,34 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         }
     }
 
+    @Override
+    public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
+        // codice per eliminare un ristorante su mongodb
+        // Vanno eliminate anche le foto e la voce in City?
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
+        URL += "/" + restaurant.getId();
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .DELETE()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = httpClient.send(httpRequest,
+                HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println(response.body()); // dbg
+        return response.statusCode() == 200;
+    }
+
+    @Override
+    public boolean update(Restaurant restaurant) {
+        // codice per aggiornare un ristorante su mongodb
+        return true;
+    }
+
     private boolean insertRestaurantIntoCity(Restaurant restaurant) throws IOException, InterruptedException {
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/" +
                 "insert-city-restaurant?";
@@ -150,32 +178,5 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
 
         return response.statusCode() == 200;
-    }
-
-    @Override
-    public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
-        // codice per eliminare un ristorante su mongodb
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
-        URL += "/" + restaurant.getId();
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest
-                .newBuilder()
-                .DELETE()
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/json")
-                .build();
-
-        HttpResponse<String> response = httpClient.send(httpRequest,
-                HttpResponse.BodyHandlers.ofString());
-
-        //System.out.println(response.body()); // dbg
-        return response.statusCode() == 200;
-    }
-
-    @Override
-    public boolean update(Restaurant restaurant) {
-        // codice per aggiornare un ristorante su mongodb
-        return true;
     }
 }

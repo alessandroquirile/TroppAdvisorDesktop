@@ -1,4 +1,4 @@
-package controllers;
+package views;
 
 import dao_interfaces.AccountDAO;
 import factories.DAOFactory;

@@ -1,4 +1,4 @@
-package controllers;
+package views;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -73,6 +73,7 @@ public class SelectTypeController implements Initializable {
             stage.setScene(scene);
             stage.setTitle("CRUD Ristorante");
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
