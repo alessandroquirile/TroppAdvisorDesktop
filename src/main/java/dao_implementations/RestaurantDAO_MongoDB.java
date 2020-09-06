@@ -75,7 +75,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     }
 
     @Override
-    public List<Restaurant> retrieve(int page, int size) throws IOException, InterruptedException {
+    public List<Restaurant> retrieveAt(int page, int size) throws IOException, InterruptedException {
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/find-all/?";
         URL += "page=" + page + "&size=" + size;
 

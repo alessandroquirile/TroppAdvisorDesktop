@@ -11,7 +11,7 @@ import java.util.List;
 public interface RestaurantDAO {
     boolean add(Restaurant restaurant) throws IOException, InterruptedException;
 
-    List<Restaurant> retrieve(int page, int size) throws IOException, InterruptedException;
+    List<Restaurant> retrieveAt(int page, int size) throws IOException, InterruptedException;
 
     boolean delete(Restaurant restaurant) throws IOException, InterruptedException;
 
