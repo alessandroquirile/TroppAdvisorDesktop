@@ -81,14 +81,13 @@ public class CrudRestaurantController {
             daoFactory = DAOFactory.getInstance();
             restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
             Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
-            //System.out.println(clickedRestaurant);
             if (clickedRestaurant != null) {
-                if (areYouSureDialog("Sei sicuro di voler cancellare " + clickedRestaurant.getName() + "?")) {
+                if (areYouSureDialog(clickedRestaurant)) {
                     try {
                         if (!restaurantDAO.delete(clickedRestaurant))
                             showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                         else
-                            showAlertDialog("Cancellato");
+                            setViewsAsDefault();
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -105,13 +104,9 @@ public class CrudRestaurantController {
 
     private void tableViewClicked() {
         crudRestaurantView.getTableView().setOnMouseClicked(event -> {
-            //System.out.println("Cliccata tabella");
             Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
-            //System.out.println(clickedRestaurant);
             if (clickedRestaurant != null) {
                 crudRestaurantView.getButtonElimina().setDisable(false);
-                // è un record
-                //System.out.println(clickedRestaurant.toString()); // dbg
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
                 clearTypeOfCuisineCheckBox();
                 populateTextFieldWithClickedRestaurant(clickedRestaurant);
@@ -231,7 +226,6 @@ public class CrudRestaurantController {
             String orarioChiusuraMattutina = crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue();
             String orarioAperturaSerale = crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue();
             String orarioChiusuraSerale = crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
-            // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina, orario
             if (formHasSomeEmptyFields()) {
                 showAlertDialog("Riempire tutti i campi");
             } else {
@@ -242,7 +236,6 @@ public class CrudRestaurantController {
                                 if (UserInputChecker.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
                                     if (UserInputChecker.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
                                         Restaurant restaurant = createRestaurantWithFormData();
-                                        // System.out.println("DBG: " + restaurant.toString()); // dbg
                                         daoFactory = DAOFactory.getInstance();
                                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
                                         try {
@@ -314,14 +307,14 @@ public class CrudRestaurantController {
         }
     }
 
-    private boolean areYouSureDialog(String alertDeletionMessage) {
+    private boolean areYouSureDialog(Restaurant restaurant) {
         Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
         Alert.AlertType alertType = Alert.AlertType.CONFIRMATION;
         Alert alert = new Alert(alertType, "");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(stage);
         alert.setTitle("Attenzione");
-        alert.getDialogPane().setHeaderText(alertDeletionMessage);
+        alert.getDialogPane().setHeaderText("Sei sicuro di voler cancellare " + restaurant.getName() + " ?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == ButtonType.OK) {
