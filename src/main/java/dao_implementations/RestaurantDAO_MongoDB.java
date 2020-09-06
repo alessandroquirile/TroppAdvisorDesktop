@@ -109,7 +109,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     @Override
     public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
         // codice per eliminare un ristorante su mongodb
-        // Vanno eliminate anche le foto e la voce in City?
+        // TODO: Vanno eliminate anche le foto e la voce in City?
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
         URL += "/" + restaurant.getId();
 

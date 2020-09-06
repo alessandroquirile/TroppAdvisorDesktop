@@ -49,6 +49,9 @@ public class CrudRestaurantController {
             case "buttonInserisci":
                 buttonInserisciClicked();
                 break;
+            case "buttonElimina":
+                buttonEliminaClicked();
+                break;
             case "buttonAnnulla":
                 buttonAnnullaClicked();
                 break;
@@ -73,11 +76,30 @@ public class CrudRestaurantController {
         }
     }
 
+    public void buttonEliminaClicked() {
+        crudRestaurantView.getButtonElimina().setOnAction(event -> {
+            daoFactory = DAOFactory.getInstance();
+            restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+            Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
+            //System.out.println(clickedRestaurant);
+            if (clickedRestaurant != null) {
+                if (areYouSureDialog("Sei sicuro di voler cancellare " + clickedRestaurant.getName() + "?")) {
+                    try {
+                        if (!restaurantDAO.delete(clickedRestaurant))
+                            showAlertDialog("Qualcosa è andato storto durante la cancellazione");
+                        else
+                            showAlertDialog("Cancellato");
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     public void setListenerOnTableView(TableView<Object> tableView) {
-        switch (tableView.getId()) {
-            case "tableView":
-                tableViewClicked();
-                break;
+        if ("tableView".equals(tableView.getId())) {
+            tableViewClicked();
         }
     }
 
@@ -87,6 +109,7 @@ public class CrudRestaurantController {
             Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
             //System.out.println(clickedRestaurant);
             if (clickedRestaurant != null) {
+                crudRestaurantView.getButtonElimina().setDisable(false);
                 // è un record
                 //System.out.println(clickedRestaurant.toString()); // dbg
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
@@ -291,6 +314,24 @@ public class CrudRestaurantController {
         }
     }
 
+    private boolean areYouSureDialog(String alertDeletionMessage) {
+        Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
+        Alert.AlertType alertType = Alert.AlertType.CONFIRMATION;
+        Alert alert = new Alert(alertType, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        alert.setTitle("Attenzione");
+        alert.getDialogPane().setHeaderText(alertDeletionMessage);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void buttonCaricaClicked() {
         crudRestaurantView.getButtonCaricaFoto().setOnAction(event -> multiFileSelection());
     }
@@ -402,9 +443,7 @@ public class CrudRestaurantController {
     }
 
     private void buttonAnnullaClicked() {
-        crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
-            setViewsAsDefault();
-        });
+        crudRestaurantView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
     }
 
     private void buttonIndietroClicked() {
@@ -518,7 +557,7 @@ public class CrudRestaurantController {
             if (restaurants != null) {
                 final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
                 fillColumnsWithData();
-                // Associare colonne alla tabella
+                // Associa colonne alla tabella
                 crudRestaurantView.getTableView().setItems(data);
             }
         } catch (IOException | InterruptedException e) {
