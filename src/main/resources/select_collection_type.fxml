@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane
         xmlns:fx="http://javafx.com/fxml/1"
-        fx:id="rootPane" fx:controller="views.SelectTypeController" maxHeight="-Infinity"
+        fx:id="rootPane" fx:controller="views.SelectCollectionTypeView" maxHeight="-Infinity"
         maxWidth="-Infinity"
         minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0"
         xmlns="http://javafx.com/javafx/11.0.1">
@@ -27,12 +27,10 @@
             </font>
         </Label>
         <Button fx:id="buttonVai" layoutX="260.0" layoutY="250.0" mnemonicParsing="false"
-                onMouseClicked="#showCrudPage"
                 style="-fx-background-color: #0078D7;" text="Vai" textFill="white"/>
     </Pane>
     <ComboBox fx:id="comboBox" layoutX="512.0" layoutY="371.0" prefHeight="30.0" prefWidth="292.0"
-              promptText="Seleziona una tipologia"
-              onAction="#comboChanged"/>
+              promptText="Seleziona una tipologia"/>
 
 </AnchorPane>
 

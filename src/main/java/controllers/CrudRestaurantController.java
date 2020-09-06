@@ -89,7 +89,7 @@ public class CrudRestaurantController {
     public void showSelectTypeStage() {
         try {
             closeCurrentStage();
-            Parent parent = FXMLLoader.load(getClass().getResource("/select_type.fxml"));
+            Parent parent = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(parent);
             stage.setScene(scene);

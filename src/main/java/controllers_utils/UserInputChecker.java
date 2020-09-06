@@ -54,4 +54,18 @@ public class UserInputChecker {
             return isValidOpeningTimeAtMorning(orarioApertura, orarioChiusura);
         }
     }
+
+    public static boolean isValid(String email) {
+        String emailRegExp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+        Pattern emailPattern = Pattern.compile(emailRegExp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = emailPattern.matcher(email);
+        return matcher.find();
+    }
+
+    public static boolean areEmpty(String... strings) {
+        for (String string : strings)
+            if (string.equals(""))
+                return true;
+        return false;
+    }
 }
