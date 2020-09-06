@@ -28,6 +28,34 @@ public class CrudRestaurantView implements Initializable {
     @FXML
     private TableView<Object> tableView;
     @FXML
+    private TableColumn<Object, String> tableColumnName;
+    @FXML
+    private TableColumn<Object, String> tableColumnId;
+    @FXML
+    private TableColumn<Object, String> tableColumnOrarioApertura;
+    @FXML
+    private TableColumn<Object, Integer> tableColumnVotoMedio;
+    @FXML
+    private TableColumn<Object, Integer> tableColumnPrezzoMedio;
+    @FXML
+    private TableColumn<Object, String> tableColumnNumeroDiTelefono;
+    @FXML
+    private TableColumn<Object, Boolean> tableColumnHasCertificateOfExcellence;
+    @FXML
+    private TableColumn<Object, Integer> tableColumnTotalReview;
+    @FXML
+    private TableColumn<Object, String> tableColumnAddedDate;
+    @FXML
+    private TableColumn<Object, String> tableColumnLastModificationDate;
+    @FXML
+    private TableColumn<Object, String> tableColumnIndirizzo;
+    @FXML
+    private TableColumn<Object, String> tableColumnTipoDiCucina;
+    @FXML
+    private TableColumn<Object, String> tableColumnPuntoSuMappa;
+    @FXML
+    private TableColumn<Object, String> tableColumnImmagini;
+    @FXML
     private javafx.scene.control.Button buttonModifica;
     @FXML
     private javafx.scene.control.TextField textFieldNome;
@@ -71,6 +99,8 @@ public class CrudRestaurantView implements Initializable {
     private ComboBox<String> comboBoxOrarioAperturaSerale;
     @FXML
     private ComboBox<String> comboBoxOrarioChiusuraSerale;
+    @FXML
+    private Button buttonMostraAltro;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -81,11 +111,72 @@ public class CrudRestaurantView implements Initializable {
         crudRestaurantController.setListenerOn(buttonConferma);
         crudRestaurantController.setListenerOn(buttonAiuto);
         crudRestaurantController.setListenerOn(buttonCaricaFoto);
+        crudRestaurantController.setListenerOn(buttonMostraAltro);
         try {
             crudRestaurantController.setViewsAsDefault();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public Button getButtonMostraAltro() {
+        return buttonMostraAltro;
+    }
+
+    public TableColumn<Object, String> getTableColumnImmagini() {
+        return tableColumnImmagini;
+    }
+
+    public TableColumn<Object, String> getTableColumnPuntoSuMappa() {
+        return tableColumnPuntoSuMappa;
+    }
+
+    public TableColumn<Object, String> getTableColumnTipoDiCucina() {
+        return tableColumnTipoDiCucina;
+    }
+
+    public TableColumn<Object, String> getTableColumnIndirizzo() {
+        return tableColumnIndirizzo;
+    }
+
+    public TableColumn<Object, String> getTableColumnLastModificationDate() {
+        return tableColumnLastModificationDate;
+    }
+
+    public TableColumn<Object, String> getTableColumnAddedDate() {
+        return tableColumnAddedDate;
+    }
+
+    public TableColumn<Object, Boolean> getTableColumnHasCertificateOfExcellence() {
+        return tableColumnHasCertificateOfExcellence;
+    }
+
+    public TableColumn<Object, Integer> getTableColumnTotalReview() {
+        return tableColumnTotalReview;
+    }
+
+    public TableColumn<Object, String> getTableColumnNumeroDiTelefono() {
+        return tableColumnNumeroDiTelefono;
+    }
+
+    public TableColumn<Object, Integer> getTableColumnPrezzoMedio() {
+        return tableColumnPrezzoMedio;
+    }
+
+    public TableColumn<Object, Integer> getTableColumnVotoMedio() {
+        return tableColumnVotoMedio;
+    }
+
+    public TableColumn<Object, String> getTableColumnOrarioApertura() {
+        return tableColumnOrarioApertura;
+    }
+
+    public TableColumn<Object, String> getTableColumnName() {
+        return tableColumnName;
+    }
+
+    public TableColumn<Object, String> getTableColumnId() {
+        return tableColumnId;
     }
 
     public AnchorPane getRootPane() {
