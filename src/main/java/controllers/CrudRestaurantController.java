@@ -40,8 +40,8 @@ public class CrudRestaurantController {
     private final CrudRestaurantView crudRestaurantView;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
-    private final int currentPage = 0;
-    private final int currentSize = 200;
+    private final int currentSize = 100;
+    private int currentPage = 0;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
@@ -67,17 +67,32 @@ public class CrudRestaurantController {
             case "buttonCaricaFoto":
                 buttonCaricaClicked();
                 break;
-            case "buttonMostraAltro":
-                buttonMostraAltroClicked();
+            case "buttonMostraAvanti":
+                buttonMostraAvantiClicked();
+                break;
+            case "buttonMostraIndietro":
+                buttonMostraIndietroClicked();
                 break;
         }
     }
 
-    private void buttonMostraAltroClicked() {
-        crudRestaurantView.getButtonMostraAltro().setOnAction(event -> {
-            System.out.println("Premuto Mostra Altro");
-            /*currentPage++;
-            loadRestaurantsIntoTableView(currentPage, currentSize);*/
+    private void buttonMostraAvantiClicked() {
+        crudRestaurantView.getButtonMostraAvanti().setOnAction(event -> {
+            System.out.println("Premuto Mostra avanti");
+            if (!crudRestaurantView.getTableView().getItems().isEmpty()) {
+                currentPage++;
+                loadRestaurantsIntoTableView(currentPage, currentSize);
+            }
+        });
+    }
+
+    private void buttonMostraIndietroClicked() {
+        crudRestaurantView.getButtonMostraIndietro().setOnAction(event -> {
+            System.out.println("Premuto mostra indietro");
+            if (currentPage != 0) {
+                currentPage--;
+                loadRestaurantsIntoTableView(currentPage, currentSize);
+            }
         });
     }
 
@@ -305,11 +320,7 @@ public class CrudRestaurantController {
 
     private void buttonAnnullaClicked() {
         crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
-            try {
-                setViewsAsDefault();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            setViewsAsDefault();
         });
     }
 
@@ -317,7 +328,7 @@ public class CrudRestaurantController {
         crudRestaurantView.getButtonIndietro().setOnAction(event -> showSelectTypeStage());
     }
 
-    public void setViewsAsDefault() throws IOException, InterruptedException {
+    public void setViewsAsDefault() {
         crudRestaurantView.getButtonIndietro().setDisable(false);
         crudRestaurantView.getButtonInserisci().setDisable(false);
         crudRestaurantView.getButtonModifica().setDisable(true);
@@ -359,7 +370,6 @@ public class CrudRestaurantController {
         initializeComboBoxOrariMattutini();
         initializeComboBoxOrariSerali();
         initializeTableViewTypeOfCuisine();
-
         loadRestaurantsIntoTableView(currentPage, currentSize);
     }
 
@@ -422,26 +432,31 @@ public class CrudRestaurantController {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         try {
             List<Restaurant> restaurants = restaurantDAO.retrieveAt(page, size);
-            final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
-            // Associare dati alle colonne
-            crudRestaurantView.getTableColumnId().setCellValueFactory(new PropertyValueFactory<>("id"));
-            crudRestaurantView.getTableColumnName().setCellValueFactory(new PropertyValueFactory<>("name"));
-            crudRestaurantView.getTableColumnOrarioApertura().setCellValueFactory(new PropertyValueFactory<>("openingTime"));
-            crudRestaurantView.getTableColumnVotoMedio().setCellValueFactory(new PropertyValueFactory<>("avarageRating"));
-            crudRestaurantView.getTableColumnPrezzoMedio().setCellValueFactory(new PropertyValueFactory<>("avaragePrice"));
-            crudRestaurantView.getTableColumnNumeroDiTelefono().setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-            crudRestaurantView.getTableColumnTotalReview().setCellValueFactory(new PropertyValueFactory<>("totalReviews"));
-            crudRestaurantView.getTableColumnHasCertificateOfExcellence().setCellValueFactory(new PropertyValueFactory<>("hasCertificateOfExcellence"));
-            crudRestaurantView.getTableColumnAddedDate().setCellValueFactory(new PropertyValueFactory<>("addedDate"));
-            crudRestaurantView.getTableColumnLastModificationDate().setCellValueFactory(new PropertyValueFactory<>("lastModificationDate"));
-            crudRestaurantView.getTableColumnIndirizzo().setCellValueFactory(new PropertyValueFactory<>("address"));
-            crudRestaurantView.getTableColumnTipoDiCucina().setCellValueFactory(new PropertyValueFactory<>("typeOfCuisine"));
-            crudRestaurantView.getTableColumnPuntoSuMappa().setCellValueFactory(new PropertyValueFactory<>("point"));
-            crudRestaurantView.getTableColumnImmagini().setCellValueFactory(new PropertyValueFactory<>("images"));
-            // Associare colonne alla tabella
-            crudRestaurantView.getTableView().setItems(data);
+            if (restaurants != null) {
+                final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
+                fillColumnsWithData();
+                // Associare colonne alla tabella
+                crudRestaurantView.getTableView().setItems(data);
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void fillColumnsWithData() {
+        crudRestaurantView.getTableColumnId().setCellValueFactory(new PropertyValueFactory<>("id"));
+        crudRestaurantView.getTableColumnName().setCellValueFactory(new PropertyValueFactory<>("name"));
+        crudRestaurantView.getTableColumnOrarioApertura().setCellValueFactory(new PropertyValueFactory<>("openingTime"));
+        crudRestaurantView.getTableColumnVotoMedio().setCellValueFactory(new PropertyValueFactory<>("avarageRating"));
+        crudRestaurantView.getTableColumnPrezzoMedio().setCellValueFactory(new PropertyValueFactory<>("avaragePrice"));
+        crudRestaurantView.getTableColumnNumeroDiTelefono().setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        crudRestaurantView.getTableColumnTotalReview().setCellValueFactory(new PropertyValueFactory<>("totalReviews"));
+        crudRestaurantView.getTableColumnHasCertificateOfExcellence().setCellValueFactory(new PropertyValueFactory<>("hasCertificateOfExcellence"));
+        crudRestaurantView.getTableColumnAddedDate().setCellValueFactory(new PropertyValueFactory<>("addedDate"));
+        crudRestaurantView.getTableColumnLastModificationDate().setCellValueFactory(new PropertyValueFactory<>("lastModificationDate"));
+        crudRestaurantView.getTableColumnIndirizzo().setCellValueFactory(new PropertyValueFactory<>("address"));
+        crudRestaurantView.getTableColumnTipoDiCucina().setCellValueFactory(new PropertyValueFactory<>("typeOfCuisine"));
+        crudRestaurantView.getTableColumnPuntoSuMappa().setCellValueFactory(new PropertyValueFactory<>("point"));
+        crudRestaurantView.getTableColumnImmagini().setCellValueFactory(new PropertyValueFactory<>("images"));
     }
 }

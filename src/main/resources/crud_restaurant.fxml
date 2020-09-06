@@ -81,5 +81,7 @@
     <ComboBox fx:id="comboBoxOrarioAperturaSerale" layoutX="155.0" layoutY="444.0" prefHeight="26.0" prefWidth="101.0"/>
     <ComboBox fx:id="comboBoxOrarioChiusuraSerale" layoutX="261.0" layoutY="444.0" prefHeight="26.0" prefWidth="101.0"/>
     <Label layoutX="19.0" layoutY="449.0" text="Orario serale"/>
-    <Button fx:id="buttonMostraAltro" layoutX="541.0" layoutY="422.0" mnemonicParsing="false" text="Mostra altro"/>
+    <Button fx:id="buttonMostraAvanti" layoutX="728.0" layoutY="421.0" mnemonicParsing="false" text="Mostra avanti"/>
+    <Button fx:id="buttonMostraIndietro" layoutX="586.0" layoutY="422.0" mnemonicParsing="false"
+            text="Mostra indietro"/>
 </AnchorPane>

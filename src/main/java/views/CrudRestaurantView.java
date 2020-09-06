@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -100,7 +99,9 @@ public class CrudRestaurantView implements Initializable {
     @FXML
     private ComboBox<String> comboBoxOrarioChiusuraSerale;
     @FXML
-    private Button buttonMostraAltro;
+    private Button buttonMostraAvanti;
+    @FXML
+    private Button buttonMostraIndietro;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -111,16 +112,17 @@ public class CrudRestaurantView implements Initializable {
         crudRestaurantController.setListenerOn(buttonConferma);
         crudRestaurantController.setListenerOn(buttonAiuto);
         crudRestaurantController.setListenerOn(buttonCaricaFoto);
-        crudRestaurantController.setListenerOn(buttonMostraAltro);
-        try {
-            crudRestaurantController.setViewsAsDefault();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        crudRestaurantController.setListenerOn(buttonMostraAvanti);
+        crudRestaurantController.setListenerOn(buttonMostraIndietro);
+        crudRestaurantController.setViewsAsDefault();
     }
 
-    public Button getButtonMostraAltro() {
-        return buttonMostraAltro;
+    public Button getButtonMostraIndietro() {
+        return buttonMostraIndietro;
+    }
+
+    public Button getButtonMostraAvanti() {
+        return buttonMostraAvanti;
     }
 
     public TableColumn<Object, String> getTableColumnImmagini() {
