@@ -15,5 +15,5 @@ public interface RestaurantDAO {
 
     boolean delete(Restaurant restaurant) throws IOException, InterruptedException;
 
-    boolean update(Restaurant restaurant);
+    boolean update(Restaurant restaurant) throws IOException, InterruptedException;
 }

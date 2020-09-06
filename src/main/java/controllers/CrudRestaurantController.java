@@ -406,9 +406,9 @@ public class CrudRestaurantController {
                 showAlertDialog("Riempire tutti i campi");
             } else {
                 if (UserInputChecker.isValidTelephoneNumber(telephoneNumber)) {
-                    if (UserInputChecker.isValidNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (UserInputChecker.isValidNumberGreaterOrEqualToZero(numeroCivico)) {
-                            if (UserInputChecker.isValidNumberGreaterOrEqualToZero(cap)) {
+                    if (UserInputChecker.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                        if (UserInputChecker.isNumberGreaterOrEqualToZero(numeroCivico)) {
+                            if (UserInputChecker.isNumberGreaterOrEqualToZero(cap)) {
                                 if (UserInputChecker.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
                                     if (UserInputChecker.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
                                         Restaurant restaurant = createRestaurantWithFormData();

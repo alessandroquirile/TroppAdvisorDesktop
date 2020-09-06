@@ -129,9 +129,40 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     }
 
     @Override
-    public boolean update(Restaurant restaurant) {
+    public boolean update(Restaurant restaurant) throws IOException, InterruptedException {
         // codice per aggiornare un ristorante su mongodb
-        return true;
+        String URL = "";
+        URL += "/" + restaurant.getId();
+
+        final Map<String, Object> values = new HashMap<>();
+        values.put("name", restaurant.getName());
+        values.put("avarageRating", restaurant.getAvarageRating());
+        values.put("avaragePrice", restaurant.getAvaragePrice());
+        values.put("phoneNumber", restaurant.getPhoneNumber());
+        values.put("address", restaurant.getAddress());
+        values.put("point", restaurant.getPoint());
+        values.put("typeOfCuisine", restaurant.getTypeOfCuisine());
+        values.put("openingTime", restaurant.getOpeningTime());
+
+        // TODO: aggiornare foto e city?
+
+        ObjectMapper objectMapper = getNewObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(values);
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println(response.body()); // dbg
+
+        return response.statusCode() == 200;
     }
 
     private boolean insertRestaurantIntoCity(Restaurant restaurant) throws IOException, InterruptedException {

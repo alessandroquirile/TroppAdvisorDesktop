@@ -19,7 +19,7 @@ public class UserInputChecker {
         }
     }
 
-    public static boolean isValidNumberGreaterOrEqualToZero(String number) {
+    public static boolean isNumberGreaterOrEqualToZero(String number) {
         String numberRegExp = "^[0-9]+$";
         Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);
