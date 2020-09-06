@@ -31,7 +31,27 @@ public class UserInputChecker {
     }
 
     public static boolean isValidOpeningTimeAtEvening(String orarioApertura, String orarioChiusura) {
-        // todo...
-        return true;
+        /*
+        System.out.println(isValidOpeningTimeAtEvening("15:00", "15:00"));
+		System.out.println(isValidOpeningTimeAtEvening("15:00", "15:30"));
+		System.out.println(isValidOpeningTimeAtEvening("16:00", "15:00"));
+		System.out.println(isValidOpeningTimeAtEvening("15:00", "03:00"));
+		System.out.println(isValidOpeningTimeAtEvening("02:00", "03:00"));
+		System.out.println(isValidOpeningTimeAtEvening("03:00", "02:00"));
+		System.out.println(isValidOpeningTimeAtEvening("03:00", "03:00"));
+		System.out.println(isValidOpeningTimeAtEvening("03:00", "03:30"));
+         */
+        int hApertura = Integer.parseInt(orarioApertura.substring(0, 2));
+        int hChiusura = Integer.parseInt(orarioChiusura.substring(0, 2));
+        if (hApertura >= 15 && hApertura <= 23) {
+            if (hChiusura >= 15 && hChiusura <= 23) {
+                return isValidOpeningTimeAtMorning(orarioApertura, orarioChiusura);
+            } else {
+                // Tra 00 e le 03
+                return !isValidOpeningTimeAtMorning(orarioApertura, orarioChiusura);
+            }
+        } else {
+            return isValidOpeningTimeAtMorning(orarioApertura, orarioChiusura);
+        }
     }
 }

@@ -89,31 +89,45 @@ public class CrudRestaurantController {
 
     private void buttonConfermaClicked() {
         crudRestaurantView.getButtonConferma().setOnAction(event -> {
+            String telephoneNumber = crudRestaurantView.getTextFieldNumeroDiTelefono().getText();
+            String prezzoMedio = crudRestaurantView.getTextFieldPrezzoMedio().getText();
+            String numeroCivico = crudRestaurantView.getTxtFieldNumeroCivico().getText();
+            String cap = crudRestaurantView.getTextFieldCAP().getText();
+            String orarioAperturaMattutina = crudRestaurantView.getComboBoxOrarioAperturaMattutina().getValue();
+            String orarioChiusuraMattutina = crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue();
+            String orarioAperturaSerale = crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue();
+            String orarioChiusuraSerale = crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
             // nome, strada, civico, provincia, cap, città, prezzo medio, numero di telefono, foto, tipo di cucina, orario
             if (formHasSomeEmptyFields()) {
                 showAlertDialog("Riempire tutti i campi");
             } else {
-                if (UserInputChecker.isValidTelephoneNumber(crudRestaurantView.getTextFieldNumeroDiTelefono().getText())) {
-                    if (UserInputChecker.isValidNumberGreaterOrEqualToZero(crudRestaurantView.getTextFieldPrezzoMedio().getText())) {
-                        if (UserInputChecker.isValidNumberGreaterOrEqualToZero(crudRestaurantView.getTxtFieldNumeroCivico().getText())) {
-                            // Controllo sull'orario di chiusura post quello di apertura?
-                            if (UserInputChecker.isValidOpeningTimeAtMorning(crudRestaurantView.getComboBoxOrarioAperturaMattutina().getValue(),
-                                    crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue())) {
-                                Restaurant restaurant = createRestaurantWithFormData();
-                                // System.out.println("DBG: " + restaurant.toString()); // dbg
-                                daoFactory = DAOFactory.getInstance();
-                                restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                try {
-                                    if (!restaurantDAO.add(restaurant)) {
-                                        showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                if (UserInputChecker.isValidTelephoneNumber(telephoneNumber)) {
+                    if (UserInputChecker.isValidNumberGreaterOrEqualToZero(prezzoMedio)) {
+                        if (UserInputChecker.isValidNumberGreaterOrEqualToZero(numeroCivico)) {
+                            if (UserInputChecker.isValidNumberGreaterOrEqualToZero(cap)) {
+                                if (UserInputChecker.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
+                                    if (UserInputChecker.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
+                                        Restaurant restaurant = createRestaurantWithFormData();
+                                        // System.out.println("DBG: " + restaurant.toString()); // dbg
+                                        daoFactory = DAOFactory.getInstance();
+                                        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                        try {
+                                            if (!restaurantDAO.add(restaurant)) {
+                                                showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                                            } else {
+                                                System.out.println("Ristorante inserito correttamente");
+                                            }
+                                        } catch (IOException | InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
                                     } else {
-                                        System.out.println("Ristorante inserito correttamente");
+                                        showAlertDialog("Orario serale non valido");
                                     }
-                                } catch (IOException | InterruptedException e) {
-                                    e.printStackTrace();
+                                } else {
+                                    showAlertDialog("Orario mattutino non valido");
                                 }
                             } else {
-                                showAlertDialog("Orario mattutino non valido");
+                                showAlertDialog("CAP non valido");
                             }
                         } else {
                             showAlertDialog("Numero civico non valido");
@@ -345,8 +359,8 @@ public class CrudRestaurantController {
     private void initializeComboBoxOrariSerali() {
         ObservableList<String> orariSerali = FXCollections.observableArrayList(
                 "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00",
-                "19:30", "20:00", "20:30", "21:00", "21.30", "22:00", "22:30",
-                "23:00", "23.30", "00:00", "00:30", "01:00", "01:30", "02:00", "02.30", "03:00");
+                "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30",
+                "23:00", "23:30", "00:00", "00:30", "01:00", "01:30", "02:00", "02:30", "03:00");
         crudRestaurantView.getComboBoxOrarioAperturaSerale().setItems(orariSerali);
         crudRestaurantView.getComboBoxOrarioChiusuraSerale().setItems(orariSerali);
     }
