@@ -11,10 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -74,6 +71,92 @@ public class CrudRestaurantController {
                 buttonMostraIndietroClicked();
                 break;
         }
+    }
+
+    public void setListenerOnTableView(TableView<Object> tableView) {
+        switch (tableView.getId()) {
+            case "tableView":
+                tableViewClicked();
+                break;
+        }
+    }
+
+    private void tableViewClicked() {
+        crudRestaurantView.getTableView().setOnMouseClicked(event -> {
+            //System.out.println("Cliccata tabella");
+            Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
+            //System.out.println(clickedRestaurant);
+            if (clickedRestaurant != null) {
+                // è un record
+                //System.out.println(clickedRestaurant.toString()); // dbg
+                crudRestaurantView.getListViewFotoPath().getItems().clear();
+                clearTypeOfCuisineCheckBox();
+                populateTextFieldWithClickedRestaurant(clickedRestaurant);
+            }
+        });
+    }
+
+    private void populateTextFieldWithClickedRestaurant(Restaurant restaurant) {
+        crudRestaurantView.getTextFieldNome().setText(restaurant.getName());
+        crudRestaurantView.getTextFieldNumeroDiTelefono().setText(restaurant.getPhoneNumber());
+        setProperAddressTypeIntoAddressTypeChoiceBox(restaurant);
+        crudRestaurantView.getTextFieldStrada().setText(restaurant.getStreet());
+        crudRestaurantView.getTxtFieldNumeroCivico().setText(restaurant.getHouseNumber());
+        crudRestaurantView.getTextFieldCittà().setText(restaurant.getCity());
+        crudRestaurantView.getTextFieldCAP().setText(restaurant.getPostalCode());
+        crudRestaurantView.getTextFieldProvincia().setText(restaurant.getProvince());
+        crudRestaurantView.getTextFieldPrezzoMedio().setText(String.valueOf(restaurant.getAvaragePrice()));
+        crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setDisable(!restaurant.isHasCertificateOfExcellence());
+        setProperOpeningHourIntoCheckBox(restaurant);
+        setProperImagesIntoListViewPhotoPath(restaurant);
+        setProperTypeOfCuisineIntoListView(restaurant);
+    }
+
+    private void setProperAddressTypeIntoAddressTypeChoiceBox(Restaurant restaurant) {
+        if (restaurant.getTypeOfAddress().equals("Via"))
+            crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(0);
+        if (restaurant.getTypeOfAddress().equals("Vie"))
+            crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(1);
+        if (restaurant.getTypeOfAddress().equals("Vico"))
+            crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(2);
+        if (restaurant.getTypeOfAddress().equals("Piazza"))
+            crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(3);
+        if (restaurant.getTypeOfAddress().equals("Largo"))
+            crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(4);
+    }
+
+    private void setProperImagesIntoListViewPhotoPath(Restaurant restaurant) {
+        if (restaurant.getImages() != null) {
+            for (String image : restaurant.getImages()) {
+                crudRestaurantView.getListViewFotoPath().getItems().add(image);
+            }
+        }
+    }
+
+    private void setProperTypeOfCuisineIntoListView(Restaurant restaurant) {
+        List<String> typeOfCuisine = restaurant.getTypeOfCuisine();
+        for (String type : typeOfCuisine) {
+            for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems()) {
+                if (tableSettersGetters.getName().equals(type))
+                    tableSettersGetters.getCheckBox().setSelected(true);
+            }
+        }
+    }
+
+    private void setProperOpeningHourIntoCheckBox(Restaurant restaurant) {
+        String aperturaMattutina = restaurant.getOpeningTime().substring(0, 5);
+        String chiusuraMattutina = restaurant.getOpeningTime().substring(8, 13);
+        String aperturaSerale = restaurant.getOpeningTime().substring(14, 19);
+        String chiusuraSerale = restaurant.getOpeningTime().substring(21, 27);
+        crudRestaurantView.getComboBoxOrarioAperturaMattutina().getSelectionModel().select(aperturaMattutina);
+        crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getSelectionModel().select(chiusuraMattutina);
+        crudRestaurantView.getComboBoxOrarioAperturaSerale().getSelectionModel().select(aperturaSerale);
+        crudRestaurantView.getComboBoxOrarioChiusuraSerale().getSelectionModel().select(chiusuraSerale);
+    }
+
+    private void clearTypeOfCuisineCheckBox() {
+        for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems())
+            tableSettersGetters.getCheckBox().setSelected(false);
     }
 
     private void buttonMostraAvantiClicked() {

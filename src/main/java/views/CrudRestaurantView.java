@@ -114,6 +114,7 @@ public class CrudRestaurantView implements Initializable {
         crudRestaurantController.setListenerOn(buttonCaricaFoto);
         crudRestaurantController.setListenerOn(buttonMostraAvanti);
         crudRestaurantController.setListenerOn(buttonMostraIndietro);
+        crudRestaurantController.setListenerOnTableView(tableView);
         crudRestaurantController.setViewsAsDefault();
     }
 
