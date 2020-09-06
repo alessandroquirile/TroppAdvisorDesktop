@@ -13,6 +13,8 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +23,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,6 +72,38 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<Restaurant> retrieve(int page, int size) throws IOException, InterruptedException {
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/find-all/?";
+        URL += "page=" + page + "&size=" + size;
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .GET()
+                .header("accept", "application/json")
+                .uri(URI.create(URL))
+                .build();
+
+        HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        JSONObject jsonObject = new JSONObject(httpResponses.body());
+        JSONArray jsonArray = jsonObject.getJSONArray("content");
+        List<Restaurant> restaurants = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            Restaurant restaurant = objectMapper.readValue(jsonArray.get(i).toString(), Restaurant.class);
+            restaurants.add(restaurant);
+        }
+
+        // dbg
+        /*for (Restaurant restaurant : restaurants) {
+            System.out.println(restaurant.getName());
+        }*/
+        return restaurants;
     }
 
     @Override

@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -80,7 +81,11 @@ public class CrudRestaurantView implements Initializable {
         crudRestaurantController.setListenerOn(buttonConferma);
         crudRestaurantController.setListenerOn(buttonAiuto);
         crudRestaurantController.setListenerOn(buttonCaricaFoto);
-        crudRestaurantController.setViewsAsDefault();
+        try {
+            crudRestaurantController.setViewsAsDefault();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public AnchorPane getRootPane() {

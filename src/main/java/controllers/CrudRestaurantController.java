@@ -291,14 +291,20 @@ public class CrudRestaurantController {
     }
 
     private void buttonAnnullaClicked() {
-        crudRestaurantView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
+        crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
+            try {
+                setViewsAsDefault();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void buttonIndietroClicked() {
         crudRestaurantView.getButtonIndietro().setOnAction(event -> showSelectTypeStage());
     }
 
-    public void setViewsAsDefault() {
+    public void setViewsAsDefault() throws IOException, InterruptedException {
         crudRestaurantView.getButtonIndietro().setDisable(false);
         crudRestaurantView.getButtonInserisci().setDisable(false);
         crudRestaurantView.getButtonModifica().setDisable(true);

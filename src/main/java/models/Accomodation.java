@@ -17,6 +17,7 @@ public abstract class Accomodation implements Serializable {
     protected Address address;
     protected Point point;
     protected List<Review> reviews;
+    //protected Integer totalReviews;
     protected List<String> images;
     protected boolean hasCertificateOfExcellence;
     protected String addedDate;
