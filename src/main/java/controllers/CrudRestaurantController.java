@@ -36,9 +36,9 @@ import java.util.Optional;
 public class CrudRestaurantController extends Controller {
 
     private final CrudRestaurantView crudRestaurantView;
+    private final int currentSize = 100;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
-    private final int currentSize = 100;
     private int currentPage = 0;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {

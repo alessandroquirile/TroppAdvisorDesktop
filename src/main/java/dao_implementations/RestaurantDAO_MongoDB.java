@@ -124,7 +124,8 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 HttpResponse.BodyHandlers.ofString());
 
         //System.out.println(response.body()); // dbg
-        // TODO: Eliminare le foto
+        // TODO: Eliminare le foto...
+
         return response.statusCode() == 200;
     }
 
@@ -165,10 +166,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
 
         return response.statusCode() == 200;
-    }
-
-    private String deleteImagesFromS3(File image) {
-        return null;
     }
 
     private boolean insertRestaurantIntoCity(Restaurant restaurant) throws IOException, InterruptedException {

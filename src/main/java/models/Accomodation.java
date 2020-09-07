@@ -67,16 +67,16 @@ public abstract class Accomodation implements Serializable {
         return address;
     }
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     public Integer getTotalReviews() {
         return totalReviews;
     }
 
     public void setTotalReviews(Integer totalReviews) {
         this.totalReviews = totalReviews;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public Point getPoint() {
