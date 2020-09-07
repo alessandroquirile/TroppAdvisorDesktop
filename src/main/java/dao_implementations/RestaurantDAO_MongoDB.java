@@ -109,7 +109,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     @Override
     public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
         // codice per eliminare un ristorante su mongodb
-        // TODO: Eliminare le foto
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
         URL += "/" + restaurant.getId();
 
@@ -125,6 +124,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 HttpResponse.BodyHandlers.ofString());
 
         //System.out.println(response.body()); // dbg
+        // TODO: Eliminare le foto
         return response.statusCode() == 200;
     }
 
@@ -147,8 +147,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
         // TODO: aggiornare foto e city?
 
-        // TODO: ancellare foto vecchie e inserire le nuove
-
         ObjectMapper objectMapper = getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
@@ -167,6 +165,10 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
 
         return response.statusCode() == 200;
+    }
+
+    private String deleteImagesFromS3(File image) {
+        return null;
     }
 
     private boolean insertRestaurantIntoCity(Restaurant restaurant) throws IOException, InterruptedException {

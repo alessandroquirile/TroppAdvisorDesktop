@@ -171,7 +171,7 @@ public class CrudRestaurantController {
             restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
             Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
             if (clickedRestaurant != null) {
-                if (areYouSureDialog(clickedRestaurant)) {
+                if (areYouSureToDelete(clickedRestaurant)) {
                     try {
                         if (!restaurantDAO.delete(clickedRestaurant))
                             showAlertDialog("Qualcosa è andato storto durante la cancellazione");
@@ -185,7 +185,7 @@ public class CrudRestaurantController {
         });
     }
 
-    private boolean areYouSureDialog(Restaurant restaurant) {
+    private boolean areYouSureToDelete(Restaurant restaurant) {
         Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
         Alert.AlertType alertType = Alert.AlertType.CONFIRMATION;
         Alert alert = new Alert(alertType, "");
