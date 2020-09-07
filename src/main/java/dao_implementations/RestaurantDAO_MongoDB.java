@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -93,8 +94,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         JSONArray jsonArray = jsonObject.getJSONArray("content");
         List<Restaurant> restaurants = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ObjectMapper objectMapper = getNewObjectMapper();
             Restaurant restaurant = objectMapper.readValue(jsonArray.get(i).toString(), Restaurant.class);
             restaurants.add(restaurant);
         }
@@ -109,7 +109,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     @Override
     public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
         // codice per eliminare un ristorante su mongodb
-        // TODO: Vanno eliminate anche le foto e la voce in City?
+        // TODO: Eliminare le foto
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
         URL += "/" + restaurant.getId();
 
@@ -147,6 +147,8 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
         // TODO: aggiornare foto e city?
 
+        // TODO: ancellare foto vecchie e inserire le nuove
+
         ObjectMapper objectMapper = getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
@@ -172,7 +174,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 "insert-city-restaurant?";
 
         // restaurant.getCity() NON viola la Legge di Demetra
-        URL += "city=" + restaurant.getCity() + "&nation=Italia" + "&id=" + restaurant.getId();
+        URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&nation=Italia" + "&id=" + restaurant.getId();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
