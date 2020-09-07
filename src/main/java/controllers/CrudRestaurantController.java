@@ -310,7 +310,6 @@ public class CrudRestaurantController {
             if (restaurants != null) {
                 final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
                 fillColumnsWithData();
-                // Associa colonne alla tabella
                 crudRestaurantView.getTableView().setItems(data);
             }
         } catch (IOException | InterruptedException e) {
@@ -343,12 +342,12 @@ public class CrudRestaurantController {
                 crudRestaurantView.getButtonModifica().setDisable(false);
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
                 clearTypeOfCuisineCheckBox();
-                populateTextFieldWithClickedRestaurant(clickedRestaurant);
+                populateTextFieldWithClickedRestaurantData(clickedRestaurant);
             }
         });
     }
 
-    private void populateTextFieldWithClickedRestaurant(Restaurant restaurant) {
+    private void populateTextFieldWithClickedRestaurantData(Restaurant restaurant) {
         crudRestaurantView.getTextFieldNome().setText(restaurant.getName());
         crudRestaurantView.getTextFieldNumeroDiTelefono().setText(restaurant.getPhoneNumber());
         setProperAddressTypeIntoAddressTypeChoiceBox(restaurant);
@@ -360,7 +359,7 @@ public class CrudRestaurantController {
         crudRestaurantView.getTextFieldPrezzoMedio().setText(String.valueOf(restaurant.getAvaragePrice()));
         crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setDisable(!restaurant.isHasCertificateOfExcellence());
         setProperOpeningHourIntoCheckBox(restaurant);
-        setProperImagesIntoListViewPhotoPath(restaurant);
+        setProperImagesIntoListView(restaurant);
         setProperTypeOfCuisineIntoListView(restaurant);
     }
 
@@ -377,7 +376,7 @@ public class CrudRestaurantController {
             crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(4);
     }
 
-    private void setProperImagesIntoListViewPhotoPath(Restaurant restaurant) {
+    private void setProperImagesIntoListView(Restaurant restaurant) {
         if (restaurant.getImages() != null) {
             for (String image : restaurant.getImages()) {
                 crudRestaurantView.getListViewFotoPath().getItems().add(image);
@@ -537,10 +536,10 @@ public class CrudRestaurantController {
     }
 
     private void buttonCaricaClicked() {
-        crudRestaurantView.getButtonCaricaFoto().setOnAction(event -> multiFileSelection());
+        crudRestaurantView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem());
     }
 
-    public void multiFileSelection() {
+    public void multiFileSelectionFromFileSystem() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         FileChooser.ExtensionFilter imageFilter =
@@ -566,20 +565,20 @@ public class CrudRestaurantController {
     private Restaurant createRestaurantWithFormData() {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(crudRestaurantView.getTextFieldNome().getText());
-        restaurant.setAddress(createAddressWithFormData());
+        restaurant.setAddress(getAddressWithFormData());
         restaurant.setAvaragePrice(Integer.parseInt(crudRestaurantView.getTextFieldPrezzoMedio().getText()));
         restaurant.setPhoneNumber(crudRestaurantView.getTextFieldNumeroDiTelefono().getText());
         restaurant.setHasCertificateOfExcellence(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
         restaurant.setImages(crudRestaurantView.getListViewFotoPath().getItems());
-        restaurant.setTypeOfCuisine(createTypeOfCuisineWithFormData());
-        restaurant.setPoint(new Point(Geocoder.reverseGeocoding(createEligibleAddressForGeocoding()).getLat(),
-                Geocoder.reverseGeocoding(createEligibleAddressForGeocoding()).getLng()));
+        restaurant.setTypeOfCuisine(getTypeOfCuisineWithFormData());
+        restaurant.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),
+                Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLng()));
         restaurant.setAddedDate(getCurrentDate());
         restaurant.setOpeningTime(getOpeningTimeWithFormData());
         return restaurant;
     }
 
-    private Address createAddressWithFormData() {
+    private Address getAddressWithFormData() {
         return new Address(
                 crudRestaurantView.getChoiceBoxIndirizzo().getValue(),
                 crudRestaurantView.getTextFieldStrada().getText(),
@@ -589,7 +588,7 @@ public class CrudRestaurantController {
                 crudRestaurantView.getTextFieldCAP().getText());
     }
 
-    private List<String> createTypeOfCuisineWithFormData() {
+    private List<String> getTypeOfCuisineWithFormData() {
         List<String> cuisineSelected = new ArrayList<>();
         for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems()) {
             if (tableSettersGetters.getCheckBox().isSelected())
@@ -598,7 +597,7 @@ public class CrudRestaurantController {
         return cuisineSelected;
     }
 
-    private String createEligibleAddressForGeocoding() {
+    private String getEligibleStringAddressForGeocoding() {
         return crudRestaurantView.getChoiceBoxIndirizzo().getValue() + " " + crudRestaurantView.getTextFieldStrada().getText() + ", " +
                 crudRestaurantView.getTxtFieldNumeroCivico().getText() + ", " + crudRestaurantView.getTextFieldCittà().getText() + ", " + crudRestaurantView.getTextFieldCAP().getText() +
                 ", " + crudRestaurantView.getTextFieldProvincia().getText();
