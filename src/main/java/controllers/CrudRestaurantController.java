@@ -50,6 +50,19 @@ public class CrudRestaurantController {
         }
     }
 
+    public void setListenerOnListView(ListView<String> listViewFotoPath) {
+        if (listViewFotoPath.getId().equals("listViewFotoPath")) {
+            listViewFotoPathClicked();
+        }
+    }
+
+    private void listViewFotoPathClicked() {
+        crudRestaurantView.getListViewFotoPath().setOnMouseClicked(event -> {
+            if (!crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems().isEmpty())
+                crudRestaurantView.getButtonEliminaFotoSelezionata().setDisable(false);
+        });
+    }
+
     public void setListenerOn(Button button) {
         switch (button.getId()) {
             case "buttonIndietro":
@@ -75,6 +88,9 @@ public class CrudRestaurantController {
                 break;
             case "buttonCaricaFoto":
                 buttonCaricaClicked();
+                break;
+            case "buttonEliminaFotoSelezionate":
+                buttonEliminaFotoSelezionataClicked();
                 break;
             case "buttonMostraIndietro":
                 buttonMostraIndietroClicked();
@@ -240,7 +256,9 @@ public class CrudRestaurantController {
         crudRestaurantView.getComboBoxOrarioChiusuraSerale().getSelectionModel().selectFirst();
         crudRestaurantView.getButtonCaricaFoto().setDisable(true);
         crudRestaurantView.getListViewFotoPath().setDisable(true);
+        crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
         crudRestaurantView.getListViewFotoPath().getItems().clear();
+        crudRestaurantView.getButtonEliminaFotoSelezionata().setDisable(true);
         initializeChoiceBoxIndirizzo();
         initializeComboBoxOrariMattutini();
         initializeComboBoxOrariSerali();
@@ -536,6 +554,13 @@ public class CrudRestaurantController {
         } else {
             showAlertDialog("I file selezionati non sono validi");
         }
+    }
+
+    private void buttonEliminaFotoSelezionataClicked() {
+        crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
+            ObservableList<String> photosSelected = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
+            showAlertDialog("Elimina foto selezionata/e " + photosSelected); // dbg
+        });
     }
 
     private Restaurant createRestaurantWithFormData() {

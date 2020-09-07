@@ -102,6 +102,8 @@ public class CrudRestaurantView implements Initializable {
     private Button buttonMostraAvanti;
     @FXML
     private Button buttonMostraIndietro;
+    @FXML
+    private Button buttonEliminaFotoSelezionate;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -116,8 +118,14 @@ public class CrudRestaurantView implements Initializable {
         crudRestaurantController.setListenerOn(buttonCaricaFoto);
         crudRestaurantController.setListenerOn(buttonMostraAvanti);
         crudRestaurantController.setListenerOn(buttonMostraIndietro);
+        crudRestaurantController.setListenerOn(buttonEliminaFotoSelezionate);
         crudRestaurantController.setListenerOnTableView(tableView);
+        crudRestaurantController.setListenerOnListView(listViewFotoPath);
         crudRestaurantController.setViewsAsDefault();
+    }
+
+    public Button getButtonEliminaFotoSelezionata() {
+        return buttonEliminaFotoSelezionate;
     }
 
     public Button getButtonMostraIndietro() {
