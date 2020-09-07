@@ -108,9 +108,57 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
-        // codice per eliminare un ristorante su mongodb
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
-        URL += "/" + restaurant.getId();
+        if (!deleteRestaurantFromCityCollection(restaurant) || !deleteRestaurantImagesFromS3Bucket(restaurant))
+            return false;
+        else {
+            String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
+            URL += "/" + restaurant.getId();
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpRequest httpRequest = HttpRequest
+                    .newBuilder()
+                    .DELETE()
+                    .uri(URI.create(URL))
+                    .header("Content-Type", "application/json")
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(httpRequest,
+                    HttpResponse.BodyHandlers.ofString());
+
+            return response.statusCode() == 200;
+        }
+    }
+
+    private boolean deleteRestaurantImagesFromS3Bucket(Restaurant restaurant) throws IOException, InterruptedException {
+        for (String imageS3Url : restaurant.getImages()) {
+            if (!deleteImage(imageS3Url))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean deleteImage(String imageS3Url) throws IOException, InterruptedException {
+        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/s3/delete-file/?";
+        URL += "url=" + imageS3Url;
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .DELETE()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .build();
+
+        HttpResponse<String> response = httpClient.send(httpRequest,
+                HttpResponse.BodyHandlers.ofString());
+
+        // System.out.println(response.body()); // dbg
+
+        return response.statusCode() == 200;
+    }
+
+    private boolean deleteRestaurantFromCityCollection(Restaurant restaurant) throws IOException, InterruptedException {
+        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-restaurant-by-id/?";
+        URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&id=" + restaurant.getId();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
@@ -124,14 +172,12 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 HttpResponse.BodyHandlers.ofString());
 
         //System.out.println(response.body()); // dbg
-        // TODO: Eliminare le foto...
 
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean update(Restaurant restaurant) throws IOException, InterruptedException {
-        // codice per aggiornare un ristorante su mongodb
         final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update";
 
         final Map<String, Object> values = new HashMap<>();
@@ -146,7 +192,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("certificateOfExcellence", restaurant.isHasCertificateOfExcellence());
         values.put("openingTime", restaurant.getOpeningTime());
 
-        // TODO: aggiornare foto e city?
+        // TODO: aggiornare foto e city...
 
         ObjectMapper objectMapper = getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
@@ -205,7 +251,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     }
 
     private String loadImageOnS3(File image) throws IOException {
-
         final String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/s3/upload-file";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPost request = new HttpPost(URL);
