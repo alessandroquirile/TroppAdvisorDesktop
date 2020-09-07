@@ -452,28 +452,10 @@ public class CrudRestaurantController {
                                         Restaurant restaurant = createRestaurantWithFormData();
                                         daoFactory = DAOFactory.getInstance();
                                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                        try {
-                                            if (crudRestaurantView.getButtonModifica().isDisable()) {
-                                                if (!restaurantDAO.add(restaurant)) {
-                                                    showAlertDialog("Qualcosa è andato storto durante l'inserimento");
-                                                } else {
-                                                    showAlertDialog("Inserimento avvenuto");
-                                                    setViewsAsDefault();
-                                                }
-                                            } else {
-                                                Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
-                                                restaurant.setId(clickedRestaurant.getId());
-                                                restaurant.setReviews(clickedRestaurant.getReviews());
-                                                restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
-                                                if (!restaurantDAO.update(restaurant)) {
-                                                    showAlertDialog("Qualcosa è andato storto durante l'update");
-                                                } else {
-                                                    showAlertDialog("Modifica avvenuta");
-                                                    setViewsAsDefault();
-                                                }
-                                            }
-                                        } catch (IOException | InterruptedException e) {
-                                            e.printStackTrace();
+                                        if (crudRestaurantView.getButtonModifica().isDisable()) {
+                                            doInsert(restaurant);
+                                        } else {
+                                            doUpdate(restaurant);
                                         }
                                     } else {
                                         showAlertDialog("Orario serale non valido");
@@ -495,6 +477,36 @@ public class CrudRestaurantController {
                 }
             }
         });
+    }
+
+    private void doInsert(Restaurant restaurant) {
+        try {
+            if (!restaurantDAO.add(restaurant)) {
+                showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+            } else {
+                showAlertDialog("Inserimento avvenuto");
+                setViewsAsDefault();
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void doUpdate(Restaurant restaurant) {
+        Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
+        restaurant.setId(clickedRestaurant.getId());
+        restaurant.setReviews(clickedRestaurant.getReviews());
+        restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
+        try {
+            if (!restaurantDAO.update(restaurant)) {
+                showAlertDialog("Qualcosa è andato storto durante l'update");
+            } else {
+                showAlertDialog("Modifica avvenuta");
+                setViewsAsDefault();
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void buttonAiutoClicked() {
