@@ -1,5 +1,6 @@
 package controllers;
 
+import controllers_utils.CrudDialoger;
 import controllers_utils.TableSettersGetters;
 import controllers_utils.UserInputChecker;
 import dao_interfaces.RestaurantDAO;
@@ -32,7 +33,7 @@ import java.util.Optional;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class CrudRestaurantController {
+public class CrudRestaurantController extends Controller {
 
     private final CrudRestaurantView crudRestaurantView;
     private DAOFactory daoFactory;
@@ -187,10 +188,11 @@ public class CrudRestaurantController {
             restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
             Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
             if (clickedRestaurant != null) {
-                if (areYouSureToDelete(clickedRestaurant)) {
+                if (CrudDialoger.areYouSureToDelete(this, clickedRestaurant.getName())) {
                     try {
                         if (!restaurantDAO.delete(clickedRestaurant))
-                            showAlertDialog("Qualcosa è andato storto durante la cancellazione");
+                            CrudDialoger.showAlertDialog(this,
+                                    "Qualcosa è andato storto durante la cancellazione");
                         else
                             setViewsAsDefault();
                     } catch (IOException | InterruptedException e) {
@@ -199,24 +201,6 @@ public class CrudRestaurantController {
                 }
             }
         });
-    }
-
-    private boolean areYouSureToDelete(Restaurant restaurant) {
-        Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
-        Alert.AlertType alertType = Alert.AlertType.CONFIRMATION;
-        Alert alert = new Alert(alertType, "");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(stage);
-        alert.setTitle("Attenzione");
-        alert.getDialogPane().setHeaderText("Sei sicuro di voler cancellare " + restaurant.getName() + " ?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                alert.close();
-                return true;
-            }
-        }
-        return false;
     }
 
     public void setViewsAsDefault() {
@@ -441,7 +425,7 @@ public class CrudRestaurantController {
             String orarioAperturaSerale = crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue();
             String orarioChiusuraSerale = crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
             if (formHasSomeEmptyFields()) {
-                showAlertDialog("Riempire tutti i campi");
+                CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
             } else {
                 if (UserInputChecker.isValidTelephoneNumber(telephoneNumber)) {
                     if (UserInputChecker.isNumberGreaterOrEqualToZero(prezzoMedio)) {
@@ -458,22 +442,22 @@ public class CrudRestaurantController {
                                             doUpdate(restaurant);
                                         }
                                     } else {
-                                        showAlertDialog("Orario serale non valido");
+                                        CrudDialoger.showAlertDialog(this, "Orario serale non valido");
                                     }
                                 } else {
-                                    showAlertDialog("Orario mattutino non valido");
+                                    CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
                                 }
                             } else {
-                                showAlertDialog("CAP non valido");
+                                CrudDialoger.showAlertDialog(this, "CAP non valido");
                             }
                         } else {
-                            showAlertDialog("Numero civico non valido");
+                            CrudDialoger.showAlertDialog(this, "Numero civico non valido");
                         }
                     } else {
-                        showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                        CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
                     }
                 } else {
-                    showAlertDialog("Numero di telefono non valido");
+                    CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                 }
             }
         });
@@ -482,9 +466,9 @@ public class CrudRestaurantController {
     private void doInsert(Restaurant restaurant) {
         try {
             if (!restaurantDAO.add(restaurant)) {
-                showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'inserimento");
             } else {
-                showAlertDialog("Inserimento avvenuto");
+                CrudDialoger.showAlertDialog(this, "Inserimento avvenuto");
                 setViewsAsDefault();
             }
         } catch (IOException | InterruptedException e) {
@@ -499,9 +483,9 @@ public class CrudRestaurantController {
         restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
         try {
             if (!restaurantDAO.update(restaurant)) {
-                showAlertDialog("Qualcosa è andato storto durante l'update");
+                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'update");
             } else {
-                showAlertDialog("Modifica avvenuta");
+                CrudDialoger.showAlertDialog(this, "Modifica avvenuta");
                 setViewsAsDefault();
             }
         } catch (IOException | InterruptedException e) {
@@ -531,7 +515,7 @@ public class CrudRestaurantController {
         }
     }
 
-    private void showAlertDialog(String alertMessage) {
+    /*private void showAlertDialog(String alertMessage) {
         Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
         Alert.AlertType alertType = Alert.AlertType.INFORMATION;
         Alert alert = new Alert(alertType, "");
@@ -545,7 +529,7 @@ public class CrudRestaurantController {
                 alert.close();
             }
         }
-    }
+    }*/
 
     private void buttonCaricaClicked() {
         crudRestaurantView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem());
@@ -563,14 +547,14 @@ public class CrudRestaurantController {
                 crudRestaurantView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
             }
         } else {
-            showAlertDialog("I file selezionati non sono validi");
+            CrudDialoger.showAlertDialog(this, "I file selezionati non sono validi");
         }
     }
 
     private void buttonEliminaFotoSelezionataClicked() {
         crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
             ObservableList<String> photosSelected = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
-            showAlertDialog("Elimina foto selezionata/e " + photosSelected); // dbg
+            CrudDialoger.showAlertDialog(this, "Elimina foto selezionata/e " + photosSelected); // dbg
         });
     }
 
@@ -644,5 +628,14 @@ public class CrudRestaurantController {
 
     private void buttonAnnullaClicked() {
         crudRestaurantView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
+    }
+
+    public CrudRestaurantView getCrudRestaurantView() {
+        return crudRestaurantView;
+    }
+
+    @Override
+    public Stage getStage() {
+        return (Stage) this.getCrudRestaurantView().getRootPane().getScene().getWindow();
     }
 }

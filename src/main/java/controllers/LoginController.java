@@ -1,30 +1,32 @@
 package controllers;
 
+import controllers_utils.CrudDialoger;
 import controllers_utils.UserInputChecker;
 import dao_interfaces.AccountDAO;
 import factories.DAOFactory;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Account;
 import utils.ConfigFileReader;
 import views.LoginView;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class LoginController {
+public class LoginController extends Controller {
     private final LoginView loginView;
 
     public LoginController(LoginView loginView) {
         this.loginView = loginView;
+    }
+
+    @Override
+    public Stage getStage() {
+        return (Stage) this.loginView.getRootPane().getScene().getWindow().getScene().getWindow();
     }
 
     public void setListenerOn(Button buttonLogin) {
@@ -46,7 +48,7 @@ public class LoginController {
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                     try {
                         if (!accountDAO.login(account)) {
-                            showAlertDialog("Qualcosa è andato storto durante il login");
+                            CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante il login");
                         } else {
                             loadSelectTypeScene();
                         }
@@ -54,28 +56,12 @@ public class LoginController {
                         e.printStackTrace();
                     }
                 } else {
-                    showAlertDialog("Pattern email non valido");
+                    CrudDialoger.showAlertDialog(this, "Pattern email non valido");
                 }
             } else {
-                showAlertDialog("Riempi tutti i campi");
+                CrudDialoger.showAlertDialog(this, "Riempire tutti i campi");
             }
         });
-    }
-
-    private void showAlertDialog(String alertMessage) {
-        Stage stage = (Stage) loginView.getRootPane().getScene().getWindow();
-        Alert.AlertType alertType = Alert.AlertType.ERROR;
-        Alert alert = new Alert(alertType, "");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(stage);
-        alert.setTitle("Attenzione");
-        alert.getDialogPane().setHeaderText(alertMessage);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                alert.close();
-            }
-        }
     }
 
     public void loadSelectTypeScene() throws IOException {

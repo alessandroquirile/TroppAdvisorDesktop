@@ -17,11 +17,16 @@ import java.io.IOException;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class SelectCollectionTypeController {
+public class SelectCollectionTypeController extends Controller {
     private final SelectCollectionTypeView selectCollectionTypeView;
 
     public SelectCollectionTypeController(SelectCollectionTypeView selectCollectionTypeView) {
         this.selectCollectionTypeView = selectCollectionTypeView;
+    }
+
+    @Override
+    public Stage getStage() {
+        return (Stage) this.selectCollectionTypeView.getRootPane().getScene().getWindow();
     }
 
     public void setListenerOnButton(Button buttonVai) {
