@@ -108,6 +108,7 @@ public class CrudRestaurantView implements Initializable {
         CrudRestaurantController crudRestaurantController = new CrudRestaurantController(this);
         crudRestaurantController.setListenerOn(buttonInserisci);
         crudRestaurantController.setListenerOn(buttonElimina);
+        crudRestaurantController.setListenerOn(buttonModifica);
         crudRestaurantController.setListenerOn(buttonAnnulla);
         crudRestaurantController.setListenerOn(buttonIndietro);
         crudRestaurantController.setListenerOn(buttonConferma);

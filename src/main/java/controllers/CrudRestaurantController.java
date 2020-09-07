@@ -58,6 +58,9 @@ public class CrudRestaurantController {
             case "buttonInserisci":
                 buttonInserisciClicked();
                 break;
+            case "buttonModifica":
+                buttonModificaClicked();
+                break;
             case "buttonElimina":
                 buttonEliminaClicked();
                 break;
@@ -143,6 +146,23 @@ public class CrudRestaurantController {
         crudRestaurantView.getButtonInserisci().setDisable(true);
         crudRestaurantView.getButtonModifica().setDisable(true);
         crudRestaurantView.getButtonElimina().setDisable(true);
+    }
+
+    public void buttonModificaClicked() {
+        crudRestaurantView.getButtonModifica().setOnAction(event -> {
+            crudRestaurantView.getButtonInserisci().setDisable(true);
+            crudRestaurantView.getButtonConferma().setDisable(false);
+            crudRestaurantView.getButtonAnnulla().setDisable(false);
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(false);
+            crudRestaurantView.getButtonCaricaFoto().setDisable(false);
+            crudRestaurantView.getListViewFotoPath().setDisable(false);
+            crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
+        });
     }
 
     public void buttonEliminaClicked() {
@@ -302,6 +322,7 @@ public class CrudRestaurantController {
             Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
             if (clickedRestaurant != null) {
                 crudRestaurantView.getButtonElimina().setDisable(false);
+                crudRestaurantView.getButtonModifica().setDisable(false);
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
                 clearTypeOfCuisineCheckBox();
                 populateTextFieldWithClickedRestaurant(clickedRestaurant);
@@ -360,7 +381,7 @@ public class CrudRestaurantController {
         String aperturaMattutina = restaurant.getOpeningTime().substring(0, 5);
         String chiusuraMattutina = restaurant.getOpeningTime().substring(8, 13);
         String aperturaSerale = restaurant.getOpeningTime().substring(14, 19);
-        String chiusuraSerale = restaurant.getOpeningTime().substring(21, 27);
+        String chiusuraSerale = restaurant.getOpeningTime().substring(22, 27);
         crudRestaurantView.getComboBoxOrarioAperturaMattutina().getSelectionModel().select(aperturaMattutina);
         crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getSelectionModel().select(chiusuraMattutina);
         crudRestaurantView.getComboBoxOrarioAperturaSerale().getSelectionModel().select(aperturaSerale);
@@ -415,10 +436,24 @@ public class CrudRestaurantController {
                                         daoFactory = DAOFactory.getInstance();
                                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
                                         try {
-                                            if (!restaurantDAO.add(restaurant)) {
-                                                showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                                            if (crudRestaurantView.getButtonModifica().isDisable()) {
+                                                if (!restaurantDAO.add(restaurant)) {
+                                                    showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                                                } else {
+                                                    showAlertDialog("Inserimento avvenuto");
+                                                    setViewsAsDefault();
+                                                }
                                             } else {
-                                                System.out.println("Ristorante inserito correttamente");
+                                                Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
+                                                restaurant.setId(clickedRestaurant.getId());
+                                                restaurant.setReviews(clickedRestaurant.getReviews());
+                                                restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
+                                                if (!restaurantDAO.update(restaurant)) {
+                                                    showAlertDialog("Qualcosa è andato storto durante l'update");
+                                                } else {
+                                                    showAlertDialog("Modifica avvenuta");
+                                                    setViewsAsDefault();
+                                                }
                                             }
                                         } catch (IOException | InterruptedException e) {
                                             e.printStackTrace();

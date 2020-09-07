@@ -131,10 +131,10 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     @Override
     public boolean update(Restaurant restaurant) throws IOException, InterruptedException {
         // codice per aggiornare un ristorante su mongodb
-        String URL = "";
-        URL += "/" + restaurant.getId();
+        final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update";
 
         final Map<String, Object> values = new HashMap<>();
+        values.put("id", restaurant.getId());
         values.put("name", restaurant.getName());
         values.put("avarageRating", restaurant.getAvarageRating());
         values.put("avaragePrice", restaurant.getAvaragePrice());
@@ -142,6 +142,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("address", restaurant.getAddress());
         values.put("point", restaurant.getPoint());
         values.put("typeOfCuisine", restaurant.getTypeOfCuisine());
+        values.put("certificateOfExcellence", restaurant.isHasCertificateOfExcellence());
         values.put("openingTime", restaurant.getOpeningTime());
 
         // TODO: aggiornare foto e city?
@@ -160,7 +161,8 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println(response.body()); // dbg
+        //System.out.println(restaurant + "\n");
+        //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
 
         return response.statusCode() == 200;
     }
