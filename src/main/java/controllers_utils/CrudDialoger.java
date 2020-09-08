@@ -45,4 +45,22 @@ public abstract class CrudDialoger {
         }
         return false;
     }
+
+    public static void showHelpDialog(Controller controller) {
+        Stage stage = controller.getStage();
+        Alert.AlertType alertType = Alert.AlertType.INFORMATION;
+        Alert alert = new Alert(alertType, "");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        alert.setTitle("Come usare l'interfaccia?");
+        alert.getDialogPane().setHeaderText("Seleziona un'operazione CRUD in alto a sinistra " +
+                "e poi conferma la tua scelta dopo aver inserito i dati nel form");
+        alert.getDialogPane().setContentText("Per aggiornare o eliminare un record già esistente, selezionarlo dapprima dalla tabella");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent()) {
+            if (result.get() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+    }
 }

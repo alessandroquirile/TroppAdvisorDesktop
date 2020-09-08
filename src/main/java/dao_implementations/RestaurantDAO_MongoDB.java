@@ -1,29 +1,23 @@
 package dao_implementations;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controllers_utils.ObjectMapperCreator;
+import dao_interfaces.CityDAO;
+import dao_interfaces.ImageDAO;
 import dao_interfaces.RestaurantDAO;
+import factories.DAOFactory;
 import models.Restaurant;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.ConfigFileReader;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +27,10 @@ import java.util.Map;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class RestaurantDAO_MongoDB implements RestaurantDAO {
+    DAOFactory daoFactory;
+    ImageDAO imageDAO;
+    CityDAO cityDAO;
+
     @Override
     public boolean add(Restaurant restaurant) throws IOException, InterruptedException {
         final String URL = getUrlInsertFor(restaurant);
@@ -47,7 +45,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("typeOfCuisine", restaurant.getTypeOfCuisine());
         values.put("openingTime", restaurant.getOpeningTime());
 
-        ObjectMapper objectMapper = getNewObjectMapper();
+        ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -64,12 +62,15 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         if (response.statusCode() == 200) {
             for (String imagePath : restaurant.getImages()) {
                 File file = new File(imagePath);
-                String endpoint = loadImageOnS3(file);
+                daoFactory = DAOFactory.getInstance();
+                imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+                String endpoint = imageDAO.loadFile(file);
                 Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
-                if (!updateRestaurantImage(parsedRestaurant, endpoint))
+                if (!imageDAO.updateRestaurantImage(parsedRestaurant, endpoint))
                     return false;
             }
-            return insertRestaurantIntoCity(getParsedRestaurantFromJson(objectMapper, response));
+            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            return cityDAO.insert(getParsedRestaurantFromJson(objectMapper, response));
         } else {
             return false;
         }
@@ -94,7 +95,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         JSONArray jsonArray = jsonObject.getJSONArray("content");
         List<Restaurant> restaurants = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            ObjectMapper objectMapper = getNewObjectMapper();
+            ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
             Restaurant restaurant = objectMapper.readValue(jsonArray.get(i).toString(), Restaurant.class);
             restaurants.add(restaurant);
         }
@@ -108,7 +109,10 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public boolean delete(Restaurant restaurant) throws IOException, InterruptedException {
-        if (!deleteRestaurantFromCityCollection(restaurant) || !deleteRestaurantImagesFromS3Bucket(restaurant))
+        daoFactory = DAOFactory.getInstance();
+        imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+        cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+        if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllImagesFromRestaurant(restaurant))
             return false;
         else {
             String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
@@ -126,54 +130,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
             return response.statusCode() == 200;
         }
-    }
-
-    private boolean deleteRestaurantImagesFromS3Bucket(Restaurant restaurant) throws IOException, InterruptedException {
-        for (String imageS3Url : restaurant.getImages()) {
-            if (!deleteImage(imageS3Url))
-                return false;
-        }
-        return true;
-    }
-
-    private boolean deleteImage(String imageS3Url) throws IOException, InterruptedException {
-        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/s3/delete-file/?";
-        URL += "url=" + imageS3Url;
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest
-                .newBuilder()
-                .DELETE()
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/json")
-                .build();
-
-        HttpResponse<String> response = httpClient.send(httpRequest,
-                HttpResponse.BodyHandlers.ofString());
-
-        // System.out.println(response.body()); // dbg
-
-        return response.statusCode() == 200;
-    }
-
-    private boolean deleteRestaurantFromCityCollection(Restaurant restaurant) throws IOException, InterruptedException {
-        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-restaurant-by-id/?";
-        URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&id=" + restaurant.getId();
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest
-                .newBuilder()
-                .DELETE()
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/json")
-                .build();
-
-        HttpResponse<String> response = httpClient.send(httpRequest,
-                HttpResponse.BodyHandlers.ofString());
-
-        //System.out.println(response.body()); // dbg
-
-        return response.statusCode() == 200;
     }
 
     @Override
@@ -194,7 +150,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
         // TODO: aggiornare foto e city...
 
-        ObjectMapper objectMapper = getNewObjectMapper();
+        ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -214,29 +170,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         return response.statusCode() == 200;
     }
 
-    private boolean insertRestaurantIntoCity(Restaurant restaurant) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/" +
-                "insert-city-restaurant?";
-
-        // restaurant.getCity() NON viola la Legge di Demetra
-        URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&nation=Italia" + "&id=" + restaurant.getId();
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest
-                .newBuilder()
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString("")) // empty body
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request,
-                HttpResponse.BodyHandlers.ofString());
-
-        //System.out.println("Debugging: " + response.headers() + "\n" + response.body()); // dbg
-
-        return response.statusCode() == 200;
-    }
-
     private String getUrlInsertFor(Restaurant restaurant) {
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/insert?";
         URL = URL.concat("latitude=" + restaurant.getPoint().getX());
@@ -244,54 +177,8 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         return URL;
     }
 
-    private ObjectMapper getNewObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return objectMapper;
-    }
-
-    private String loadImageOnS3(File image) throws IOException {
-        final String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/s3/upload-file";
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        final HttpPost request = new HttpPost(URL);
-        HttpEntity entity = MultipartEntityBuilder.create()
-                .addPart("file", new FileBody(image))
-                .build();
-        request.setEntity(entity);
-        CloseableHttpResponse response = httpClient.execute(request);
-        //StatusLine statusLine = response.getStatusLine();
-        // System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
-        return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8); // response.body
-    }
-
     private Restaurant getParsedRestaurantFromJson(ObjectMapper objectMapper, HttpResponse<String> response) throws IOException {
         return objectMapper.readValue(response.body(), new TypeReference<Restaurant>() {
         });
-    }
-
-    private boolean updateRestaurantImage(Restaurant restaurant, String endpoint) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update-images";
-        URL += "/" + restaurant.getId();
-
-        final Map<String, Object> values = new HashMap<>();
-        values.put("url", endpoint);
-
-        ObjectMapper objectMapper = getNewObjectMapper();
-        String requestBody = objectMapper.writeValueAsString(values);
-
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest
-                .newBuilder()
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/json")
-                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request,
-                HttpResponse.BodyHandlers.ofString());
-
-        //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
-
-        return response.statusCode() == 200;
     }
 }

@@ -3,6 +3,7 @@ package controllers;
 import controllers_utils.CrudDialoger;
 import controllers_utils.TableSettersGetters;
 import controllers_utils.UserInputChecker;
+import dao_interfaces.ImageDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
 import geocoding.Geocoder;
@@ -15,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Address;
 import models.Restaurant;
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
@@ -39,6 +38,7 @@ public class CrudRestaurantController extends Controller {
     private final int currentSize = 100;
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
+    private ImageDAO imageDAO;
     private int currentPage = 0;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
@@ -494,42 +494,8 @@ public class CrudRestaurantController extends Controller {
     }
 
     private void buttonAiutoClicked() {
-        crudRestaurantView.getButtonAiuto().setOnAction(event -> showHelpDialog());
+        crudRestaurantView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog(this));
     }
-
-    private void showHelpDialog() {
-        Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
-        Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-        Alert alert = new Alert(alertType, "");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(stage);
-        alert.setTitle("Come usare l'interfaccia?");
-        alert.getDialogPane().setHeaderText("Seleziona un'operazione CRUD in alto a sinistra " +
-                "e poi conferma la tua scelta dopo aver inserito i dati nel form");
-        alert.getDialogPane().setContentText("Per aggiornare o eliminare un record già esistente, selezionarlo dapprima dalla tabella");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                alert.close();
-            }
-        }
-    }
-
-    /*private void showAlertDialog(String alertMessage) {
-        Stage stage = (Stage) crudRestaurantView.getRootPane().getScene().getWindow();
-        Alert.AlertType alertType = Alert.AlertType.INFORMATION;
-        Alert alert = new Alert(alertType, "");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(stage);
-        alert.setTitle("Attenzione");
-        alert.getDialogPane().setHeaderText(alertMessage);
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                alert.close();
-            }
-        }
-    }*/
 
     private void buttonCaricaClicked() {
         crudRestaurantView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem());
@@ -554,10 +520,20 @@ public class CrudRestaurantController extends Controller {
     private void buttonEliminaFotoSelezionataClicked() {
         crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
             ObservableList<String> imagesSelected = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
-            //CrudDialoger.showAlertDialog(this, "Elimina foto selezionata/e " + imagesSelected); // dbg
             for (String imageSelected : imagesSelected) {
                 if (CrudDialoger.areYouSureToDelete(this, imageSelected)) {
-                    // TODO: Cancellazione
+                    daoFactory = DAOFactory.getInstance();
+                    imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+                    try {
+                        if (!imageDAO.deleteThisImage(imageSelected))
+                            CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante la cancellazione" +
+                                    "di " + imageSelected);
+                        else {
+                            // TODO: Aggiornare il ristorante rimuovendo imageSelected
+                        }
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
