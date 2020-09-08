@@ -28,14 +28,14 @@ public abstract class CrudDialoger {
         }
     }
 
-    public static boolean areYouSureToDelete(Controller controller, String accomodationIdentifier) {
+    public static boolean areYouSureToDelete(Controller controller, String somethingToDelete) {
         Stage stage = controller.getStage();
         Alert.AlertType alertType = Alert.AlertType.CONFIRMATION;
         Alert alert = new Alert(alertType, "");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(stage);
         alert.setTitle("Attenzione");
-        alert.getDialogPane().setHeaderText("Sei sicuro di voler eliminare " + accomodationIdentifier + " ?");
+        alert.getDialogPane().setHeaderText("Sei sicuro di voler eliminare " + somethingToDelete + " ?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
             if (result.get() == ButtonType.OK) {

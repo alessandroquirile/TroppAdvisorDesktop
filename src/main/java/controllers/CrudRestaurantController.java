@@ -553,9 +553,13 @@ public class CrudRestaurantController extends Controller {
 
     private void buttonEliminaFotoSelezionataClicked() {
         crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
-            ObservableList<String> photosSelected = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
-            CrudDialoger.showAlertDialog(this, "Elimina foto selezionata/e " + photosSelected); // dbg
-            // TODO: eliminazione della foto selezionata dal bucket s3
+            ObservableList<String> imagesSelected = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
+            //CrudDialoger.showAlertDialog(this, "Elimina foto selezionata/e " + imagesSelected); // dbg
+            for (String imageSelected : imagesSelected) {
+                if (CrudDialoger.areYouSureToDelete(this, imageSelected)) {
+                    // TODO: Cancellazione
+                }
+            }
         });
     }
 
