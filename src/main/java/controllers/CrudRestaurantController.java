@@ -40,6 +40,8 @@ public class CrudRestaurantController extends Controller {
     private RestaurantDAO restaurantDAO;
     private ImageDAO imageDAO;
     private int currentPage = 0;
+    private ObservableList<String> imagesList;
+    private ObservableList<String> imagesSelectedToDelete;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
@@ -440,6 +442,7 @@ public class CrudRestaurantController extends Controller {
                                             doInsert(restaurant);
                                         } else {
                                             doUpdate(restaurant);
+                                            imagesSelectedToDelete = null;
                                         }
                                     } else {
                                         CrudDialoger.showAlertDialog(this, "Orario serale non valido");
@@ -481,15 +484,55 @@ public class CrudRestaurantController extends Controller {
         restaurant.setId(clickedRestaurant.getId());
         restaurant.setReviews(clickedRestaurant.getReviews());
         restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
-        try {
-            if (!restaurantDAO.update(restaurant)) {
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'update");
-            } else {
-                CrudDialoger.showAlertDialog(this, "Modifica avvenuta");
-                setViewsAsDefault();
+
+
+        CrudDialoger.showAlertDialog(this, "imagesSelectedToDelete: " + imagesSelectedToDelete); // dbg
+
+        System.out.println("Restaurant debug: " + restaurant); // dbg
+
+        for (String image : crudRestaurantView.getListViewFotoPath().getItems()) {
+            //CrudDialoger.showAlertDialog(this, image); // dbg
+            if (image.startsWith("/")) {
+                File file = new File(image);
+                CrudDialoger.showAlertDialog(this, image + " da inserire"); // dbg
+                daoFactory = DAOFactory.getInstance();
+                imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+                String imageHostUrl = null;
+                try {
+                    imageHostUrl = imageDAO.loadFileIntoBucket(file); // carica su s3
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (!restaurantDAO.updateRestaurantSingleImageFromRestaurantCollection(restaurant, imageHostUrl) && imageHostUrl != null)
+                        CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto");
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+        }
+        try {
+            if (!restaurantDAO.update(restaurant))
+                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'update di restaurant");
+            else
+                updateImages(restaurant, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+        setViewsAsDefault();
+    }
+
+    private void updateImages(Restaurant restaurant, ObservableList<String> images) throws IOException, InterruptedException {
+        daoFactory = DAOFactory.getInstance();
+        imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+        if (images != null) {
+            for (String imageUrl : images) {
+                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
+                    CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
+                else
+                    CrudDialoger.showAlertDialog(this, "Modifica effettuata");
+            }
         }
     }
 
@@ -519,23 +562,10 @@ public class CrudRestaurantController extends Controller {
 
     private void buttonEliminaFotoSelezionataClicked() {
         crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
-            ObservableList<String> imagesSelected = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
-            for (String imageSelected : imagesSelected) {
-                if (CrudDialoger.areYouSureToDelete(this, imageSelected)) {
-                    daoFactory = DAOFactory.getInstance();
-                    imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-                    try {
-                        if (!imageDAO.deleteThisImage(imageSelected))
-                            CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante la cancellazione" +
-                                    "di " + imageSelected);
-                        else {
-                            // TODO: Aggiornare il ristorante rimuovendo imageSelected
-                        }
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            imagesList = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
+            ObservableList<String> imagesSelectedToDelete2 = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
+            imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
+            crudRestaurantView.getListViewFotoPath().getItems().removeAll(imagesSelectedToDelete2);
         });
     }
 

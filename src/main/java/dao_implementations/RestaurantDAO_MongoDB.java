@@ -64,9 +64,9 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 File file = new File(imagePath);
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-                String endpoint = imageDAO.loadFile(file);
+                String endpoint = imageDAO.loadFileIntoBucket(file);
                 Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
-                if (!imageDAO.updateRestaurantImage(parsedRestaurant, endpoint))
+                if (!updateRestaurantSingleImageFromRestaurantCollection(parsedRestaurant, endpoint))
                     return false;
             }
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
@@ -112,7 +112,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         daoFactory = DAOFactory.getInstance();
         imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllImagesFromRestaurant(restaurant))
+        if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllImagesFromBucket(restaurant))
             return false;
         else {
             String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
@@ -148,7 +148,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("certificateOfExcellence", restaurant.isHasCertificateOfExcellence());
         values.put("openingTime", restaurant.getOpeningTime());
 
-        // TODO: aggiornare foto e city...
+        // TODO: aggiornare city?
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
@@ -166,6 +166,62 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
         //System.out.println(restaurant + "\n");
         //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
+
+        return response.statusCode() == 200;
+    }
+
+    @Override
+    public boolean deleteRestaurantSingleImageFromRestaurantCollection(Restaurant restaurant, String imageUrl) throws IOException, InterruptedException {
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-image";
+        URL += "/" + restaurant.getId();
+
+        System.out.println(restaurant);
+
+        final Map<String, Object> values = new HashMap<>();
+        values.put("url", imageUrl);
+
+        ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(values);
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
+
+        return response.statusCode() == 200;
+    }
+
+    @Override
+    public boolean updateRestaurantSingleImageFromRestaurantCollection(Restaurant restaurant, String endpoint) throws IOException, InterruptedException {
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update-images";
+        URL += "/" + restaurant.getId();
+
+        final Map<String, Object> values = new HashMap<>();
+        values.put("url", endpoint);
+
+        ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
+        String requestBody = objectMapper.writeValueAsString(values);
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
 
         return response.statusCode() == 200;
     }
