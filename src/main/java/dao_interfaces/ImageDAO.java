@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author Alessandro Quirile, Mauro Telese
  */
 public interface ImageDAO {
-    boolean deleteAllImagesFromBucket(Restaurant restaurant) throws IOException, InterruptedException;
+    boolean deleteAllRestaurantImagesFromBucket(Restaurant restaurant) throws IOException, InterruptedException;
 
     boolean deleteThisImageFromBucket(String imageUrl) throws IOException, InterruptedException;
 

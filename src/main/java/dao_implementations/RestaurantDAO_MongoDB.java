@@ -112,7 +112,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         daoFactory = DAOFactory.getInstance();
         imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllImagesFromBucket(restaurant))
+        if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllRestaurantImagesFromBucket(restaurant))
             return false;
         else {
             String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";

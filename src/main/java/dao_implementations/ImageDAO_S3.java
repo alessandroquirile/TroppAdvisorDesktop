@@ -24,9 +24,9 @@ import java.nio.charset.StandardCharsets;
  */
 public class ImageDAO_S3 implements ImageDAO {
     @Override
-    public boolean deleteAllImagesFromBucket(Restaurant restaurant) throws IOException, InterruptedException {
+    public boolean deleteAllRestaurantImagesFromBucket(Restaurant restaurant) throws IOException, InterruptedException {
         for (String imageS3Url : restaurant.getImages()) {
-            if (!deleteThisImageFromBucket(imageS3Url))
+            if (deleteThisImageFromBucket(imageS3Url))
                 return false;
         }
         return true;
@@ -50,7 +50,7 @@ public class ImageDAO_S3 implements ImageDAO {
 
         // System.out.println(response.body()); // dbg
 
-        return response.statusCode() == 200;
+        return response.statusCode() != 200;
     }
 
     @Override

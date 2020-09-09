@@ -536,7 +536,7 @@ public class CrudRestaurantController extends Controller {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
+                if (imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
                     CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
             }
             CrudDialoger.showAlertDialog(this, "Modifica effettuata");
