@@ -41,14 +41,10 @@ public class CrudRestaurantController extends Controller {
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
     private ImageDAO imageDAO;
-    private CityDAO cityDAO;
     private int currentPage = 0;
     private ObservableList<String> imagesSelectedToDelete;
     private FormCheckerFactory formCheckerFactory;
     private FormChecker formChecker;
-
-    private String oldCity;
-    private String proposedCity;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
@@ -339,7 +335,6 @@ public class CrudRestaurantController extends Controller {
                 crudRestaurantView.getButtonModifica().setDisable(false);
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
                 clearTypeOfCuisineCheckBox();
-                oldCity = selectedRestaurant.getCity();
                 populateTextFieldsWithSelectedRestaurantData(selectedRestaurant);
             }
         });
@@ -539,7 +534,7 @@ public class CrudRestaurantController extends Controller {
         if (!clickedRestaurant.getCity().equals(restaurant.getCity())) {
             //CrudDialoger.showAlertDialog(this, clickedRestaurant.getCity() + " not equal to " + restaurant.getCity());
             daoFactory = DAOFactory.getInstance();
-            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
                 //System.out.println(clickedRestaurant);
                 if (!cityDAO.delete(clickedRestaurant))
