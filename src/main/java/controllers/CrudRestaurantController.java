@@ -56,7 +56,7 @@ public class CrudRestaurantController extends Controller {
     }
 
     public void setListenerOnTableView(TableView<Object> tableView) {
-        if ("tableView".equals(tableView.getId())) {
+        if (tableView.getId().equals("tableView")) {
             tableViewClicked();
         }
     }
@@ -231,14 +231,6 @@ public class CrudRestaurantController extends Controller {
         crudRestaurantView.getTextFieldCittà().setDisable(true);
         crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setDisable(true);
         crudRestaurantView.getTableViewTypeOfCuisine().setDisable(true);
-        crudRestaurantView.getTextFieldNome().setText("");
-        crudRestaurantView.getTextFieldCAP().setText("");
-        crudRestaurantView.getTextFieldCittà().setText("");
-        crudRestaurantView.getTextFieldPrezzoMedio().setText("");
-        crudRestaurantView.getTextFieldNumeroDiTelefono().setText("");
-        crudRestaurantView.getTextFieldStrada().setText("");
-        crudRestaurantView.getTxtFieldNumeroCivico().setText("");
-        crudRestaurantView.getTextFieldProvincia().setText("");
         crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
         crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
         crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
@@ -252,11 +244,27 @@ public class CrudRestaurantController extends Controller {
         crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
         crudRestaurantView.getListViewFotoPath().getItems().clear();
         crudRestaurantView.getButtonEliminaFotoSelezionata().setDisable(true);
+        initializeBoxes();
+        clearTextFields();
+        loadRestaurantsIntoTableView(currentPage, currentSize);
+    }
+
+    private void initializeBoxes() {
         initializeChoiceBoxIndirizzo();
         initializeComboBoxOrariMattutini();
         initializeComboBoxOrariSerali();
         initializeTableViewTypeOfCuisine();
-        loadRestaurantsIntoTableView(currentPage, currentSize);
+    }
+
+    private void clearTextFields() {
+        crudRestaurantView.getTextFieldNome().setText("");
+        crudRestaurantView.getTextFieldCAP().setText("");
+        crudRestaurantView.getTextFieldCittà().setText("");
+        crudRestaurantView.getTextFieldPrezzoMedio().setText("");
+        crudRestaurantView.getTextFieldNumeroDiTelefono().setText("");
+        crudRestaurantView.getTextFieldStrada().setText("");
+        crudRestaurantView.getTxtFieldNumeroCivico().setText("");
+        crudRestaurantView.getTextFieldProvincia().setText("");
     }
 
     private void initializeChoiceBoxIndirizzo() {

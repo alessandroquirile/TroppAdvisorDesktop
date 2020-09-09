@@ -136,6 +136,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     public boolean update(Restaurant restaurant) throws IOException, InterruptedException {
         final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update";
 
+        assert restaurant.getTypeOfCuisine() != null;
         final Map<String, Object> values = new HashMap<>();
         values.put("id", restaurant.getId());
         values.put("name", restaurant.getName());
@@ -147,8 +148,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("typeOfCuisine", restaurant.getTypeOfCuisine());
         values.put("certificateOfExcellence", restaurant.isHasCertificateOfExcellence());
         values.put("openingTime", restaurant.getOpeningTime());
-
-        // TODO: aggiornare city?
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
