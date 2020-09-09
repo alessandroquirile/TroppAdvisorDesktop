@@ -1,8 +1,6 @@
 package views;
 
-import controllers.LoginController;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -14,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class LoginView implements Initializable {
+public class LoginView extends FormView {
 
     @FXML
     private TextField textFieldEmail;
@@ -27,7 +25,7 @@ public class LoginView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        LoginController loginController = new LoginController(this);
+        controllers.LoginController loginController = new controllers.LoginController(this);
         loginController.setListenerOn(buttonLogin);
     }
 
@@ -45,5 +43,13 @@ public class LoginView implements Initializable {
 
     public AnchorPane getRootPane() {
         return rootPane;
+    }
+
+    public String getEmail() {
+        return this.getTextFieldEmail().getText();
+    }
+
+    public String getPassword() {
+        return this.getPasswordField().getText();
     }
 }

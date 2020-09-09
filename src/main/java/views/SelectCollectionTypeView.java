@@ -1,6 +1,5 @@
 package views;
 
-import controllers.SelectCollectionTypeController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -24,7 +23,7 @@ public class SelectCollectionTypeView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SelectCollectionTypeController selectCollectionTypeController = new SelectCollectionTypeController(this);
+        controllers.SelectCollectionTypeController selectCollectionTypeController = new controllers.SelectCollectionTypeController(this);
         selectCollectionTypeController.initializeView();
         selectCollectionTypeController.setListenerOnButton(buttonVai);
         selectCollectionTypeController.setListenerOnComboBox(comboBox);

@@ -1,9 +1,7 @@
 package views;
 
-import controllers.CrudRestaurantController;
-import controllers_utils.TableSettersGetters;
+import controllers_utils.TypeOfCuisineItem;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
@@ -13,7 +11,7 @@ import java.util.ResourceBundle;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class CrudRestaurantView implements Initializable {
+public class CrudRestaurantView extends FormView {
     @FXML
     private AnchorPane rootPane;
     @FXML
@@ -77,11 +75,11 @@ public class CrudRestaurantView implements Initializable {
     @FXML
     private ListView<String> listViewFotoPath;
     @FXML
-    private TableColumn<TableSettersGetters, String> typeOfCuisineNameColumn;
+    private TableColumn<TypeOfCuisineItem, String> typeOfCuisineNameColumn;
     @FXML
-    private TableColumn<TableSettersGetters, CheckBox> typeOfCuisineSelectColumn;
+    private TableColumn<TypeOfCuisineItem, CheckBox> typeOfCuisineSelectColumn;
     @FXML
-    private TableView<TableSettersGetters> tableViewTypeOfCuisine;
+    private TableView<TypeOfCuisineItem> tableViewTypeOfCuisine;
     @FXML
     private TextField textFieldPrezzoMedio;
     @FXML
@@ -107,7 +105,7 @@ public class CrudRestaurantView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        CrudRestaurantController crudRestaurantController = new CrudRestaurantController(this);
+        controllers.CrudRestaurantController crudRestaurantController = new controllers.CrudRestaurantController(this);
         crudRestaurantController.setListenerOn(buttonInserisci);
         crudRestaurantController.setListenerOn(buttonElimina);
         crudRestaurantController.setListenerOn(buttonModifica);
@@ -260,15 +258,15 @@ public class CrudRestaurantView implements Initializable {
         return listViewFotoPath;
     }
 
-    public TableColumn<TableSettersGetters, String> getTypeOfCuisineNameColumn() {
+    public TableColumn<TypeOfCuisineItem, String> getTypeOfCuisineNameColumn() {
         return typeOfCuisineNameColumn;
     }
 
-    public TableColumn<TableSettersGetters, CheckBox> getTypeOfCuisineSelectColumn() {
+    public TableColumn<TypeOfCuisineItem, CheckBox> getTypeOfCuisineSelectColumn() {
         return typeOfCuisineSelectColumn;
     }
 
-    public TableView<TableSettersGetters> getTableViewTypeOfCuisine() {
+    public TableView<TypeOfCuisineItem> getTableViewTypeOfCuisine() {
         return tableViewTypeOfCuisine;
     }
 

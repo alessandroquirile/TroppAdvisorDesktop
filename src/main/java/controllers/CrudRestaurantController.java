@@ -1,13 +1,14 @@
 package controllers;
 
 import controllers_utils.CrudDialoger;
-import controllers_utils.TableSettersGetters;
-import controllers_utils.UserInputChecker;
+import controllers_utils.InputValidator;
+import controllers_utils.TypeOfCuisineItem;
 import dao_interfaces.ImageDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
+import factories.FormCheckerFactory;
+import form_checker_interfaces.FormChecker;
 import geocoding.Geocoder;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -40,8 +41,9 @@ public class CrudRestaurantController extends Controller {
     private RestaurantDAO restaurantDAO;
     private ImageDAO imageDAO;
     private int currentPage = 0;
-    private ObservableList<String> imagesList;
     private ObservableList<String> imagesSelectedToDelete;
+    private FormCheckerFactory formCheckerFactory;
+    private FormChecker formChecker;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
@@ -277,12 +279,12 @@ public class CrudRestaurantController extends Controller {
 
     private void initializeTableViewTypeOfCuisine() {
         crudRestaurantView.getTableViewTypeOfCuisine().setDisable(true);
-        ObservableList<TableSettersGetters> list = FXCollections.observableArrayList();
-        list.add(new TableSettersGetters("Mediterranea", new CheckBox()));
-        list.add(new TableSettersGetters("Pizzeria", new CheckBox()));
-        list.add(new TableSettersGetters("Ristorante", new CheckBox()));
-        list.add(new TableSettersGetters("Rosticceria", new CheckBox()));
-        list.add(new TableSettersGetters("Vegana", new CheckBox()));
+        ObservableList<TypeOfCuisineItem> list = FXCollections.observableArrayList();
+        list.add(new TypeOfCuisineItem("Mediterranea", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Pizzeria", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Ristorante", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Rosticceria", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Vegana", new CheckBox()));
         crudRestaurantView.getTableViewTypeOfCuisine().setItems(list);
         crudRestaurantView.getTypeOfCuisineNameColumn().setCellValueFactory(new PropertyValueFactory<>("name"));
         crudRestaurantView.getTypeOfCuisineSelectColumn().setCellValueFactory(new PropertyValueFactory<>("checkBox"));
@@ -371,11 +373,11 @@ public class CrudRestaurantController extends Controller {
     }
 
     private void setProperTypeOfCuisineIntoListView(Restaurant restaurant) {
-        List<String> typeOfCuisine = restaurant.getTypeOfCuisine();
-        for (String type : typeOfCuisine) {
-            for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems()) {
-                if (tableSettersGetters.getName().equals(type))
-                    tableSettersGetters.getCheckBox().setSelected(true);
+        List<String> typesOfCuisine = restaurant.getTypeOfCuisine();
+        for (String type : typesOfCuisine) {
+            for (TypeOfCuisineItem typeOfCuisineItem : getTypesOfCuisine()) {
+                if (typeOfCuisineItem.getName().equals(type))
+                    typeOfCuisineItem.getCheckBox().setSelected(true);
             }
         }
     }
@@ -392,8 +394,8 @@ public class CrudRestaurantController extends Controller {
     }
 
     private void clearTypeOfCuisineCheckBox() {
-        for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems())
-            tableSettersGetters.getCheckBox().setSelected(false);
+        for (TypeOfCuisineItem typeOfCuisineItem : crudRestaurantView.getTableViewTypeOfCuisine().getItems())
+            typeOfCuisineItem.getCheckBox().setSelected(false);
     }
 
     private void buttonMostraAvantiClicked() {
@@ -426,16 +428,20 @@ public class CrudRestaurantController extends Controller {
             String orarioChiusuraMattutina = crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue();
             String orarioAperturaSerale = crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue();
             String orarioChiusuraSerale = crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
-            if (formHasSomeEmptyFields()) {
+
+            formCheckerFactory = FormCheckerFactory.getInstance();
+            formChecker = formCheckerFactory.getFormChecker(this);
+
+            if (formChecker.formHasSomeEmptyField(this)) {
                 CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
             } else {
-                if (UserInputChecker.isValidTelephoneNumber(telephoneNumber)) {
-                    if (UserInputChecker.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (UserInputChecker.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                            if (UserInputChecker.isNumberGreaterOrEqualToZero(cap)) {
-                                if (UserInputChecker.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
-                                    if (UserInputChecker.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
-                                        Restaurant restaurant = createRestaurantWithFormData();
+                if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
+                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                if (InputValidator.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
+                                    if (InputValidator.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
+                                        Restaurant restaurant = getRestaurantWithFormData();
                                         daoFactory = DAOFactory.getInstance();
                                         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
                                         if (crudRestaurantView.getButtonModifica().isDisable()) {
@@ -485,10 +491,9 @@ public class CrudRestaurantController extends Controller {
         restaurant.setReviews(clickedRestaurant.getReviews());
         restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
 
+        //CrudDialoger.showAlertDialog(this, "imagesSelectedToDelete: " + imagesSelectedToDelete); // dbg
 
-        CrudDialoger.showAlertDialog(this, "imagesSelectedToDelete: " + imagesSelectedToDelete); // dbg
-
-        System.out.println("Restaurant debug: " + restaurant); // dbg
+        //System.out.println("Restaurant debug: " + restaurant); // dbg
 
         for (String image : crudRestaurantView.getListViewFotoPath().getItems()) {
             //CrudDialoger.showAlertDialog(this, image); // dbg
@@ -562,14 +567,13 @@ public class CrudRestaurantController extends Controller {
 
     private void buttonEliminaFotoSelezionataClicked() {
         crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
-            imagesList = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
             ObservableList<String> imagesSelectedToDelete2 = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
             imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
             crudRestaurantView.getListViewFotoPath().getItems().removeAll(imagesSelectedToDelete2);
         });
     }
 
-    private Restaurant createRestaurantWithFormData() {
+    private Restaurant getRestaurantWithFormData() {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(crudRestaurantView.getTextFieldNome().getText());
         restaurant.setAddress(getAddressWithFormData());
@@ -597,9 +601,9 @@ public class CrudRestaurantController extends Controller {
 
     private List<String> getTypeOfCuisineWithFormData() {
         List<String> cuisineSelected = new ArrayList<>();
-        for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems()) {
-            if (tableSettersGetters.getCheckBox().isSelected())
-                cuisineSelected.add(tableSettersGetters.getName());
+        for (TypeOfCuisineItem typeOfCuisineItem : crudRestaurantView.getTableViewTypeOfCuisine().getItems()) {
+            if (typeOfCuisineItem.getCheckBox().isSelected())
+                cuisineSelected.add(typeOfCuisineItem.getName());
         }
         return cuisineSelected;
     }
@@ -619,30 +623,52 @@ public class CrudRestaurantController extends Controller {
                 " " + crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue() + " - " + crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
     }
 
-    private boolean formHasSomeEmptyFields() {
-        return crudRestaurantView.getTextFieldNome().getText().isEmpty() || crudRestaurantView.getTextFieldStrada().getText().isEmpty() ||
-                crudRestaurantView.getTxtFieldNumeroCivico().getText().isEmpty() || crudRestaurantView.getTextFieldProvincia().getText().isEmpty() ||
-                crudRestaurantView.getTextFieldCAP().getText().isEmpty() ||
-                crudRestaurantView.getTextFieldCittà().getText().isEmpty() || crudRestaurantView.getTextFieldPrezzoMedio().getText().isEmpty() ||
-                crudRestaurantView.getTextFieldNumeroDiTelefono().getText().isEmpty() || Bindings.isEmpty(crudRestaurantView.getListViewFotoPath().getItems()).get() ||
-                !hasAtLeastOneTypeOfCuisineSelected();
-    }
-
-    private boolean hasAtLeastOneTypeOfCuisineSelected() {
-        for (TableSettersGetters tableSettersGetters : crudRestaurantView.getTableViewTypeOfCuisine().getItems()) {
-            if (tableSettersGetters.getCheckBox().isSelected()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void buttonAnnullaClicked() {
         crudRestaurantView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
     }
 
     public CrudRestaurantView getCrudRestaurantView() {
         return crudRestaurantView;
+    }
+
+    public String getNome() {
+        return this.crudRestaurantView.getTextFieldNome().getText();
+    }
+
+    public String getStrada() {
+        return this.crudRestaurantView.getTextFieldStrada().getText();
+    }
+
+    public String getNumeroCivico() {
+        return this.crudRestaurantView.getTxtFieldNumeroCivico().getText();
+    }
+
+    public String getProvincia() {
+        return this.crudRestaurantView.getTextFieldProvincia().getText();
+    }
+
+    public String getCAP() {
+        return this.crudRestaurantView.getTextFieldCAP().getText();
+    }
+
+    public String getCittà() {
+        return this.crudRestaurantView.getTextFieldCittà().getText();
+    }
+
+    public String getPrezzoMedio() {
+        return this.crudRestaurantView.getTableColumnPrezzoMedio().getText();
+    }
+
+    public String getNumeroDiTelefono() {
+        return this.crudRestaurantView.getTextFieldNumeroDiTelefono().getText();
+    }
+
+    public ObservableList<String> getImages() {
+        return this.getCrudRestaurantView().getListViewFotoPath().getItems();
+    }
+
+    public ObservableList<TypeOfCuisineItem> getTypesOfCuisine() {
+        return this.getCrudRestaurantView().getTableViewTypeOfCuisine().getItems();
     }
 
     @Override

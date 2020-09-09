@@ -1,9 +1,11 @@
 package controllers;
 
 import controllers_utils.CrudDialoger;
-import controllers_utils.UserInputChecker;
+import controllers_utils.InputValidator;
 import dao_interfaces.AccountDAO;
 import factories.DAOFactory;
+import factories.FormCheckerFactory;
+import form_checker_interfaces.FormChecker;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -19,6 +21,8 @@ import java.io.IOException;
  */
 public class LoginController extends Controller {
     private final LoginView loginView;
+    private FormCheckerFactory formCheckerFactory;
+    private FormChecker formChecker;
 
     public LoginController(LoginView loginView) {
         this.loginView = loginView;
@@ -37,12 +41,16 @@ public class LoginController extends Controller {
 
     public void buttonLoginClicked() {
         loginView.getButtonLogin().setOnAction(event -> {
-            String email, password;
-            email = loginView.getTextFieldEmail().getText();
-            password = loginView.getPasswordField().getText();
+            String email = getEmail();
+            String password = getPassword();
 
-            if (!UserInputChecker.areEmpty(email, password)) {
-                if (UserInputChecker.isValid(email)) {
+            formCheckerFactory = FormCheckerFactory.getInstance();
+            formChecker = formCheckerFactory.getFormChecker(this);
+
+            if (formChecker.formHasSomeEmptyField(this)) {
+                CrudDialoger.showAlertDialog(this, "Riempire tutto");
+            } else {
+                if (InputValidator.isValid(email)) {
                     Account account = new Account(email, password);
                     DAOFactory daoFactory = DAOFactory.getInstance();
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
@@ -58,10 +66,21 @@ public class LoginController extends Controller {
                 } else {
                     CrudDialoger.showAlertDialog(this, "Pattern email non valido");
                 }
-            } else {
-                CrudDialoger.showAlertDialog(this, "Riempire tutti i campi");
             }
         });
+    }
+
+
+    public LoginView getLoginView() {
+        return loginView;
+    }
+
+    public String getEmail() {
+        return this.getLoginView().getTextFieldEmail().getText();
+    }
+
+    public String getPassword() {
+        return this.getLoginView().getPasswordField().getText();
     }
 
     public void loadSelectTypeScene() throws IOException {

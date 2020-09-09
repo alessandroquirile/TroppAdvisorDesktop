@@ -77,7 +77,6 @@ public class SelectCollectionTypeController extends Controller {
             stage.setScene(scene);
             stage.setTitle("CRUD Ristorante");
             stage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

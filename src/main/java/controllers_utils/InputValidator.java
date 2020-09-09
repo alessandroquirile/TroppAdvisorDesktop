@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class UserInputChecker {
+public abstract class InputValidator {
     public static boolean isValidTelephoneNumber(String telephoneNumber) {
         String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
         if (telephoneNumber.length() == 10 || telephoneNumber.length() == 9) {
@@ -60,12 +60,5 @@ public class UserInputChecker {
         Pattern emailPattern = Pattern.compile(emailRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = emailPattern.matcher(email);
         return matcher.find();
-    }
-
-    public static boolean areEmpty(String... strings) {
-        for (String string : strings)
-            if (string.equals(""))
-                return true;
-        return false;
     }
 }
