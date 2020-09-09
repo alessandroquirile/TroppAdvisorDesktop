@@ -379,10 +379,12 @@ public class CrudRestaurantController extends Controller {
 
     private void setProperTypeOfCuisineIntoListView(Restaurant restaurant) {
         List<String> typesOfCuisine = restaurant.getTypeOfCuisine();
-        for (String type : typesOfCuisine) {
-            for (TypeOfCuisineItem typeOfCuisineItem : getTypesOfCuisine()) {
-                if (typeOfCuisineItem.getName().equals(type))
-                    typeOfCuisineItem.getCheckBox().setSelected(true);
+        if (typesOfCuisine != null) {
+            for (String type : typesOfCuisine) {
+                for (TypeOfCuisineItem typeOfCuisineItem : getTypesOfCuisine()) {
+                    if (typeOfCuisineItem.getName().equals(type))
+                        typeOfCuisineItem.getCheckBox().setSelected(true);
+                }
             }
         }
     }
