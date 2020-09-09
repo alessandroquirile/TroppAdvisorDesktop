@@ -1,6 +1,7 @@
 package views;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -12,7 +13,7 @@ import java.util.ResourceBundle;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class LoginView extends FormView {
+public class LoginView implements Initializable {
 
     @FXML
     private TextField textFieldEmail;

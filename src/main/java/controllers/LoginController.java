@@ -80,10 +80,10 @@ public class LoginController extends Controller {
     }
 
     public String getEmail() {
-        return this.getLoginView().getTextFieldEmail().getText();
+        return this.getLoginView().getEmail();
     }
 
     public String getPassword() {
-        return this.getLoginView().getPasswordField().getText();
+        return this.getLoginView().getPassword();
     }
 }
