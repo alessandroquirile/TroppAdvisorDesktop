@@ -512,7 +512,7 @@ public class CrudRestaurantController extends Controller {
                     e.printStackTrace();
                 }
                 try {
-                    if (!restaurantDAO.updateRestaurantSingleImageFromRestaurantCollection(restaurant, imageHostUrl) && imageHostUrl != null)
+                    if (!restaurantDAO.updateRestaurantSingleImageFromRestaurantCollection(restaurant, imageHostUrl) || imageHostUrl == null)
                         CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
