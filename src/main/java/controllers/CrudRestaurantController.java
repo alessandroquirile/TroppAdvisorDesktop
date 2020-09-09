@@ -3,6 +3,7 @@ package controllers;
 import controllers_utils.CrudDialoger;
 import controllers_utils.InputValidator;
 import controllers_utils.TypeOfCuisineItem;
+import dao_interfaces.CityDAO;
 import dao_interfaces.ImageDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
@@ -40,10 +41,14 @@ public class CrudRestaurantController extends Controller {
     private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
     private ImageDAO imageDAO;
+    private CityDAO cityDAO;
     private int currentPage = 0;
     private ObservableList<String> imagesSelectedToDelete;
     private FormCheckerFactory formCheckerFactory;
     private FormChecker formChecker;
+
+    private String oldCity;
+    private String proposedCity;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
@@ -334,6 +339,7 @@ public class CrudRestaurantController extends Controller {
                 crudRestaurantView.getButtonModifica().setDisable(false);
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
                 clearTypeOfCuisineCheckBox();
+                oldCity = selectedRestaurant.getCity();
                 populateTextFieldsWithSelectedRestaurantData(selectedRestaurant);
             }
         });
@@ -494,6 +500,8 @@ public class CrudRestaurantController extends Controller {
         restaurant.setReviews(clickedRestaurant.getReviews());
         restaurant.setLastModificationDate(clickedRestaurant.getLastModificationDate());
 
+        //CrudDialoger.showAlertDialog(this, "Old City: " + clickedRestaurant.getCity() + "\nNew City: " + restaurant.getCity()); // dbg
+
         //CrudDialoger.showAlertDialog(this, "imagesSelectedToDelete: " + imagesSelectedToDelete); // dbg
 
         //System.out.println("Restaurant debug: " + restaurant); // dbg
@@ -527,6 +535,22 @@ public class CrudRestaurantController extends Controller {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
+        if (!clickedRestaurant.getCity().equals(restaurant.getCity())) {
+            //CrudDialoger.showAlertDialog(this, clickedRestaurant.getCity() + " not equal to " + restaurant.getCity());
+            daoFactory = DAOFactory.getInstance();
+            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            try {
+                //System.out.println(clickedRestaurant);
+                if (!cityDAO.delete(clickedRestaurant))
+                    CrudDialoger.showAlertDialog(this, "Non è stato possibile eliminare"); // dbg
+                if (!cityDAO.insert(restaurant))
+                    CrudDialoger.showAlertDialog(this, "Non è stato possibile inserire"); // dbg
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         setViewsAsDefault();
     }
 
