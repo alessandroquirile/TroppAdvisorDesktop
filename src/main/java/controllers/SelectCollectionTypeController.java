@@ -30,12 +30,12 @@ public class SelectCollectionTypeController extends Controller {
     }
 
     public void setListenerOnButton(Button buttonVai) {
-        if (selectCollectionTypeView.getButtonVai().getId().equals("buttonVai"))
+        if (buttonVai.getId().equals("buttonVai"))
             buttonVaiClicked();
     }
 
     public void setListenerOnComboBox(ComboBox<String> comboBox) {
-        if (selectCollectionTypeView.getComboBox().getId().equals("comboBox"))
+        if (comboBox.getId().equals("comboBox"))
             comboBoxChanged();
     }
 

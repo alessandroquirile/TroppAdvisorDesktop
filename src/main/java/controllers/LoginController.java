@@ -70,6 +70,10 @@ public class LoginController extends Controller {
         });
     }
 
+    public void loadSelectTypeScene() throws IOException {
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));
+        loginView.getRootPane().getChildren().setAll(pane);
+    }
 
     public LoginView getLoginView() {
         return loginView;
@@ -81,10 +85,5 @@ public class LoginController extends Controller {
 
     public String getPassword() {
         return this.getLoginView().getPasswordField().getText();
-    }
-
-    public void loadSelectTypeScene() throws IOException {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));
-        loginView.getRootPane().getChildren().setAll(pane);
     }
 }

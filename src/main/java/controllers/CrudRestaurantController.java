@@ -49,6 +49,11 @@ public class CrudRestaurantController extends Controller {
         this.crudRestaurantView = crudRestaurantView;
     }
 
+    @Override
+    public Stage getStage() {
+        return (Stage) this.getCrudRestaurantView().getRootPane().getScene().getWindow();
+    }
+
     public void setListenerOnTableView(TableView<Object> tableView) {
         if ("tableView".equals(tableView.getId())) {
             tableViewClicked();
@@ -190,20 +195,19 @@ public class CrudRestaurantController extends Controller {
         crudRestaurantView.getButtonElimina().setOnAction(event -> {
             daoFactory = DAOFactory.getInstance();
             restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-            Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
-            if (clickedRestaurant != null) {
-                if (CrudDialoger.areYouSureToDelete(this, clickedRestaurant.getName())) {
+            Restaurant selectedRestaurant = getSelectedRestaurantFromTableView();
+            if (selectedRestaurant != null) {
+                if (CrudDialoger.areYouSureToDelete(this, selectedRestaurant.getName())) {
                     try {
-                        if (!restaurantDAO.delete(clickedRestaurant))
+                        if (!restaurantDAO.delete(selectedRestaurant))
                             CrudDialoger.showAlertDialog(this,
                                     "Qualcosa è andato storto durante la cancellazione");
-                        else
-                            setViewsAsDefault();
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
+            setViewsAsDefault();
         });
     }
 
@@ -324,18 +328,18 @@ public class CrudRestaurantController extends Controller {
 
     private void tableViewClicked() {
         crudRestaurantView.getTableView().setOnMouseClicked(event -> {
-            Restaurant clickedRestaurant = (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
-            if (clickedRestaurant != null) {
+            Restaurant selectedRestaurant = getSelectedRestaurantFromTableView();
+            if (selectedRestaurant != null) {
                 crudRestaurantView.getButtonElimina().setDisable(false);
                 crudRestaurantView.getButtonModifica().setDisable(false);
                 crudRestaurantView.getListViewFotoPath().getItems().clear();
                 clearTypeOfCuisineCheckBox();
-                populateTextFieldWithClickedRestaurantData(clickedRestaurant);
+                populateTextFieldsWithSelectedRestaurantData(selectedRestaurant);
             }
         });
     }
 
-    private void populateTextFieldWithClickedRestaurantData(Restaurant restaurant) {
+    private void populateTextFieldsWithSelectedRestaurantData(Restaurant restaurant) {
         crudRestaurantView.getTextFieldNome().setText(restaurant.getName());
         crudRestaurantView.getTextFieldNumeroDiTelefono().setText(restaurant.getPhoneNumber());
         setProperAddressTypeIntoAddressTypeChoiceBox(restaurant);
@@ -420,14 +424,14 @@ public class CrudRestaurantController extends Controller {
 
     private void buttonConfermaClicked() {
         crudRestaurantView.getButtonConferma().setOnAction(event -> {
-            String telephoneNumber = crudRestaurantView.getTextFieldNumeroDiTelefono().getText();
-            String prezzoMedio = crudRestaurantView.getTextFieldPrezzoMedio().getText();
-            String numeroCivico = crudRestaurantView.getTxtFieldNumeroCivico().getText();
-            String cap = crudRestaurantView.getTextFieldCAP().getText();
-            String orarioAperturaMattutina = crudRestaurantView.getComboBoxOrarioAperturaMattutina().getValue();
-            String orarioChiusuraMattutina = crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue();
-            String orarioAperturaSerale = crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue();
-            String orarioChiusuraSerale = crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
+            String telephoneNumber = getNumeroDiTelefono();
+            String prezzoMedio = getPrezzoMedio();
+            String numeroCivico = getNumeroCivico();
+            String cap = getCAP();
+            String orarioAperturaMattutina = getOrarioAperturaMattutina();
+            String orarioChiusuraMattutina = getOrarioChiusuraMattutina();
+            String orarioAperturaSerale = getOrarioAperturaSerale();
+            String orarioChiusuraSerale = getOrarioChiusuraSerale();
 
             formCheckerFactory = FormCheckerFactory.getInstance();
             formChecker = formCheckerFactory.getFormChecker(this);
@@ -474,15 +478,14 @@ public class CrudRestaurantController extends Controller {
 
     private void doInsert(Restaurant restaurant) {
         try {
-            if (!restaurantDAO.add(restaurant)) {
+            if (!restaurantDAO.add(restaurant))
                 CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'inserimento");
-            } else {
+            else
                 CrudDialoger.showAlertDialog(this, "Inserimento avvenuto");
-                setViewsAsDefault();
-            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+        setViewsAsDefault();
     }
 
     private void doUpdate(Restaurant restaurant) {
@@ -494,11 +497,11 @@ public class CrudRestaurantController extends Controller {
         //CrudDialoger.showAlertDialog(this, "imagesSelectedToDelete: " + imagesSelectedToDelete); // dbg
 
         //System.out.println("Restaurant debug: " + restaurant); // dbg
-
-        for (String image : crudRestaurantView.getListViewFotoPath().getItems()) {
+        for (String image : getImagesFromListView()) {
+            File file = new File(image);
             //CrudDialoger.showAlertDialog(this, image); // dbg
-            if (image.startsWith("/")) {
-                File file = new File(image);
+            if (file.isAbsolute()) {
+                //File file = new File(image);
                 CrudDialoger.showAlertDialog(this, image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
@@ -535,9 +538,8 @@ public class CrudRestaurantController extends Controller {
             for (String imageUrl : images) {
                 if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
                     CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
-                else
-                    CrudDialoger.showAlertDialog(this, "Modifica effettuata");
             }
+            CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
 
@@ -656,14 +658,14 @@ public class CrudRestaurantController extends Controller {
     }
 
     public String getPrezzoMedio() {
-        return this.crudRestaurantView.getTableColumnPrezzoMedio().getText();
+        return this.crudRestaurantView.getTextFieldPrezzoMedio().getText();
     }
 
     public String getNumeroDiTelefono() {
         return this.crudRestaurantView.getTextFieldNumeroDiTelefono().getText();
     }
 
-    public ObservableList<String> getImages() {
+    public ObservableList<String> getImagesFromListView() {
         return this.getCrudRestaurantView().getListViewFotoPath().getItems();
     }
 
@@ -671,8 +673,23 @@ public class CrudRestaurantController extends Controller {
         return this.getCrudRestaurantView().getTableViewTypeOfCuisine().getItems();
     }
 
-    @Override
-    public Stage getStage() {
-        return (Stage) this.getCrudRestaurantView().getRootPane().getScene().getWindow();
+    public String getOrarioAperturaMattutina() {
+        return this.crudRestaurantView.getComboBoxOrarioAperturaMattutina().getValue();
+    }
+
+    public String getOrarioChiusuraMattutina() {
+        return this.crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue();
+    }
+
+    public String getOrarioAperturaSerale() {
+        return this.crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue();
+    }
+
+    public String getOrarioChiusuraSerale() {
+        return this.crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
+    }
+
+    public Restaurant getSelectedRestaurantFromTableView() {
+        return (Restaurant) crudRestaurantView.getTableView().getSelectionModel().getSelectedItem();
     }
 }
