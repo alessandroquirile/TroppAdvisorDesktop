@@ -2,8 +2,10 @@ package views;
 
 import controllers_utils.TypeOfCuisineItem;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,68 +14,9 @@ import java.util.ResourceBundle;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class CrudRestaurantView extends FormView {
-    @FXML
-    private AnchorPane rootPane;
-    @FXML
-    private javafx.scene.control.Button buttonElimina;
-    @FXML
-    private javafx.scene.control.Button buttonConferma;
-    @FXML
-    private javafx.scene.control.Button buttonAnnulla;
-    @FXML
-    private javafx.scene.control.Button buttonAiuto;
-    @FXML
-    private TableView<Object> tableView;
-    @FXML
-    private TableColumn<Object, String> tableColumnName;
-    @FXML
-    private TableColumn<Object, String> tableColumnId;
-    @FXML
-    private TableColumn<Object, String> tableColumnOrarioApertura;
-    @FXML
-    private TableColumn<Object, Integer> tableColumnVotoMedio;
-    @FXML
-    private TableColumn<Object, Integer> tableColumnPrezzoMedio;
-    @FXML
-    private TableColumn<Object, String> tableColumnNumeroDiTelefono;
-    @FXML
-    private TableColumn<Object, Boolean> tableColumnHasCertificateOfExcellence;
-    @FXML
-    private TableColumn<Object, Integer> tableColumnTotalReview;
-    @FXML
-    private TableColumn<Object, String> tableColumnAddedDate;
-    @FXML
-    private TableColumn<Object, String> tableColumnLastModificationDate;
-    @FXML
-    private TableColumn<Object, String> tableColumnIndirizzo;
+    // Ha solo in più il tipo di cucina e gli orari d'apertura mattutini e pomeridiani
     @FXML
     private TableColumn<Object, String> tableColumnTipoDiCucina;
-    @FXML
-    private TableColumn<Object, String> tableColumnPuntoSuMappa;
-    @FXML
-    private TableColumn<Object, String> tableColumnImmagini;
-    @FXML
-    private javafx.scene.control.Button buttonModifica;
-    @FXML
-    private javafx.scene.control.TextField textFieldNome;
-    @FXML
-    private ChoiceBox<String> choiceBoxIndirizzo;
-    @FXML
-    private javafx.scene.control.TextField textFieldCittà;
-    @FXML
-    private CheckBox checkBoxCertificatoDiEccellenza;
-    @FXML
-    private javafx.scene.control.Button buttonIndietro;
-    @FXML
-    private javafx.scene.control.Button buttonInserisci;
-    @FXML
-    private javafx.scene.control.TextField textFieldCAP;
-    @FXML
-    private TextField textFieldNumeroDiTelefono;
-    @FXML
-    private Button buttonCaricaFoto;
-    @FXML
-    private ListView<String> listViewFotoPath;
     @FXML
     private TableColumn<TypeOfCuisineItem, String> typeOfCuisineNameColumn;
     @FXML
@@ -81,13 +24,7 @@ public class CrudRestaurantView extends FormView {
     @FXML
     private TableView<TypeOfCuisineItem> tableViewTypeOfCuisine;
     @FXML
-    private TextField textFieldPrezzoMedio;
-    @FXML
-    private TextField txtFieldNumeroCivico;
-    @FXML
-    private TextField textFieldProvincia;
-    @FXML
-    private TextField textFieldStrada;
+    private TableColumn<Object, String> tableColumnOrarioApertura;
     @FXML
     private ComboBox<String> comboBoxOrarioAperturaMattutina;
     @FXML
@@ -96,12 +33,6 @@ public class CrudRestaurantView extends FormView {
     private ComboBox<String> comboBoxOrarioAperturaSerale;
     @FXML
     private ComboBox<String> comboBoxOrarioChiusuraSerale;
-    @FXML
-    private Button buttonMostraAvanti;
-    @FXML
-    private Button buttonMostraIndietro;
-    @FXML
-    private Button buttonEliminaFotoSelezionate;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -122,140 +53,12 @@ public class CrudRestaurantView extends FormView {
         crudRestaurantController.setViewsAsDefault();
     }
 
-    public Button getButtonEliminaFotoSelezionata() {
-        return buttonEliminaFotoSelezionate;
-    }
-
-    public Button getButtonMostraIndietro() {
-        return buttonMostraIndietro;
-    }
-
-    public Button getButtonMostraAvanti() {
-        return buttonMostraAvanti;
-    }
-
-    public TableColumn<Object, String> getTableColumnImmagini() {
-        return tableColumnImmagini;
-    }
-
-    public TableColumn<Object, String> getTableColumnPuntoSuMappa() {
-        return tableColumnPuntoSuMappa;
-    }
-
     public TableColumn<Object, String> getTableColumnTipoDiCucina() {
         return tableColumnTipoDiCucina;
     }
 
-    public TableColumn<Object, String> getTableColumnIndirizzo() {
-        return tableColumnIndirizzo;
-    }
-
-    public TableColumn<Object, String> getTableColumnLastModificationDate() {
-        return tableColumnLastModificationDate;
-    }
-
-    public TableColumn<Object, String> getTableColumnAddedDate() {
-        return tableColumnAddedDate;
-    }
-
-    public TableColumn<Object, Boolean> getTableColumnHasCertificateOfExcellence() {
-        return tableColumnHasCertificateOfExcellence;
-    }
-
-    public TableColumn<Object, Integer> getTableColumnTotalReview() {
-        return tableColumnTotalReview;
-    }
-
-    public TableColumn<Object, String> getTableColumnNumeroDiTelefono() {
-        return tableColumnNumeroDiTelefono;
-    }
-
-    public TableColumn<Object, Integer> getTableColumnPrezzoMedio() {
-        return tableColumnPrezzoMedio;
-    }
-
-    public TableColumn<Object, Integer> getTableColumnVotoMedio() {
-        return tableColumnVotoMedio;
-    }
-
     public TableColumn<Object, String> getTableColumnOrarioApertura() {
         return tableColumnOrarioApertura;
-    }
-
-    public TableColumn<Object, String> getTableColumnName() {
-        return tableColumnName;
-    }
-
-    public TableColumn<Object, String> getTableColumnId() {
-        return tableColumnId;
-    }
-
-    public AnchorPane getRootPane() {
-        return rootPane;
-    }
-
-    public Button getButtonElimina() {
-        return buttonElimina;
-    }
-
-    public Button getButtonConferma() {
-        return buttonConferma;
-    }
-
-    public Button getButtonAnnulla() {
-        return buttonAnnulla;
-    }
-
-    public Button getButtonAiuto() {
-        return buttonAiuto;
-    }
-
-    public TableView<Object> getTableView() {
-        return tableView;
-    }
-
-    public Button getButtonModifica() {
-        return buttonModifica;
-    }
-
-    public TextField getTextFieldNome() {
-        return textFieldNome;
-    }
-
-    public ChoiceBox<String> getChoiceBoxIndirizzo() {
-        return choiceBoxIndirizzo;
-    }
-
-    public TextField getTextFieldCittà() {
-        return textFieldCittà;
-    }
-
-    public CheckBox getCheckBoxCertificatoDiEccellenza() {
-        return checkBoxCertificatoDiEccellenza;
-    }
-
-    public Button getButtonIndietro() {
-        return buttonIndietro;
-    }
-
-    public Button getButtonInserisci() {
-        return buttonInserisci;
-    }
-
-    public TextField getTextFieldCAP() {
-        return textFieldCAP;
-    }
-
-    public TextField getTextFieldNumeroDiTelefono() {
-        return textFieldNumeroDiTelefono;
-    }
-
-    public Button getButtonCaricaFoto() {
-        return buttonCaricaFoto;
-    }
-
-    public ListView<String> getListViewFotoPath() {
-        return listViewFotoPath;
     }
 
     public TableColumn<TypeOfCuisineItem, String> getTypeOfCuisineNameColumn() {
@@ -268,22 +71,6 @@ public class CrudRestaurantView extends FormView {
 
     public TableView<TypeOfCuisineItem> getTableViewTypeOfCuisine() {
         return tableViewTypeOfCuisine;
-    }
-
-    public TextField getTextFieldPrezzoMedio() {
-        return textFieldPrezzoMedio;
-    }
-
-    public TextField getTxtFieldNumeroCivico() {
-        return txtFieldNumeroCivico;
-    }
-
-    public TextField getTextFieldProvincia() {
-        return textFieldProvincia;
-    }
-
-    public TextField getTextFieldStrada() {
-        return textFieldStrada;
     }
 
     public ComboBox<String> getComboBoxOrarioAperturaMattutina() {

@@ -70,7 +70,7 @@ public class CrudRestaurantController extends Controller {
     private void listViewFotoPathClicked() {
         crudRestaurantView.getListViewFotoPath().setOnMouseClicked(event -> {
             if (!crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems().isEmpty())
-                crudRestaurantView.getButtonEliminaFotoSelezionata().setDisable(false);
+                crudRestaurantView.getButtonEliminaFotoSelezionate().setDisable(false);
         });
     }
 
@@ -243,7 +243,7 @@ public class CrudRestaurantController extends Controller {
         crudRestaurantView.getListViewFotoPath().setDisable(true);
         crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
         crudRestaurantView.getListViewFotoPath().getItems().clear();
-        crudRestaurantView.getButtonEliminaFotoSelezionata().setDisable(true);
+        crudRestaurantView.getButtonEliminaFotoSelezionate().setDisable(true);
         initializeBoxes();
         clearTextFields();
         loadRestaurantsIntoTableView(currentPage, currentSize);
@@ -597,7 +597,7 @@ public class CrudRestaurantController extends Controller {
     }
 
     private void buttonEliminaFotoSelezionataClicked() {
-        crudRestaurantView.getButtonEliminaFotoSelezionata().setOnAction(event -> {
+        crudRestaurantView.getButtonEliminaFotoSelezionate().setOnAction(event -> {
             ObservableList<String> imagesSelectedToDelete2 = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
             imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
             crudRestaurantView.getListViewFotoPath().getItems().removeAll(imagesSelectedToDelete2);
