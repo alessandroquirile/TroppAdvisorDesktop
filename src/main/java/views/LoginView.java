@@ -1,5 +1,6 @@
 package views;
 
+import controllers.LoginController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -26,7 +27,7 @@ public class LoginView implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        controllers.LoginController loginController = new controllers.LoginController(this);
+        LoginController loginController = new LoginController(this);
         loginController.setListenerOn(buttonLogin);
     }
 

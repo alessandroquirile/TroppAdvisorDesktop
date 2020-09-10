@@ -26,7 +26,7 @@ public class AccountDAO_Cognito implements AccountDAO {
                 .uri(URI.create(URL))
                 .build();
         HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        // System.out.println("Header:\n" +httpResponses.headers() + "\nBody:\n" + httpResponses.body()); // dbg
+        //System.out.println("Header:\n" +httpResponses.headers() + "\nBody:\n" + httpResponses.body()); // dbg
         return httpResponses.statusCode() == 200;
     }
 

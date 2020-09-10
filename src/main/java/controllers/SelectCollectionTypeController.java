@@ -52,7 +52,7 @@ public class SelectCollectionTypeController extends Controller {
                     showCrudPageRestaurantStage();
                     break;
                 case "Hotel":
-                    System.out.println("Hotel");
+                    showCrudPageHotelStage();
                     break;
                 case "Attrazioni":
                     System.out.println("Attrazioni");
@@ -82,9 +82,29 @@ public class SelectCollectionTypeController extends Controller {
         }
     }
 
+    public void showCrudPageHotelStage() {
+        try {
+            closeCurrentStage();
+            Parent parent = FXMLLoader.load(getClass().getResource("/crud_hotel.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(parent);
+            Screen screen = Screen.getPrimary();
+            Rectangle2D rectangle2D = screen.getVisualBounds();
+            stage.setX(rectangle2D.getMinX());
+            stage.setY(rectangle2D.getMinX());
+            stage.setWidth(rectangle2D.getWidth());
+            stage.setHeight(rectangle2D.getHeight());
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.setTitle("CRUD Hotel");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void closeCurrentStage() {
-        Stage thisStage = (Stage) selectCollectionTypeView.getRootPane().getScene().getWindow();
-        thisStage.close();
+        getStage().close();
     }
 
     public void initializeView() {

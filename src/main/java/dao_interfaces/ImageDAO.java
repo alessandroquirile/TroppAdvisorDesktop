@@ -1,6 +1,6 @@
 package dao_interfaces;
 
-import models.Restaurant;
+import models.Accomodation;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author Alessandro Quirile, Mauro Telese
  */
 public interface ImageDAO {
-    boolean deleteAllRestaurantImagesFromBucket(Restaurant restaurant) throws IOException, InterruptedException;
+    boolean deleteAllAccomodationImagesFromBucket(Accomodation accomodation) throws IOException, InterruptedException;
 
     boolean deleteThisImageFromBucket(String imageUrl) throws IOException, InterruptedException;
 

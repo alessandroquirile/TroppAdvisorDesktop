@@ -48,18 +48,17 @@ public class LoginController extends Controller {
             formChecker = formCheckerFactory.getFormChecker(this);
 
             if (formChecker.formHasSomeEmptyField(this)) {
-                CrudDialoger.showAlertDialog(this, "Riempire tutto");
+                CrudDialoger.showAlertDialog(this, "Riempire tutti i campi");
             } else {
                 if (InputValidator.isValid(email)) {
                     Account account = new Account(email, password);
                     DAOFactory daoFactory = DAOFactory.getInstance();
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                     try {
-                        if (!accountDAO.login(account)) {
+                        if (!accountDAO.login(account))
                             CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante il login");
-                        } else {
+                        else
                             loadSelectTypeScene();
-                        }
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }

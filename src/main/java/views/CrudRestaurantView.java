@@ -1,5 +1,6 @@
 package views;
 
+import controllers.CrudRestaurantController;
 import controllers_utils.TypeOfCuisineItem;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -36,7 +37,7 @@ public class CrudRestaurantView extends FormView {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        controllers.CrudRestaurantController crudRestaurantController = new controllers.CrudRestaurantController(this);
+        CrudRestaurantController crudRestaurantController = new CrudRestaurantController(this);
         crudRestaurantController.setListenerOn(buttonInserisci);
         crudRestaurantController.setListenerOn(buttonElimina);
         crudRestaurantController.setListenerOn(buttonModifica);

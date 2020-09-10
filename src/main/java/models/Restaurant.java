@@ -25,30 +25,6 @@ public class Restaurant extends Accomodation {
         this.openingTime = openingTime;
     }
 
-    public String getCity() {
-        return this.address.getCity();
-    }
-
-    public String getStreet() {
-        return this.address.getStreet();
-    }
-
-    public String getHouseNumber() {
-        return this.address.getHouseNumber();
-    }
-
-    public String getPostalCode() {
-        return this.address.getPostalCode();
-    }
-
-    public String getProvince() {
-        return this.address.getProvince();
-    }
-
-    public String getTypeOfAddress() {
-        return this.address.getType();
-    }
-
     @Override
     public String toString() {
         return "Restaurant{" +

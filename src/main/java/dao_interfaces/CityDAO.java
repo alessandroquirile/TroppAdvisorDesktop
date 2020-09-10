@@ -1,6 +1,6 @@
 package dao_interfaces;
 
-import models.Restaurant;
+import models.Accomodation;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author Alessandro Quirile, Mauro Telese
  */
 public interface CityDAO {
-    boolean insert(Restaurant restaurant) throws IOException, InterruptedException;
+    boolean insert(Accomodation accomodation) throws IOException, InterruptedException;
 
-    boolean delete(Restaurant restaurant) throws IOException, InterruptedException;
+    boolean delete(Accomodation accomodation) throws IOException, InterruptedException;
 }

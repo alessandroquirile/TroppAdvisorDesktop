@@ -1,13 +1,7 @@
 package factories;
 
-import dao_implementations.AccountDAO_Cognito;
-import dao_implementations.CityDAO_MongoDB;
-import dao_implementations.ImageDAO_S3;
-import dao_implementations.RestaurantDAO_MongoDB;
-import dao_interfaces.AccountDAO;
-import dao_interfaces.CityDAO;
-import dao_interfaces.ImageDAO;
-import dao_interfaces.RestaurantDAO;
+import dao_implementations.*;
+import dao_interfaces.*;
 import my_exceptions.TechnologyNotSupportedYetException;
 
 /**
@@ -53,5 +47,12 @@ public class DAOFactory {
             return new CityDAO_MongoDB();
         else
             throw new TechnologyNotSupportedYetException(cityStorageTechnology);
+    }
+
+    public HotelDAO getHotelDAO(String hotelStorageTechnology) {
+        if (hotelStorageTechnology.equals("mongodb"))
+            return new HotelDAO_MongoDB();
+        else
+            throw new TechnologyNotSupportedYetException(hotelStorageTechnology);
     }
 }

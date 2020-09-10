@@ -1,7 +1,7 @@
 package dao_implementations;
 
 import dao_interfaces.ImageDAO;
-import models.Restaurant;
+import models.Accomodation;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -24,12 +24,14 @@ import java.nio.charset.StandardCharsets;
  */
 public class ImageDAO_S3 implements ImageDAO {
     @Override
-    public boolean deleteAllRestaurantImagesFromBucket(Restaurant restaurant) throws IOException, InterruptedException {
-        for (String imageS3Url : restaurant.getImages()) {
-            if (deleteThisImageFromBucket(imageS3Url))
-                return false;
+    public boolean deleteAllAccomodationImagesFromBucket(Accomodation accomodation) throws IOException, InterruptedException {
+        if (accomodation.getImages() != null) {
+            for (String imageS3Url : accomodation.getImages()) {
+                if (deleteThisImageFromBucket(imageS3Url))
+                    return true;
+            }
         }
-        return true;
+        return false;
     }
 
     @Override
