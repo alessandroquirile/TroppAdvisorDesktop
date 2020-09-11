@@ -28,7 +28,7 @@ public class Attraction extends Accomodation {
                 ", reviews=" + reviews +
                 ", totalReviews=" + totalReviews +
                 ", images=" + images +
-                ", hasCertificateOfExcellence=" + excellence +
+                ", hasCertificateOfExcellence=" + hasCertificateOfExcellence +
                 ", addedDate='" + addedDate + '\'' +
                 ", lastModificationDate='" + lastModificationDate + '\'' +
                 '}';

@@ -146,7 +146,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         values.put("address", restaurant.getAddress());
         values.put("point", restaurant.getPoint());
         values.put("typeOfCuisine", restaurant.getTypeOfCuisine());
-        values.put("certificateOfExcellence", restaurant.isExcellent());
+        values.put("certificateOfExcellence", restaurant.isHasCertificateOfExcellence());
         values.put("openingTime", restaurant.getOpeningTime());
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();

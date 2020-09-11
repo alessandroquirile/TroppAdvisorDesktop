@@ -146,7 +146,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
         values.put("phoneNumber", hotel.getPhoneNumber());
         values.put("address", hotel.getAddress());
         values.put("point", hotel.getPoint());
-        values.put("certificateOfExcellence", hotel.isExcellent());
+        values.put("certificateOfExcellence", hotel.isHasCertificateOfExcellence());
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);

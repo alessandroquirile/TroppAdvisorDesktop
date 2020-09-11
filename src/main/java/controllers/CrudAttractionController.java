@@ -346,7 +346,7 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getTextFieldCAP().setText(attraction.getPostalCode());
         crudAttractionView.getTextFieldProvincia().setText(attraction.getProvince());
         crudAttractionView.getTextFieldPrezzoMedio().setText(String.valueOf(attraction.getAvaragePrice()));
-        crudAttractionView.getCheckBoxCertificatoDiEccellenza().setSelected(attraction.isExcellent());
+        crudAttractionView.getCheckBoxCertificatoDiEccellenza().setSelected(attraction.isHasCertificateOfExcellence());
         setProperOpeningHourIntoCheckBox(attraction);
         setProperImagesIntoListView(attraction);
     }
@@ -579,7 +579,7 @@ public class CrudAttractionController extends CrudController {
         attraction.setAddress(getAddressWithFormData());
         attraction.setAvaragePrice(Integer.parseInt(crudAttractionView.getTextFieldPrezzoMedio().getText()));
         attraction.setPhoneNumber(crudAttractionView.getTextFieldNumeroDiTelefono().getText());
-        attraction.setExcellence(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        attraction.setHasCertificateOfExcellence(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
         attraction.setImages(crudAttractionView.getListViewFotoPath().getItems());
         attraction.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),
                 Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLng()));
