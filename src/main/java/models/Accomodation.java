@@ -19,7 +19,7 @@ public abstract class Accomodation implements Serializable {
     protected List<Review> reviews;
     protected Integer totalReviews;
     protected List<String> images;
-    protected boolean hasCertificateOfExcellence;
+    protected boolean excellence;
     protected String addedDate;
     protected String lastModificationDate;
 
@@ -103,12 +103,12 @@ public abstract class Accomodation implements Serializable {
         this.images = images;
     }
 
-    public boolean isHasCertificateOfExcellence() {
-        return hasCertificateOfExcellence;
+    public boolean isExcellent() {
+        return excellence;
     }
 
-    public void setHasCertificateOfExcellence(boolean hasCertificateOfExcellence) {
-        this.hasCertificateOfExcellence = hasCertificateOfExcellence;
+    public void setExcellence(boolean excellence) {
+        this.excellence = excellence;
     }
 
     public String getAddedDate() {

@@ -365,7 +365,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getTextFieldCAP().setText(restaurant.getPostalCode());
         crudRestaurantView.getTextFieldProvincia().setText(restaurant.getProvince());
         crudRestaurantView.getTextFieldPrezzoMedio().setText(String.valueOf(restaurant.getAvaragePrice()));
-        crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setSelected(restaurant.isHasCertificateOfExcellence());
+        crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setSelected(restaurant.isExcellent());
         setProperOpeningHourIntoCheckBox(restaurant);
         setProperImagesIntoListView(restaurant);
         setProperTypeOfCuisineIntoListView(restaurant);
@@ -617,7 +617,7 @@ public class CrudRestaurantController extends CrudController {
         restaurant.setAddress(getAddressWithFormData());
         restaurant.setAvaragePrice(Integer.parseInt(crudRestaurantView.getTextFieldPrezzoMedio().getText()));
         restaurant.setPhoneNumber(crudRestaurantView.getTextFieldNumeroDiTelefono().getText());
-        restaurant.setHasCertificateOfExcellence(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        restaurant.setExcellence(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
         restaurant.setImages(crudRestaurantView.getListViewFotoPath().getItems());
         restaurant.setTypeOfCuisine(getTypeOfCuisineWithFormData());
         restaurant.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),

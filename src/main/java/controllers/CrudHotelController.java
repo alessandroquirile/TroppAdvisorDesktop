@@ -326,7 +326,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getTextFieldCAP().setText(hotel.getPostalCode());
         crudHotelView.getTextFieldProvincia().setText(hotel.getProvince());
         crudHotelView.getTextFieldPrezzoMedio().setText(String.valueOf(hotel.getAvaragePrice()));
-        crudHotelView.getCheckBoxCertificatoDiEccellenza().setSelected(hotel.isHasCertificateOfExcellence());
+        crudHotelView.getCheckBoxCertificatoDiEccellenza().setSelected(hotel.isExcellent());
         setProperImagesIntoListView(hotel);
     }
 
@@ -550,7 +550,7 @@ public class CrudHotelController extends CrudController {
         hotel.setAddress(getAddressWithFormData());
         hotel.setAvaragePrice(Integer.parseInt(crudHotelView.getTextFieldPrezzoMedio().getText()));
         hotel.setPhoneNumber(crudHotelView.getTextFieldNumeroDiTelefono().getText());
-        hotel.setHasCertificateOfExcellence(crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        hotel.setExcellence(crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected());
         hotel.setImages(crudHotelView.getListViewFotoPath().getItems());
         hotel.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),
                 Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLng()));
