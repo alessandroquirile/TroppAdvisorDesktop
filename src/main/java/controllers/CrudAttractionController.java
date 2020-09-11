@@ -537,7 +537,7 @@ public class CrudAttractionController extends CrudController {
                 if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
                     CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
             }
-            //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
+            //CrudDialoger.showAlertDialog(this, "Modifica effettuata"); //
         }
     }
 
