@@ -141,6 +141,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
         crudRestaurantView.getListViewFotoPath().getItems().clear();
         crudRestaurantView.getButtonEliminaFotoSelezionate().setDisable(true);
+        crudRestaurantView.getTableView().setDisable(false);
         initializeBoxes();
         clearTextFields();
         loadRestaurantsIntoTableView(currentPage, currentPageSize);
@@ -180,6 +181,7 @@ public class CrudRestaurantController extends CrudController {
             enableAllTextFields();
             enableAllChoiceBoxes();
             disableCRUDButtons();
+            crudRestaurantView.getTableView().setDisable(true);
             crudRestaurantView.getButtonConferma().setDisable(false);
             crudRestaurantView.getButtonAnnulla().setDisable(false);
             crudRestaurantView.getButtonIndietro().setDisable(true);
@@ -363,7 +365,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getTextFieldCAP().setText(restaurant.getPostalCode());
         crudRestaurantView.getTextFieldProvincia().setText(restaurant.getProvince());
         crudRestaurantView.getTextFieldPrezzoMedio().setText(String.valueOf(restaurant.getAvaragePrice()));
-        crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setDisable(!restaurant.isHasCertificateOfExcellence());
+        crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setSelected(restaurant.isHasCertificateOfExcellence());
         setProperOpeningHourIntoCheckBox(restaurant);
         setProperImagesIntoListView(restaurant);
         setProperTypeOfCuisineIntoListView(restaurant);
@@ -570,10 +572,10 @@ public class CrudRestaurantController extends CrudController {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
+                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
                     CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
             }
-            CrudDialoger.showAlertDialog(this, "Modifica effettuata");
+            //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
 

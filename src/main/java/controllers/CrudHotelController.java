@@ -126,6 +126,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getListViewFotoPath().getItems().clear();
         crudHotelView.getButtonEliminaFotoSelezionate().setDisable(true);
         crudHotelView.getChoiceBoxNumeroStelle().setDisable(true);
+        crudHotelView.getTableView().setDisable(false);
         initializeBoxes();
         clearTextFields();
         loadHotelsIntoTableView(currentPage, currentPageSize);
@@ -172,6 +173,7 @@ public class CrudHotelController extends CrudController {
             enableAllTextFields();
             enableAllChoiceBoxes();
             disableCRUDButtons();
+            crudHotelView.getTableView().setDisable(true);
             crudHotelView.getButtonConferma().setDisable(false);
             crudHotelView.getButtonAnnulla().setDisable(false);
             crudHotelView.getButtonIndietro().setDisable(true);
@@ -324,7 +326,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getTextFieldCAP().setText(hotel.getPostalCode());
         crudHotelView.getTextFieldProvincia().setText(hotel.getProvince());
         crudHotelView.getTextFieldPrezzoMedio().setText(String.valueOf(hotel.getAvaragePrice()));
-        crudHotelView.getCheckBoxCertificatoDiEccellenza().setDisable(!hotel.isHasCertificateOfExcellence());
+        crudHotelView.getCheckBoxCertificatoDiEccellenza().setSelected(hotel.isHasCertificateOfExcellence());
         setProperImagesIntoListView(hotel);
     }
 
@@ -502,10 +504,10 @@ public class CrudHotelController extends CrudController {
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (imageDAO.deleteThisImageFromBucket(imageUrl) || !hotelDAO.deleteHotelSingleImageFromHotelCollection(hotel, imageUrl))
+                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !hotelDAO.deleteHotelSingleImageFromHotelCollection(hotel, imageUrl))
                     CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
             }
-            CrudDialoger.showAlertDialog(this, "Modifica effettuata");
+            //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
 

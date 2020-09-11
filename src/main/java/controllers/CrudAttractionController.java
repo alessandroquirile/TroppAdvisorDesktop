@@ -128,6 +128,7 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
         crudAttractionView.getListViewFotoPath().getItems().clear();
         crudAttractionView.getButtonEliminaFotoSelezionate().setDisable(true);
+        crudAttractionView.getTableView().setDisable(false);
         initializeBoxes();
         clearTextFields();
         loadAttractionsIntoTableView(currentPage, currentPageSize);
@@ -179,6 +180,7 @@ public class CrudAttractionController extends CrudController {
             enableAllTextFields();
             enableAllChoiceBoxes();
             disableCRUDButtons();
+            crudAttractionView.getTableView().setDisable(true);
             crudAttractionView.getButtonConferma().setDisable(false);
             crudAttractionView.getButtonAnnulla().setDisable(false);
             crudAttractionView.getButtonIndietro().setDisable(true);
@@ -344,7 +346,7 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getTextFieldCAP().setText(attraction.getPostalCode());
         crudAttractionView.getTextFieldProvincia().setText(attraction.getProvince());
         crudAttractionView.getTextFieldPrezzoMedio().setText(String.valueOf(attraction.getAvaragePrice()));
-        crudAttractionView.getCheckBoxCertificatoDiEccellenza().setDisable(!attraction.isHasCertificateOfExcellence());
+        crudAttractionView.getCheckBoxCertificatoDiEccellenza().setSelected(attraction.isHasCertificateOfExcellence());
         setProperOpeningHourIntoCheckBox(attraction);
         setProperImagesIntoListView(attraction);
     }
@@ -532,10 +534,10 @@ public class CrudAttractionController extends CrudController {
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (imageDAO.deleteThisImageFromBucket(imageUrl) || !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
+                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
                     CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
             }
-            CrudDialoger.showAlertDialog(this, "Modifica effettuata");
+            //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
 
