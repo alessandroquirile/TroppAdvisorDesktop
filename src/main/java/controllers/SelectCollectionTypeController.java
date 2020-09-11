@@ -40,9 +40,7 @@ public class SelectCollectionTypeController extends Controller {
     }
 
     public void comboBoxChanged() {
-        selectCollectionTypeView.getComboBox().setOnAction(event -> {
-            selectCollectionTypeView.getButtonVai().setDisable(false);
-        });
+        selectCollectionTypeView.getComboBox().setOnAction(event -> selectCollectionTypeView.getButtonVai().setDisable(false));
     }
 
     public void buttonVaiClicked() {
@@ -55,7 +53,7 @@ public class SelectCollectionTypeController extends Controller {
                     showCrudPageHotelStage();
                     break;
                 case "Attrazioni":
-                    System.out.println("Attrazioni");
+                    showCrudPageAttractionStage();
                     break;
             }
         });
@@ -75,7 +73,7 @@ public class SelectCollectionTypeController extends Controller {
             stage.setHeight(rectangle2D.getHeight());
             stage.setResizable(false);
             stage.setScene(scene);
-            stage.setTitle("CRUD Ristorante");
+            stage.setTitle("CRUD Ristoranti");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,6 +95,27 @@ public class SelectCollectionTypeController extends Controller {
             stage.setResizable(false);
             stage.setScene(scene);
             stage.setTitle("CRUD Hotel");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showCrudPageAttractionStage() {
+        try {
+            closeCurrentStage();
+            Parent parent = FXMLLoader.load(getClass().getResource("/crud_attraction.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(parent);
+            Screen screen = Screen.getPrimary();
+            Rectangle2D rectangle2D = screen.getVisualBounds();
+            stage.setX(rectangle2D.getMinX());
+            stage.setY(rectangle2D.getMinX());
+            stage.setWidth(rectangle2D.getWidth());
+            stage.setHeight(rectangle2D.getHeight());
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.setTitle("CRUD Attrazioni");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

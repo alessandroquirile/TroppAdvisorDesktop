@@ -1,9 +1,7 @@
 package factories;
 
-import controllers.Controller;
-import controllers.CrudHotelController;
-import controllers.CrudRestaurantController;
-import controllers.LoginController;
+import controllers.*;
+import form_checker_implementations.FormChecker_AttractionCrud;
 import form_checker_implementations.FormChecker_HotelCrud;
 import form_checker_implementations.FormChecker_Login;
 import form_checker_implementations.FormChecker_RestaurantCrud;
@@ -32,7 +30,9 @@ public class FormCheckerFactory {
             return new FormChecker_RestaurantCrud();
         else if (controller instanceof CrudHotelController)
             return new FormChecker_HotelCrud();
+        else if (controller instanceof CrudAttractionController)
+            return new FormChecker_AttractionCrud();
         else
-            throw new RuntimeException("Attrazioni todo"); // TODO
+            throw new RuntimeException(controller.toString() + " inesistente");
     }
 }

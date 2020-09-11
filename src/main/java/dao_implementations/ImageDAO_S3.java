@@ -27,11 +27,12 @@ public class ImageDAO_S3 implements ImageDAO {
     public boolean deleteAllAccomodationImagesFromBucket(Accomodation accomodation) throws IOException, InterruptedException {
         if (accomodation.getImages() != null) {
             for (String imageS3Url : accomodation.getImages()) {
-                if (deleteThisImageFromBucket(imageS3Url))
-                    return true;
+                if (!deleteThisImageFromBucket(imageS3Url))
+                    return false;
             }
-        }
-        return false;
+            return true;
+        } else
+            return false;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class ImageDAO_S3 implements ImageDAO {
 
         // System.out.println(response.body()); // dbg
 
-        return response.statusCode() != 200;
+        return response.statusCode() == 200;
     }
 
     @Override

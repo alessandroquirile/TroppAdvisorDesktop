@@ -55,4 +55,11 @@ public class DAOFactory {
         else
             throw new TechnologyNotSupportedYetException(hotelStorageTechnology);
     }
+
+    public AttractionDAO getAttractionDAO(String attractionStorageTechnology) {
+        if (attractionStorageTechnology.equals("mongodb"))
+            return new AttractionDAO_MongoDB();
+        else
+            throw new TechnologyNotSupportedYetException(attractionStorageTechnology);
+    }
 }
