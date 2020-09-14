@@ -576,10 +576,6 @@ public class CrudRestaurantController extends CrudController {
         final String provincia = getProvincia();
         final String prezzoMedio = getPrezzoMedio();
         String certificatoDiEccellenza = String.valueOf(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        /*final String orarioAperturaMattutina = getOrarioAperturaMattutina();
-        final String orarioChiusuraMattutina = getOrarioChiusuraMattutina();
-        final String orarioAperturaSerale = getOrarioAperturaSerale();
-        final String orarioChiusuraSerale = getOrarioChiusuraSerale();*/
         boolean concatena = false;
 
         if (!nome.isEmpty()) {
@@ -671,13 +667,6 @@ public class CrudRestaurantController extends CrudController {
                 }
             }
         }
-
-        // Se non vogliamo garantire la ricerca anche per orari di apertura
-        crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
-        crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
-        crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
-        crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
-
         return query;
     }
 
