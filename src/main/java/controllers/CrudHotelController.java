@@ -464,7 +464,7 @@ public class CrudHotelController extends CrudController {
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = "";
 
-        query = getQuery(query);
+        query = createQuery(query);
 
         CrudDialoger.showAlertDialog(query); // dbg
 
@@ -488,7 +488,7 @@ public class CrudHotelController extends CrudController {
         disableCRUDButtons();
     }
 
-    private String getQuery(String query) {
+    private String createQuery(String query) {
         final String nome = getNome();
         final String numeroDiTelefono = getNumeroDiTelefono();
         final String tipoIndirizzo = getTipoIndirizzo();
