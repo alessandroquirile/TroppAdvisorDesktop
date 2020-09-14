@@ -4,10 +4,8 @@ import controllers_utils.CrudDialoger;
 import controllers_utils.InputValidator;
 import dao_interfaces.CityDAO;
 import dao_interfaces.HotelDAO;
-import dao_interfaces.ImageDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import form_checker_interfaces.FormChecker;
 import geocoding.Geocoder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,15 +35,7 @@ import java.util.List;
  */
 public class CrudHotelController extends CrudController {
     private final CrudHotelView crudHotelView;
-    private final int currentPageSize = 100;
-    private DAOFactory daoFactory;
     private HotelDAO hotelDAO;
-    private ImageDAO imageDAO;
-    private int currentPage = 0;
-    private ObservableList<String> imagesSelectedToDelete;
-    private FormCheckerFactory formCheckerFactory;
-    private FormChecker formChecker;
-    private boolean retrieving = false;
 
     public CrudHotelController(CrudHotelView crudHotelView) {
         this.crudHotelView = crudHotelView;

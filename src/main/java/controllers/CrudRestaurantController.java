@@ -4,11 +4,9 @@ import controllers_utils.CrudDialoger;
 import controllers_utils.InputValidator;
 import controllers_utils.TypeOfCuisineItem;
 import dao_interfaces.CityDAO;
-import dao_interfaces.ImageDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import form_checker_interfaces.FormChecker;
 import geocoding.Geocoder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,17 +33,8 @@ import java.util.List;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class CrudRestaurantController extends CrudController {
-
     private final CrudRestaurantView crudRestaurantView;
-    private final int currentPageSize = 100;
-    private DAOFactory daoFactory;
     private RestaurantDAO restaurantDAO;
-    private ImageDAO imageDAO;
-    private int currentPage = 0;
-    private ObservableList<String> imagesSelectedToDelete;
-    private FormCheckerFactory formCheckerFactory;
-    private FormChecker formChecker;
-    private boolean retrieving = false;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
