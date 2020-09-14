@@ -112,30 +112,6 @@ public class CrudRestaurantController extends CrudController {
         }
     }
 
-    private void buttonCercaClicked() {
-        crudRestaurantView.getButtonCerca().setOnAction(event -> {
-            retrieving = true;
-            enableAllTextFields();
-            enableAllChoiceBoxes();
-            disableCRUDButtons();
-            clearTextFields();
-            crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
-            crudRestaurantView.getTableView().setDisable(true);
-            crudRestaurantView.getButtonConferma().setDisable(false);
-            crudRestaurantView.getButtonAnnulla().setDisable(false);
-            crudRestaurantView.getButtonIndietro().setDisable(true);
-            crudRestaurantView.getButtonCaricaFoto().setDisable(false);
-            crudRestaurantView.getTextFieldNumeroDiTelefono().setDisable(false);
-            crudRestaurantView.getListViewFotoPath().setDisable(false);
-            crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
-            crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
-            crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
-            crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
-            crudRestaurantView.getButtonCaricaFoto().setDisable(true);
-            crudRestaurantView.getListViewFotoPath().setDisable(true);
-        });
-    }
-
     @Override
     public void setViewsAsDefault() {
         crudRestaurantView.getButtonIndietro().setDisable(false);
@@ -175,6 +151,30 @@ public class CrudRestaurantController extends CrudController {
         initializeBoxes();
         clearTextFields();
         loadRestaurantsIntoTableView(currentPage, currentPageSize);
+    }
+
+    private void buttonCercaClicked() {
+        crudRestaurantView.getButtonCerca().setOnAction(event -> {
+            retrieving = true;
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            disableCRUDButtons();
+            clearTextFields();
+            crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
+            crudRestaurantView.getTableView().setDisable(true);
+            crudRestaurantView.getButtonConferma().setDisable(false);
+            crudRestaurantView.getButtonAnnulla().setDisable(false);
+            crudRestaurantView.getButtonIndietro().setDisable(true);
+            crudRestaurantView.getButtonCaricaFoto().setDisable(false);
+            crudRestaurantView.getTextFieldNumeroDiTelefono().setDisable(false);
+            crudRestaurantView.getListViewFotoPath().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+            crudRestaurantView.getButtonCaricaFoto().setDisable(true);
+            crudRestaurantView.getListViewFotoPath().setDisable(true);
+        });
     }
 
     private void listViewFotoPathClicked() {

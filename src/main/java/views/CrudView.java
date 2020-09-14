@@ -8,8 +8,9 @@ import javafx.scene.layout.AnchorPane;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public abstract class FormView implements Initializable {
-    // Contiene gli attributi, cioè i campi, in comune a tutte le schermate CRUD
+public abstract class CrudView implements Initializable {
+    @FXML
+    protected Button buttonCerca;
     @FXML
     protected Button buttonMostraAvanti;
     @FXML
@@ -82,6 +83,10 @@ public abstract class FormView implements Initializable {
     protected TableColumn<Object, String> tableColumnName;
     @FXML
     protected TableColumn<Object, String> tableColumnId;
+
+    public Button getButtonCerca() {
+        return buttonCerca;
+    }
 
     public Button getButtonMostraAvanti() {
         return buttonMostraAvanti;

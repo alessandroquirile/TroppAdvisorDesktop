@@ -93,29 +93,6 @@ public class CrudAttractionController extends CrudController {
         }
     }
 
-    private void buttonCercaClicked() {
-        crudAttractionView.getButtonCerca().setOnAction(event -> {
-            retrieving = true;
-            enableAllTextFields();
-            enableAllChoiceBoxes();
-            disableCRUDButtons();
-            clearTextFields();
-            crudAttractionView.getTableView().setDisable(true);
-            crudAttractionView.getButtonConferma().setDisable(false);
-            crudAttractionView.getButtonAnnulla().setDisable(false);
-            crudAttractionView.getButtonIndietro().setDisable(true);
-            crudAttractionView.getButtonCaricaFoto().setDisable(false);
-            crudAttractionView.getTextFieldNumeroDiTelefono().setDisable(false);
-            crudAttractionView.getListViewFotoPath().setDisable(false);
-            crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(true);
-            crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
-            crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
-            crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
-            crudAttractionView.getButtonCaricaFoto().setDisable(true);
-            crudAttractionView.getListViewFotoPath().setDisable(true);
-        });
-    }
-
     @Override
     public void setListenerOnTableView(TableView<Object> tableView) {
         if (tableView.getId().equals("tableView")) {
@@ -174,6 +151,29 @@ public class CrudAttractionController extends CrudController {
     @Override
     public Stage getStage() {
         return (Stage) this.getCrudAttractionView().getRootPane().getScene().getWindow();
+    }
+
+    private void buttonCercaClicked() {
+        crudAttractionView.getButtonCerca().setOnAction(event -> {
+            retrieving = true;
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            disableCRUDButtons();
+            clearTextFields();
+            crudAttractionView.getTableView().setDisable(true);
+            crudAttractionView.getButtonConferma().setDisable(false);
+            crudAttractionView.getButtonAnnulla().setDisable(false);
+            crudAttractionView.getButtonIndietro().setDisable(true);
+            crudAttractionView.getButtonCaricaFoto().setDisable(false);
+            crudAttractionView.getTextFieldNumeroDiTelefono().setDisable(false);
+            crudAttractionView.getListViewFotoPath().setDisable(false);
+            crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(true);
+            crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
+            crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
+            crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+            crudAttractionView.getButtonCaricaFoto().setDisable(true);
+            crudAttractionView.getListViewFotoPath().setDisable(true);
+        });
     }
 
     private void listViewFotoPathClicked() {

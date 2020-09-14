@@ -98,25 +98,6 @@ public class CrudHotelController extends CrudController {
         }
     }
 
-    private void buttonCercaClicked() {
-        crudHotelView.getButtonCerca().setOnAction(e -> {
-            retrieving = true;
-            enableAllTextFields();
-            enableAllChoiceBoxes();
-            disableCRUDButtons();
-            clearTextFields();
-            crudHotelView.getTableView().setDisable(true);
-            crudHotelView.getButtonConferma().setDisable(false);
-            crudHotelView.getButtonAnnulla().setDisable(false);
-            crudHotelView.getButtonIndietro().setDisable(true);
-            crudHotelView.getButtonCaricaFoto().setDisable(false);
-            crudHotelView.getTextFieldNumeroDiTelefono().setDisable(false);
-            crudHotelView.getListViewFotoPath().setDisable(false);
-            crudHotelView.getButtonCaricaFoto().setDisable(true);
-            crudHotelView.getListViewFotoPath().setDisable(true);
-        });
-    }
-
     @Override
     public void setListenerOnTableView(TableView<Object> tableView) {
         if (tableView.getId().equals("tableView")) {
@@ -164,6 +145,25 @@ public class CrudHotelController extends CrudController {
         if (listViewFotoPath.getId().equals("listViewFotoPath")) {
             listViewFotoPathClicked();
         }
+    }
+
+    private void buttonCercaClicked() {
+        crudHotelView.getButtonCerca().setOnAction(e -> {
+            retrieving = true;
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            disableCRUDButtons();
+            clearTextFields();
+            crudHotelView.getTableView().setDisable(true);
+            crudHotelView.getButtonConferma().setDisable(false);
+            crudHotelView.getButtonAnnulla().setDisable(false);
+            crudHotelView.getButtonIndietro().setDisable(true);
+            crudHotelView.getButtonCaricaFoto().setDisable(false);
+            crudHotelView.getTextFieldNumeroDiTelefono().setDisable(false);
+            crudHotelView.getListViewFotoPath().setDisable(false);
+            crudHotelView.getButtonCaricaFoto().setDisable(true);
+            crudHotelView.getListViewFotoPath().setDisable(true);
+        });
     }
 
     private void listViewFotoPathClicked() {

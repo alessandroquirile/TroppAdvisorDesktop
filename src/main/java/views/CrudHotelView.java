@@ -12,13 +12,11 @@ import java.util.ResourceBundle;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class CrudHotelView extends FormView {
+public class CrudHotelView extends CrudView {
     @FXML
     private TableColumn<Object, Integer> tableColumnNumeroStelle;
     @FXML
     private ChoiceBox<Integer> choiceBoxNumeroStelle;
-    @FXML
-    private Button buttonCerca;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

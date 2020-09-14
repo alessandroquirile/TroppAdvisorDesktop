@@ -2,7 +2,6 @@ package views;
 
 import controllers.CrudAttractionController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 
@@ -12,9 +11,7 @@ import java.util.ResourceBundle;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class CrudAttractionView extends FormView {
-    @FXML
-    private Button buttonCerca; // andrà in FormView
+public class CrudAttractionView extends CrudView {
     @FXML
     private TableColumn<Object, String> tableColumnOrarioApertura;
     @FXML
@@ -44,10 +41,6 @@ public class CrudAttractionView extends FormView {
         crudAttractionController.setListenerOnTableView(tableView);
         crudAttractionController.setListenerOnListView(listViewFotoPath);
         crudAttractionController.setViewsAsDefault();
-    }
-
-    public Button getButtonCerca() {
-        return buttonCerca;
     }
 
     public TableColumn<Object, String> getTableColumnOrarioApertura() {
