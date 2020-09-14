@@ -9,7 +9,7 @@
     <Button fx:id="buttonInserisci" layoutX="166.0" layoutY="27.0" mnemonicParsing="false"
             style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Inserisci"
             AnchorPane.leftAnchor="166.0"/>
-    <Button fx:id="buttonElimina" disable="true" layoutX="327.0" layoutY="26.0" mnemonicParsing="false" text="Elimina"/>
+    <Button fx:id="buttonElimina" disable="true" layoutX="424.0" layoutY="27.0" mnemonicParsing="false" text="Elimina"/>
     <Button fx:id="buttonConferma" disable="true" layoutX="541.0" layoutY="28.0" mnemonicParsing="false"
             text="Conferma"/>
     <Button fx:id="buttonAnnulla" disable="true" layoutX="629.0" layoutY="28.0" mnemonicParsing="false" text="Annulla"/>
@@ -34,8 +34,8 @@
             <TableColumn fx:id="tableColumnImmagini" prefWidth="75.0" text="Immagini"/>
         </columns>
     </TableView>
-    <Button fx:id="buttonModifica" disable="true" layoutX="244.0" layoutY="27.0" mnemonicParsing="false" text="Modifica"
-            AnchorPane.topAnchor="27.0"/>
+    <Button fx:id="buttonModifica" disable="true" layoutX="341.0" layoutY="28.0" mnemonicParsing="false" text="Modifica"
+            AnchorPane.topAnchor="28.0"/>
     <Label layoutX="29.0" layoutY="73.0" text="Nome"/>
     <TextField fx:id="textFieldNome" disable="true" layoutX="29.0" layoutY="91.0" prefHeight="26.0" prefWidth="701.0"
                promptText="Nome Hotel"/>
@@ -76,4 +76,6 @@
     <Label layoutX="29.0" layoutY="400.0" text="Numero stelle"/>
     <ChoiceBox fx:id="choiceBoxNumeroStelle" disable="true" layoutX="29.0" layoutY="419.0" prefHeight="26.0"
                prefWidth="66.0"/>
+    <Button fx:id="buttonCerca" layoutX="259.0" layoutY="28.0" mnemonicParsing="false"
+            style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Cerca"/>
 </AnchorPane>

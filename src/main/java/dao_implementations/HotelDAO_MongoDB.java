@@ -15,9 +15,11 @@ import utils.ConfigFileReader;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +105,48 @@ public class HotelDAO_MongoDB implements HotelDAO {
         /*for (Hotel hotel : hotels) {
             System.out.println(hotel.getName());
         }*/
+        return hotels;
+    }
+
+    @Override
+    public List<Hotel> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException {
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/search-by-rsql-no-point?";
+        if (query != null)
+            URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
+        else
+            URL += "page=" + page + "&size=" + size;
+
+        System.out.println("URL: " + URL);
+
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .GET()
+                .header("accept", "application/json")
+                .uri(URI.create(URL)) // bug qui, URISyntaxException
+                .build();
+
+        HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        List<Hotel> hotels = null;
+
+        // No content
+        if (httpResponses.statusCode() == 204)
+            return null;
+        else if (httpResponses.statusCode() == 200) {
+            JSONObject jsonObject = new JSONObject(httpResponses.body());
+            JSONArray jsonArray = jsonObject.getJSONArray("content");
+            hotels = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
+                Hotel hotel = objectMapper.readValue(jsonArray.get(i).toString(), Hotel.class);
+                hotels.add(hotel);
+            }
+        }
+
+        System.out.println("Response: " + httpResponses);
+
         return hotels;
     }
 

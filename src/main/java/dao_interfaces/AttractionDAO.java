@@ -13,6 +13,8 @@ public interface AttractionDAO {
 
     List<Attraction> retrieveAt(int page, int size) throws IOException, InterruptedException;
 
+    List<Attraction> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException;
+
     boolean delete(Attraction attraction) throws IOException, InterruptedException;
 
     boolean update(Attraction attraction) throws IOException, InterruptedException;

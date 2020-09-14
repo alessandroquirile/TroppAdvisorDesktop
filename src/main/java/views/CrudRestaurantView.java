@@ -3,10 +3,7 @@ package views;
 import controllers.CrudRestaurantController;
 import controllers_utils.TypeOfCuisineItem;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,11 +31,14 @@ public class CrudRestaurantView extends FormView {
     private ComboBox<String> comboBoxOrarioAperturaSerale;
     @FXML
     private ComboBox<String> comboBoxOrarioChiusuraSerale;
+    @FXML
+    private Button buttonCerca;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudRestaurantController crudRestaurantController = new CrudRestaurantController(this);
         crudRestaurantController.setListenerOn(buttonInserisci);
+        crudRestaurantController.setListenerOn(buttonCerca);
         crudRestaurantController.setListenerOn(buttonElimina);
         crudRestaurantController.setListenerOn(buttonModifica);
         crudRestaurantController.setListenerOn(buttonAnnulla);
@@ -52,6 +52,10 @@ public class CrudRestaurantView extends FormView {
         crudRestaurantController.setListenerOnTableView(tableView);
         crudRestaurantController.setListenerOnListView(listViewFotoPath);
         crudRestaurantController.setViewsAsDefault();
+    }
+
+    public Button getButtonCerca() {
+        return buttonCerca;
     }
 
     public TableColumn<Object, String> getTableColumnTipoDiCucina() {

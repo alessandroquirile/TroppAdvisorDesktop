@@ -19,6 +19,8 @@ public class FormChecker_AttractionCrud implements FormChecker {
                 crudAttractionController.getCittà().isEmpty() ||
                 crudAttractionController.getPrezzoMedio().isEmpty() ||
                 crudAttractionController.getNumeroDiTelefono().isEmpty() ||
+                crudAttractionController.getTipoIndirizzo() == null ||
                 Bindings.isEmpty(crudAttractionController.getImagesFromListView()).get();
+
     }
 }

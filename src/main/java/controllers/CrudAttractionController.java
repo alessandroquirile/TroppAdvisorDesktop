@@ -45,6 +45,7 @@ public class CrudAttractionController extends CrudController {
     private ObservableList<String> imagesSelectedToDelete;
     private FormCheckerFactory formCheckerFactory;
     private FormChecker formChecker;
+    private boolean retrieving = false;
 
     public CrudAttractionController(CrudAttractionView crudAttractionView) {
         this.crudAttractionView = crudAttractionView;
@@ -86,7 +87,33 @@ public class CrudAttractionController extends CrudController {
             case "buttonMostraAvanti":
                 buttonMostraAvantiClicked();
                 break;
+            case "buttonCerca":
+                buttonCercaClicked();
+                break;
         }
+    }
+
+    private void buttonCercaClicked() {
+        crudAttractionView.getButtonCerca().setOnAction(event -> {
+            retrieving = true;
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            disableCRUDButtons();
+            clearTextFields();
+            crudAttractionView.getTableView().setDisable(true);
+            crudAttractionView.getButtonConferma().setDisable(false);
+            crudAttractionView.getButtonAnnulla().setDisable(false);
+            crudAttractionView.getButtonIndietro().setDisable(true);
+            crudAttractionView.getButtonCaricaFoto().setDisable(false);
+            crudAttractionView.getTextFieldNumeroDiTelefono().setDisable(false);
+            crudAttractionView.getListViewFotoPath().setDisable(false);
+            crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(true);
+            crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
+            crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
+            crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+            crudAttractionView.getButtonCaricaFoto().setDisable(true);
+            crudAttractionView.getListViewFotoPath().setDisable(true);
+        });
     }
 
     @Override
@@ -119,16 +146,19 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
         crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
         crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
-        crudAttractionView.getComboBoxOrarioAperturaMattutina().getSelectionModel().selectFirst();
-        crudAttractionView.getComboBoxOrarioChiusuraMattutina().getSelectionModel().selectFirst();
-        crudAttractionView.getComboBoxOrarioAperturaSerale().getSelectionModel().selectFirst();
-        crudAttractionView.getComboBoxOrarioChiusuraSerale().getSelectionModel().selectFirst();
+        crudAttractionView.getComboBoxOrarioAperturaMattutina().getSelectionModel().clearSelection();
+        crudAttractionView.getComboBoxOrarioChiusuraMattutina().getSelectionModel().clearSelection();
+        crudAttractionView.getComboBoxOrarioAperturaSerale().getSelectionModel().clearSelection();
+        crudAttractionView.getComboBoxOrarioChiusuraSerale().getSelectionModel().clearSelection();
+        crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
         crudAttractionView.getButtonCaricaFoto().setDisable(true);
         crudAttractionView.getListViewFotoPath().setDisable(true);
-        crudAttractionView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
+        crudAttractionView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         crudAttractionView.getListViewFotoPath().getItems().clear();
         crudAttractionView.getButtonEliminaFotoSelezionate().setDisable(true);
         crudAttractionView.getTableView().setDisable(false);
+        crudAttractionView.getButtonCerca().setDisable(false);
+        crudAttractionView.getCheckBoxCertificatoDiEccellenza().setSelected(false);
         initializeBoxes();
         clearTextFields();
         loadAttractionsIntoTableView(currentPage, currentPageSize);
@@ -211,6 +241,7 @@ public class CrudAttractionController extends CrudController {
     }
 
     public void disableCRUDButtons() {
+        crudAttractionView.getButtonCerca().setDisable(true);
         crudAttractionView.getButtonInserisci().setDisable(true);
         crudAttractionView.getButtonModifica().setDisable(true);
         crudAttractionView.getButtonElimina().setDisable(true);
@@ -272,7 +303,7 @@ public class CrudAttractionController extends CrudController {
     private void initializeChoiceBoxIndirizzo() {
         ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
         crudAttractionView.getChoiceBoxIndirizzo().setItems(observableList);
-        crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
+        //crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
     private void initializeComboBoxOrariMattutini() {
@@ -354,7 +385,7 @@ public class CrudAttractionController extends CrudController {
     private void setProperAddressTypeIntoAddressTypeChoiceBox(Attraction attraction) {
         if (attraction.getTypeOfAddress().equals("Via"))
             crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().select(0);
-        if (attraction.getTypeOfAddress().equals("Vie"))
+        if (attraction.getTypeOfAddress().equals("Viale"))
             crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().select(1);
         if (attraction.getTypeOfAddress().equals("Vico"))
             crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().select(2);
@@ -417,44 +448,203 @@ public class CrudAttractionController extends CrudController {
             formCheckerFactory = FormCheckerFactory.getInstance();
             formChecker = formCheckerFactory.getFormChecker(this);
 
-            if (formChecker.formHasSomeEmptyField(this)) {
-                CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+            if (retrieving) {
+                try {
+                    doRetrieveByQuery();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
-                if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
-                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                if (InputValidator.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
-                                    if (InputValidator.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
-                                        Attraction attraction = getAttractionWithFormData();
-                                        daoFactory = DAOFactory.getInstance();
-                                        attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
-                                        if (crudAttractionView.getButtonModifica().isDisable()) {
-                                            doInsert(attraction);
+                if (formChecker.formHasSomeEmptyField(this)) {
+                    CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+                } else {
+                    if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                            if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
+                                if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                    if (InputValidator.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
+                                        if (InputValidator.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
+                                            Attraction attraction = getAttractionWithFormData();
+                                            daoFactory = DAOFactory.getInstance();
+                                            attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
+                                            if (crudAttractionView.getButtonModifica().isDisable()) {
+                                                doInsert(attraction);
+                                            } else {
+                                                doUpdate(attraction);
+                                                imagesSelectedToDelete = null;
+                                            }
                                         } else {
-                                            doUpdate(attraction);
-                                            imagesSelectedToDelete = null;
+                                            CrudDialoger.showAlertDialog(this, "Orario serale non valido");
                                         }
                                     } else {
-                                        CrudDialoger.showAlertDialog(this, "Orario serale non valido");
+                                        CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
                                     }
                                 } else {
-                                    CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
+                                    CrudDialoger.showAlertDialog(this, "CAP non valido");
                                 }
                             } else {
-                                CrudDialoger.showAlertDialog(this, "CAP non valido");
+                                CrudDialoger.showAlertDialog(this, "Numero civico non valido");
                             }
                         } else {
-                            CrudDialoger.showAlertDialog(this, "Numero civico non valido");
+                            CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
                         }
                     } else {
-                        CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
+                        CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                     }
-                } else {
-                    CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                 }
             }
         });
+    }
+
+    private void doRetrieveByQuery() throws IOException, InterruptedException {
+        String query = "";
+
+        query = getQuery(query);
+
+        CrudDialoger.showAlertDialog(this, query); // dbg
+
+        daoFactory = DAOFactory.getInstance();
+        attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
+
+        List<Attraction> attractions = (query.equals("")) ? attractionDAO.retrieveAt(currentPage, currentPageSize)
+                : attractionDAO.retrieveByQuery(query, currentPage, currentPageSize);
+
+        if (attractions != null) {
+            final ObservableList<Object> data = FXCollections.observableArrayList(attractions);
+            fillColumnsWithData();
+            crudAttractionView.getTableView().setItems(data);
+            System.out.println(attractions); // dbg
+            crudAttractionView.getTableView().setDisable(false);
+            //retrieving = false;
+        } else {
+            CrudDialoger.showAlertDialog(this, "Non sono state trovate attrazioni con questi criteri: " + query +
+                    "&page=" + currentPage + "&size=" + currentPageSize);
+        }
+        disableCRUDButtons();
+    }
+
+    private String getQuery(String query) {
+        final String nome = getNome();
+        final String numeroDiTelefono = getNumeroDiTelefono();
+        final String tipoIndirizzo = getTipoIndirizzo();
+        final String strada = getStrada();
+        final String civico = getNumeroCivico();
+        final String città = getCittà();
+        final String cap = getCAP();
+        final String provincia = getProvincia();
+        final String prezzoMedio = getPrezzoMedio();
+        String certificatoDiEccellenza = String.valueOf(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        /*final String orarioAperturaMattutina = getOrarioAperturaMattutina();
+        final String orarioChiusuraMattutina = getOrarioChiusuraMattutina();
+        final String orarioAperturaSerale = getOrarioAperturaSerale();
+        final String orarioChiusuraSerale = getOrarioChiusuraSerale();*/
+        boolean concatena = false;
+
+        if (!nome.isEmpty()) {
+            query += "name==\"" + nome + "\"";
+            concatena = true;
+        }
+
+        if (!numeroDiTelefono.isEmpty()) {
+            if (concatena)
+                query += ";phoneNumber==\"" + numeroDiTelefono + "\"";
+            else {
+                query += "phoneNumber==\"" + numeroDiTelefono + "\"";
+                concatena = true;
+            }
+        }
+        if (tipoIndirizzo != null) {
+            if (concatena)
+                query += ";address.type==\"" + tipoIndirizzo + "\"";
+            else {
+                query += "address.type==\"" + tipoIndirizzo + "\"";
+                concatena = true;
+            }
+        }
+        if (!strada.isEmpty()) {
+            if (concatena)
+                query += ";address.street==\"" + strada + "\"";
+            else {
+                query += "address.street==\"" + strada + "\"";
+                concatena = true;
+            }
+        }
+        if (!civico.isEmpty()) {
+            if (concatena)
+                query += ";address.houseNumber==\"" + civico + "\"";
+            else {
+                query += "address.houseNumber==\"" + civico + "\"";
+                concatena = true;
+            }
+        }
+        if (!città.isEmpty()) {
+            if (concatena)
+                query += ";address.city==\"" + città + "\"";
+            else {
+                query += "address.city==\"" + città + "\"";
+                concatena = true;
+            }
+        }
+        if (!cap.isEmpty()) {
+            if (concatena)
+                query += ";address.postalCode==\"" + cap + "\"";
+            else {
+                query += "address.postalCode==\"" + cap + "\"";
+                concatena = true;
+            }
+        }
+        if (!provincia.isEmpty()) {
+            if (concatena)
+                query += ";address.province==\"" + provincia + "\"";
+            else {
+                query += "address.province==\"" + provincia + "\"";
+                concatena = true;
+            }
+        }
+        if (!prezzoMedio.isEmpty()) {
+            if (concatena)
+                query += ";avaragePrice==\"" + prezzoMedio + "\"";
+            else {
+                query += "avaragePrice==\"" + prezzoMedio + "\"";
+                concatena = true;
+            }
+        }
+
+        // Se selezionato il certificato di eccellenza, inseriscilo
+        if (crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
+            if (concatena)
+                query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+            else {
+                query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                concatena = true;
+            }
+        } else {
+            if (!CrudDialoger.ignoreExcellence()) {
+                certificatoDiEccellenza = "false";
+                if (concatena)
+                    query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                else {
+                    query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                    concatena = true;
+                }
+            }
+        }
+
+        crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(true);
+        crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
+        crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
+        crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+        // Bug
+        /*if (orarioAperturaMattutina != null && orarioChiusuraMattutina != null && orarioAperturaSerale != null && orarioChiusuraSerale != null) {
+            String openingTime = orarioAperturaMattutina + " - " + orarioChiusuraMattutina +
+                    " " + orarioAperturaSerale + " - " + orarioChiusuraSerale;
+            if (concatena)
+                query += ";openingTime==\"" + openingTime + "\"";
+            else
+                query += "openingTime==\"" + openingTime + "\"";
+        }*/
+
+        return query;
     }
 
     private void doInsert(Attraction attraction) {
@@ -614,7 +804,10 @@ public class CrudAttractionController extends CrudController {
     }
 
     private void buttonAnnullaClicked() {
-        crudAttractionView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
+        crudAttractionView.getButtonAnnulla().setOnAction(event -> {
+            setViewsAsDefault();
+            retrieving = false;
+        });
     }
 
     public String getNome() {
@@ -627,6 +820,10 @@ public class CrudAttractionController extends CrudController {
 
     public String getNumeroCivico() {
         return this.crudAttractionView.getTxtFieldNumeroCivico().getText();
+    }
+
+    public String getTipoIndirizzo() {
+        return this.crudAttractionView.getChoiceBoxIndirizzo().getValue();
     }
 
     public String getProvincia() {

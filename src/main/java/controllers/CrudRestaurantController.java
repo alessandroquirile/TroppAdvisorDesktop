@@ -45,6 +45,7 @@ public class CrudRestaurantController extends CrudController {
     private ObservableList<String> imagesSelectedToDelete;
     private FormCheckerFactory formCheckerFactory;
     private FormChecker formChecker;
+    private boolean retrieving = false;
 
     public CrudRestaurantController(CrudRestaurantView crudRestaurantView) {
         this.crudRestaurantView = crudRestaurantView;
@@ -105,7 +106,34 @@ public class CrudRestaurantController extends CrudController {
             case "buttonMostraAvanti":
                 buttonMostraAvantiClicked();
                 break;
+            case "buttonCerca":
+                buttonCercaClicked();
+                break;
         }
+    }
+
+    private void buttonCercaClicked() {
+        crudRestaurantView.getButtonCerca().setOnAction(event -> {
+            retrieving = true;
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            disableCRUDButtons();
+            clearTextFields();
+            crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
+            crudRestaurantView.getTableView().setDisable(true);
+            crudRestaurantView.getButtonConferma().setDisable(false);
+            crudRestaurantView.getButtonAnnulla().setDisable(false);
+            crudRestaurantView.getButtonIndietro().setDisable(true);
+            crudRestaurantView.getButtonCaricaFoto().setDisable(false);
+            crudRestaurantView.getTextFieldNumeroDiTelefono().setDisable(false);
+            crudRestaurantView.getListViewFotoPath().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+            crudRestaurantView.getButtonCaricaFoto().setDisable(true);
+            crudRestaurantView.getListViewFotoPath().setDisable(true);
+        });
     }
 
     @Override
@@ -142,6 +170,8 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getListViewFotoPath().getItems().clear();
         crudRestaurantView.getButtonEliminaFotoSelezionate().setDisable(true);
         crudRestaurantView.getTableView().setDisable(false);
+        crudRestaurantView.getButtonCerca().setDisable(false);
+        crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setSelected(false);
         initializeBoxes();
         clearTextFields();
         loadRestaurantsIntoTableView(currentPage, currentPageSize);
@@ -213,6 +243,7 @@ public class CrudRestaurantController extends CrudController {
     }
 
     public void disableCRUDButtons() {
+        crudRestaurantView.getButtonCerca().setDisable(true);
         crudRestaurantView.getButtonInserisci().setDisable(true);
         crudRestaurantView.getButtonModifica().setDisable(true);
         crudRestaurantView.getButtonElimina().setDisable(true);
@@ -276,7 +307,7 @@ public class CrudRestaurantController extends CrudController {
     private void initializeChoiceBoxIndirizzo() {
         ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
         crudRestaurantView.getChoiceBoxIndirizzo().setItems(observableList);
-        crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
+        //crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
     private void initializeComboBoxOrariMattutini() {
@@ -374,7 +405,7 @@ public class CrudRestaurantController extends CrudController {
     private void setProperAddressTypeIntoAddressTypeChoiceBox(Restaurant restaurant) {
         if (restaurant.getTypeOfAddress().equals("Via"))
             crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(0);
-        if (restaurant.getTypeOfAddress().equals("Vie"))
+        if (restaurant.getTypeOfAddress().equals("Viale"))
             crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(1);
         if (restaurant.getTypeOfAddress().equals("Vico"))
             crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().select(2);
@@ -454,44 +485,197 @@ public class CrudRestaurantController extends CrudController {
             formCheckerFactory = FormCheckerFactory.getInstance();
             formChecker = formCheckerFactory.getFormChecker(this);
 
-            if (formChecker.formHasSomeEmptyField(this)) {
-                CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+            if (retrieving) {
+                try {
+                    doRetrieveByQuery();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
-                if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
-                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                if (InputValidator.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
-                                    if (InputValidator.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
-                                        Restaurant restaurant = getRestaurantWithFormData();
-                                        daoFactory = DAOFactory.getInstance();
-                                        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                        if (crudRestaurantView.getButtonModifica().isDisable()) {
-                                            doInsert(restaurant);
+                if (formChecker.formHasSomeEmptyField(this)) {
+                    CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+                } else {
+                    if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                            if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
+                                if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                    if (InputValidator.isValidOpeningTimeAtMorning(orarioAperturaMattutina, orarioChiusuraMattutina)) {
+                                        if (InputValidator.isValidOpeningTimeAtEvening(orarioAperturaSerale, orarioChiusuraSerale)) {
+                                            Restaurant restaurant = getRestaurantWithFormData();
+                                            daoFactory = DAOFactory.getInstance();
+                                            restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                            if (crudRestaurantView.getButtonModifica().isDisable()) {
+                                                doInsert(restaurant);
+                                            } else {
+                                                doUpdate(restaurant);
+                                                imagesSelectedToDelete = null;
+                                            }
                                         } else {
-                                            doUpdate(restaurant);
-                                            imagesSelectedToDelete = null;
+                                            CrudDialoger.showAlertDialog(this, "Orario serale non valido");
                                         }
                                     } else {
-                                        CrudDialoger.showAlertDialog(this, "Orario serale non valido");
+                                        CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
                                     }
                                 } else {
-                                    CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
+                                    CrudDialoger.showAlertDialog(this, "CAP non valido");
                                 }
                             } else {
-                                CrudDialoger.showAlertDialog(this, "CAP non valido");
+                                CrudDialoger.showAlertDialog(this, "Numero civico non valido");
                             }
                         } else {
-                            CrudDialoger.showAlertDialog(this, "Numero civico non valido");
+                            CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
                         }
                     } else {
-                        CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
+                        CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                     }
-                } else {
-                    CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                 }
             }
         });
+    }
+
+    private void doRetrieveByQuery() throws IOException, InterruptedException {
+        String query = "";
+
+        query = getQuery(query);
+
+        CrudDialoger.showAlertDialog(this, query); // dbg
+
+        daoFactory = DAOFactory.getInstance();
+        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+
+        List<Restaurant> restaurants = (query.equals("")) ? restaurantDAO.retrieveAt(currentPage, currentPageSize)
+                : restaurantDAO.retrieveByQuery(query, currentPage, currentPageSize);
+
+        if (restaurants != null) {
+            List<String> typeOfCuisineDesired = getTypeOfCuisineWithFormData();
+            restaurants.removeIf(restaurant -> !restaurant.getTypeOfCuisine().containsAll(typeOfCuisineDesired));
+            final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
+            fillColumnsWithData();
+            crudRestaurantView.getTableView().setItems(data);
+            System.out.println(restaurants); // dbg
+            crudRestaurantView.getTableView().setDisable(false);
+            //retrieving = false;
+        } else {
+            CrudDialoger.showAlertDialog(this, "Non sono stati trovati ristoranti con questi criteri: " + query +
+                    "&page=" + currentPage + "&size=" + currentPageSize);
+        }
+        disableCRUDButtons();
+    }
+
+    private String getQuery(String query) {
+        final String nome = getNome();
+        final String numeroDiTelefono = getNumeroDiTelefono();
+        final String tipoIndirizzo = getTipoIndirizzo();
+        final String strada = getStrada();
+        final String civico = getNumeroCivico();
+        final String città = getCittà();
+        final String cap = getCAP();
+        final String provincia = getProvincia();
+        final String prezzoMedio = getPrezzoMedio();
+        String certificatoDiEccellenza = String.valueOf(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        /*final String orarioAperturaMattutina = getOrarioAperturaMattutina();
+        final String orarioChiusuraMattutina = getOrarioChiusuraMattutina();
+        final String orarioAperturaSerale = getOrarioAperturaSerale();
+        final String orarioChiusuraSerale = getOrarioChiusuraSerale();*/
+        boolean concatena = false;
+
+        if (!nome.isEmpty()) {
+            query += "name==\"" + nome + "\"";
+            concatena = true;
+        }
+
+        if (!numeroDiTelefono.isEmpty()) {
+            if (concatena)
+                query += ";phoneNumber==\"" + numeroDiTelefono + "\"";
+            else {
+                query += "phoneNumber==\"" + numeroDiTelefono + "\"";
+                concatena = true;
+            }
+        }
+        if (tipoIndirizzo != null) {
+            if (concatena)
+                query += ";address.type==\"" + tipoIndirizzo + "\"";
+            else {
+                query += "address.type==\"" + tipoIndirizzo + "\"";
+                concatena = true;
+            }
+        }
+        if (!strada.isEmpty()) {
+            if (concatena)
+                query += ";address.street==\"" + strada + "\"";
+            else {
+                query += "address.street==\"" + strada + "\"";
+                concatena = true;
+            }
+        }
+        if (!civico.isEmpty()) {
+            if (concatena)
+                query += ";address.houseNumber==\"" + civico + "\"";
+            else {
+                query += "address.houseNumber==\"" + civico + "\"";
+                concatena = true;
+            }
+        }
+        if (!città.isEmpty()) {
+            if (concatena)
+                query += ";address.city==\"" + città + "\"";
+            else {
+                query += "address.city==\"" + città + "\"";
+                concatena = true;
+            }
+        }
+        if (!cap.isEmpty()) {
+            if (concatena)
+                query += ";address.postalCode==\"" + cap + "\"";
+            else {
+                query += "address.postalCode==\"" + cap + "\"";
+                concatena = true;
+            }
+        }
+        if (!provincia.isEmpty()) {
+            if (concatena)
+                query += ";address.province==\"" + provincia + "\"";
+            else {
+                query += "address.province==\"" + provincia + "\"";
+                concatena = true;
+            }
+        }
+        if (!prezzoMedio.isEmpty()) {
+            if (concatena)
+                query += ";avaragePrice==\"" + prezzoMedio + "\"";
+            else {
+                query += "avaragePrice==\"" + prezzoMedio + "\"";
+                concatena = true;
+            }
+        }
+
+        // Se selezionato il certificato di eccellenza, inseriscilo
+        if (crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
+            if (concatena)
+                query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+            else {
+                query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                concatena = true;
+            }
+        } else {
+            if (!CrudDialoger.ignoreExcellence()) {
+                certificatoDiEccellenza = "false";
+                if (concatena)
+                    query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                else {
+                    query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                    concatena = true;
+                }
+            }
+        }
+
+        // Se non vogliamo garantire la ricerca anche per orari di apertura
+        crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
+        crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
+        crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
+        crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+
+        return query;
     }
 
     private void doInsert(Restaurant restaurant) {
@@ -656,13 +840,20 @@ public class CrudRestaurantController extends CrudController {
         return new Date().toString();
     }
 
+    public String getTipoIndirizzo() {
+        return this.crudRestaurantView.getChoiceBoxIndirizzo().getValue();
+    }
+
     private String getOpeningTimeWithFormData() {
         return crudRestaurantView.getComboBoxOrarioAperturaMattutina().getValue() + " - " + crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getValue() +
                 " " + crudRestaurantView.getComboBoxOrarioAperturaSerale().getValue() + " - " + crudRestaurantView.getComboBoxOrarioChiusuraSerale().getValue();
     }
 
     private void buttonAnnullaClicked() {
-        crudRestaurantView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
+        crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
+            setViewsAsDefault();
+            retrieving = false;
+        });
     }
 
     public CrudRestaurantView getCrudRestaurantView() {

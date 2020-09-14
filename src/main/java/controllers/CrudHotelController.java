@@ -45,6 +45,7 @@ public class CrudHotelController extends CrudController {
     private ObservableList<String> imagesSelectedToDelete;
     private FormCheckerFactory formCheckerFactory;
     private FormChecker formChecker;
+    private boolean retrieving = false;
 
     public CrudHotelController(CrudHotelView crudHotelView) {
         this.crudHotelView = crudHotelView;
@@ -91,7 +92,29 @@ public class CrudHotelController extends CrudController {
             case "buttonMostraAvanti":
                 buttonMostraAvantiClicked();
                 break;
+            case "buttonCerca":
+                buttonCercaClicked();
+                break;
         }
+    }
+
+    private void buttonCercaClicked() {
+        crudHotelView.getButtonCerca().setOnAction(e -> {
+            retrieving = true;
+            enableAllTextFields();
+            enableAllChoiceBoxes();
+            disableCRUDButtons();
+            clearTextFields();
+            crudHotelView.getTableView().setDisable(true);
+            crudHotelView.getButtonConferma().setDisable(false);
+            crudHotelView.getButtonAnnulla().setDisable(false);
+            crudHotelView.getButtonIndietro().setDisable(true);
+            crudHotelView.getButtonCaricaFoto().setDisable(false);
+            crudHotelView.getTextFieldNumeroDiTelefono().setDisable(false);
+            crudHotelView.getListViewFotoPath().setDisable(false);
+            crudHotelView.getButtonCaricaFoto().setDisable(true);
+            crudHotelView.getListViewFotoPath().setDisable(true);
+        });
     }
 
     @Override
@@ -114,6 +137,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getButtonConferma().setDisable(true);
         crudHotelView.getButtonAnnulla().setDisable(true);
         crudHotelView.getButtonAiuto().setDisable(false);
+        crudHotelView.getButtonAiuto().setDisable(false);
         crudHotelView.getTextFieldNome().setDisable(true);
         crudHotelView.getTextFieldPrezzoMedio().setDisable(true);
         crudHotelView.getChoiceBoxIndirizzo().setDisable(true);
@@ -127,7 +151,10 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getButtonEliminaFotoSelezionate().setDisable(true);
         crudHotelView.getChoiceBoxNumeroStelle().setDisable(true);
         crudHotelView.getTableView().setDisable(false);
+        crudHotelView.getButtonCerca().setDisable(false);
+        crudHotelView.getCheckBoxCertificatoDiEccellenza().setSelected(false);
         initializeBoxes();
+        crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
         clearTextFields();
         loadHotelsIntoTableView(currentPage, currentPageSize);
     }
@@ -202,6 +229,7 @@ public class CrudHotelController extends CrudController {
     }
 
     public void disableCRUDButtons() {
+        crudHotelView.getButtonCerca().setDisable(true);
         crudHotelView.getButtonInserisci().setDisable(true);
         crudHotelView.getButtonModifica().setDisable(true);
         crudHotelView.getButtonElimina().setDisable(true);
@@ -258,7 +286,7 @@ public class CrudHotelController extends CrudController {
     private void initializeChoiceBoxIndirizzo() {
         ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
         crudHotelView.getChoiceBoxIndirizzo().setItems(observableList);
-        crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
+        //crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
     private void initializeChoiceBoxNumeroStelle() {
@@ -333,7 +361,7 @@ public class CrudHotelController extends CrudController {
     private void setProperAddressTypeIntoAddressTypeChoiceBox(Hotel hotel) {
         if (hotel.getTypeOfAddress().equals("Via"))
             crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().select(0);
-        if (hotel.getTypeOfAddress().equals("Vie"))
+        if (hotel.getTypeOfAddress().equals("Viale"))
             crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().select(1);
         if (hotel.getTypeOfAddress().equals("Vico"))
             crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().select(2);
@@ -394,36 +422,188 @@ public class CrudHotelController extends CrudController {
             formCheckerFactory = FormCheckerFactory.getInstance();
             formChecker = formCheckerFactory.getFormChecker(this);
 
-            if (formChecker.formHasSomeEmptyField(this)) {
-                CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+            if (retrieving) {
+                try {
+                    doRetrieveByQuery();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
-                if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
-                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                Hotel hotel = getHotelWithFormData();
-                                daoFactory = DAOFactory.getInstance();
-                                hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
-                                if (crudHotelView.getButtonModifica().isDisable()) {
-                                    doInsert(hotel);
+                if (formChecker.formHasSomeEmptyField(this)) {
+                    CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+                } else {
+                    if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                            if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
+                                if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                    Hotel hotel = getHotelWithFormData();
+                                    daoFactory = DAOFactory.getInstance();
+                                    hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
+                                    if (crudHotelView.getButtonModifica().isDisable()) {
+                                        doInsert(hotel);
+                                    } else {
+                                        doUpdate(hotel);
+                                        imagesSelectedToDelete = null;
+                                    }
                                 } else {
-                                    doUpdate(hotel);
-                                    imagesSelectedToDelete = null;
+                                    CrudDialoger.showAlertDialog(this, "CAP non valido");
                                 }
                             } else {
-                                CrudDialoger.showAlertDialog(this, "CAP non valido");
+                                CrudDialoger.showAlertDialog(this, "Numero civico non valido");
                             }
                         } else {
-                            CrudDialoger.showAlertDialog(this, "Numero civico non valido");
+                            CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
                         }
                     } else {
-                        CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
+                        CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                     }
-                } else {
-                    CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
                 }
             }
         });
+    }
+
+    private void doRetrieveByQuery() throws IOException, InterruptedException {
+        String query = "";
+
+        query = getQuery(query);
+
+        CrudDialoger.showAlertDialog(this, query); // dbg
+
+        daoFactory = DAOFactory.getInstance();
+        hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
+
+        List<Hotel> hotels = (query.equals("")) ? hotelDAO.retrieveAt(currentPage, currentPageSize)
+                : hotelDAO.retrieveByQuery(query, currentPage, currentPageSize);
+
+        if (hotels != null) {
+            final ObservableList<Object> data = FXCollections.observableArrayList(hotels);
+            fillColumnsWithData();
+            crudHotelView.getTableView().setItems(data);
+            System.out.println(hotels); // dbg
+            crudHotelView.getTableView().setDisable(false);
+            //retrieving = false;
+        } else {
+            CrudDialoger.showAlertDialog(this, "Non sono stati trovati hotel con questi criteri: " + query +
+                    "&page=" + currentPage + "&size=" + currentPageSize);
+        }
+        disableCRUDButtons();
+    }
+
+    private String getQuery(String query) {
+        final String nome = getNome();
+        final String numeroDiTelefono = getNumeroDiTelefono();
+        final String tipoIndirizzo = getTipoIndirizzo();
+        final Integer stelle = getStars();
+        final String strada = getStrada();
+        final String civico = getNumeroCivico();
+        final String città = getCittà();
+        final String cap = getCAP();
+        final String provincia = getProvincia();
+        final String prezzoMedio = getPrezzoMedio();
+        String certificatoDiEccellenza = String.valueOf(crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        boolean concatena = false;
+
+        if (!nome.isEmpty()) {
+            query += "name==\"" + nome + "\"";
+            concatena = true;
+        }
+
+        if (!numeroDiTelefono.isEmpty()) {
+            if (concatena)
+                query += ";phoneNumber==\"" + numeroDiTelefono + "\"";
+            else {
+                query += "phoneNumber==\"" + numeroDiTelefono + "\"";
+                concatena = true;
+            }
+        }
+
+        if (stelle != null) {
+            if (concatena)
+                query += ";stars==\"" + stelle + "\"";
+            else {
+                query += "stars==\"" + stelle + "\"";
+                concatena = true;
+            }
+        }
+
+        if (tipoIndirizzo != null) {
+            if (concatena)
+                query += ";address.type==\"" + tipoIndirizzo + "\"";
+            else {
+                query += "address.type==\"" + tipoIndirizzo + "\"";
+                concatena = true;
+            }
+        }
+        if (!strada.isEmpty()) {
+            if (concatena)
+                query += ";address.street==\"" + strada + "\"";
+            else {
+                query += "address.street==\"" + strada + "\"";
+                concatena = true;
+            }
+        }
+        if (!civico.isEmpty()) {
+            if (concatena)
+                query += ";address.houseNumber==\"" + civico + "\"";
+            else {
+                query += "address.houseNumber==\"" + civico + "\"";
+                concatena = true;
+            }
+        }
+        if (!città.isEmpty()) {
+            if (concatena)
+                query += ";address.city==\"" + città + "\"";
+            else {
+                query += "address.city==\"" + città + "\"";
+                concatena = true;
+            }
+        }
+        if (!cap.isEmpty()) {
+            if (concatena)
+                query += ";address.postalCode==\"" + cap + "\"";
+            else {
+                query += "address.postalCode==\"" + cap + "\"";
+                concatena = true;
+            }
+        }
+        if (!provincia.isEmpty()) {
+            if (concatena)
+                query += ";address.province==\"" + provincia + "\"";
+            else {
+                query += "address.province==\"" + provincia + "\"";
+                concatena = true;
+            }
+        }
+        if (!prezzoMedio.isEmpty()) {
+            if (concatena)
+                query += ";avaragePrice==\"" + prezzoMedio + "\"";
+            else {
+                query += "avaragePrice==\"" + prezzoMedio + "\"";
+                concatena = true;
+            }
+        }
+
+        // Se selezionato il certificato di eccellenza, inseriscilo
+        if (crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
+            if (concatena)
+                query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+            else {
+                query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                concatena = true;
+            }
+        } else {
+            if (!CrudDialoger.ignoreExcellence()) {
+                certificatoDiEccellenza = "false";
+                if (concatena)
+                    query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                else {
+                    query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
+                    concatena = true;
+                }
+            }
+        }
+
+        return query;
     }
 
     private void doInsert(Hotel hotel) {
@@ -583,7 +763,10 @@ public class CrudHotelController extends CrudController {
     }
 
     private void buttonAnnullaClicked() {
-        crudHotelView.getButtonAnnulla().setOnAction(event -> setViewsAsDefault());
+        crudHotelView.getButtonAnnulla().setOnAction(event -> {
+            setViewsAsDefault();
+            retrieving = false;
+        });
     }
 
     public String getNome() {
@@ -598,8 +781,16 @@ public class CrudHotelController extends CrudController {
         return this.crudHotelView.getTxtFieldNumeroCivico().getText();
     }
 
+    public String getTipoIndirizzo() {
+        return this.crudHotelView.getChoiceBoxIndirizzo().getValue();
+    }
+
     public String getProvincia() {
         return this.crudHotelView.getTextFieldProvincia().getText();
+    }
+
+    public Integer getStars() {
+        return this.crudHotelView.getChoiceBoxNumeroStelle().getValue();
     }
 
     public String getCAP() {

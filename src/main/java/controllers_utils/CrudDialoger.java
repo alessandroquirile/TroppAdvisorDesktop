@@ -2,6 +2,7 @@ package controllers_utils;
 
 import controllers.Controller;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -12,6 +13,9 @@ import java.util.Optional;
  * @author Alessandro Quirile, Mauro Telese
  */
 public abstract class CrudDialoger {
+
+    // TODO: attenzione, le dipendenze da controller potrebbero essere tolte
+
     public static void showAlertDialog(Controller controller, String alertMessage) {
         Stage stage = controller.getStage();
         Alert.AlertType alertType = Alert.AlertType.INFORMATION;
@@ -62,5 +66,17 @@ public abstract class CrudDialoger {
                 alert.close();
             }
         }
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean ignoreExcellence() {
+        ButtonType yes = new ButtonType("Ignora certificato di eccellenza", ButtonBar.ButtonData.YES);
+        ButtonType no = new ButtonType("Cerca strutture senza certificato di eccellenza", ButtonBar.ButtonData.NO);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", yes, no);
+        alert.setTitle("Attenzione");
+        alert.setHeaderText("Non hai selezionato il Certificato di Eccellenza. Vuoi ignorarlo?");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.orElse(no) == yes;
     }
 }

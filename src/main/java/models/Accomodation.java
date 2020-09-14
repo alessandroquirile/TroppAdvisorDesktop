@@ -17,7 +17,9 @@ public abstract class Accomodation implements Serializable {
     protected Address address;
     protected Point point;
     protected List<Review> reviews;
-    protected Integer totalReviews;
+    //protected Integer totalReviews;
+    protected Long totalReviews;
+    protected Long totalRating;
     protected List<String> images;
     protected boolean hasCertificateOfExcellence;
     protected String addedDate;
@@ -71,13 +73,21 @@ public abstract class Accomodation implements Serializable {
         this.address = address;
     }
 
-    public Integer getTotalReviews() {
+    public Long getTotalReviews() {
+        return totalReviews;
+    }
+
+    public Long getTotalRating() {
+        return totalRating;
+    }
+
+    /*public Integer getTotalReviews() {
         return totalReviews;
     }
 
     public void setTotalReviews(Integer totalReviews) {
         this.totalReviews = totalReviews;
-    }
+    }*/
 
     public Point getPoint() {
         return point;

@@ -21,6 +21,7 @@ public class FormChecker_RestaurantCrud implements FormChecker {
                 crudRestaurantController.getCittà().isEmpty() ||
                 crudRestaurantController.getPrezzoMedio().isEmpty() ||
                 crudRestaurantController.getNumeroDiTelefono().isEmpty() ||
+                crudRestaurantController.getTipoIndirizzo() == null ||
                 Bindings.isEmpty(crudRestaurantController.getImagesFromListView()).get() ||
                 !hasAtLeastOneTypeOfCuisineSelected(crudRestaurantController.getTypesOfCuisine());
     }

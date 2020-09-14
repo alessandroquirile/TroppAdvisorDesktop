@@ -2,6 +2,7 @@ package views;
 
 import controllers.CrudHotelController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 
@@ -16,11 +17,14 @@ public class CrudHotelView extends FormView {
     private TableColumn<Object, Integer> tableColumnNumeroStelle;
     @FXML
     private ChoiceBox<Integer> choiceBoxNumeroStelle;
+    @FXML
+    private Button buttonCerca;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudHotelController crudHotelController = new CrudHotelController(this);
         crudHotelController.setListenerOn(buttonInserisci);
+        crudHotelController.setListenerOn(buttonCerca);
         crudHotelController.setListenerOn(buttonElimina);
         crudHotelController.setListenerOn(buttonModifica);
         crudHotelController.setListenerOn(buttonAnnulla);
@@ -34,6 +38,10 @@ public class CrudHotelView extends FormView {
         crudHotelController.setListenerOnTableView(tableView);
         crudHotelController.setListenerOnListView(listViewFotoPath);
         crudHotelController.setViewsAsDefault();
+    }
+
+    public Button getButtonCerca() {
+        return buttonCerca;
     }
 
     public ChoiceBox<Integer> getChoiceBoxNumeroStelle() {

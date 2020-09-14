@@ -13,6 +13,8 @@ public interface HotelDAO {
 
     List<Hotel> retrieveAt(int page, int size) throws IOException, InterruptedException;
 
+    List<Hotel> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException;
+
     boolean delete(Hotel hotel) throws IOException, InterruptedException;
 
     boolean update(Hotel hotel) throws IOException, InterruptedException;

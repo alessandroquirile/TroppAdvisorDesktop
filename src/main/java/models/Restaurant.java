@@ -39,6 +39,7 @@ public class Restaurant extends Accomodation {
                 ", point=" + point +
                 ", reviews=" + reviews +
                 ", totalReviews=" + totalReviews +
+                ", totalRating=" + totalRating +
                 ", images=" + images +
                 ", hasCertificateOfExcellence=" + hasCertificateOfExcellence +
                 ", addedDate='" + addedDate + '\'' +

@@ -15,9 +15,11 @@ import utils.ConfigFileReader;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,6 +100,48 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
             Attraction attraction = objectMapper.readValue(jsonArray.get(i).toString(), Attraction.class);
             attractions.add(attraction);
         }
+
+        return attractions;
+    }
+
+    @Override
+    public List<Attraction> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException {
+        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/search-by-rsql-no-point?";
+        if (query != null)
+            URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
+        else
+            URL += "page=" + page + "&size=" + size;
+
+        System.out.println("URL: " + URL);
+
+
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .GET()
+                .header("accept", "application/json")
+                .uri(URI.create(URL)) // bug qui, URISyntaxException
+                .build();
+
+        HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+        List<Attraction> attractions = null;
+
+        // No content
+        if (httpResponses.statusCode() == 204)
+            return null;
+        else if (httpResponses.statusCode() == 200) {
+            JSONObject jsonObject = new JSONObject(httpResponses.body());
+            JSONArray jsonArray = jsonObject.getJSONArray("content");
+            attractions = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
+                Attraction attraction = objectMapper.readValue(jsonArray.get(i).toString(), Attraction.class);
+                attractions.add(attraction);
+            }
+        }
+
+        System.out.println("Response: " + httpResponses);
 
         return attractions;
     }
