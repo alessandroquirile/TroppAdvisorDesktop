@@ -136,10 +136,10 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
         crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
         crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
-        crudRestaurantView.getComboBoxOrarioAperturaMattutina().getSelectionModel().selectFirst();
-        crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getSelectionModel().selectFirst();
-        crudRestaurantView.getComboBoxOrarioAperturaSerale().getSelectionModel().selectFirst();
-        crudRestaurantView.getComboBoxOrarioChiusuraSerale().getSelectionModel().selectFirst();
+        crudRestaurantView.getComboBoxOrarioAperturaMattutina().getSelectionModel().clearSelection();
+        crudRestaurantView.getComboBoxOrarioChiusuraMattutina().getSelectionModel().clearSelection();
+        crudRestaurantView.getComboBoxOrarioAperturaSerale().getSelectionModel().clearSelection();
+        crudRestaurantView.getComboBoxOrarioChiusuraSerale().getSelectionModel().clearSelection();
         crudRestaurantView.getButtonCaricaFoto().setDisable(true);
         crudRestaurantView.getListViewFotoPath().setDisable(true);
         crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
@@ -168,10 +168,10 @@ public class CrudRestaurantController extends CrudController {
             crudRestaurantView.getButtonCaricaFoto().setDisable(false);
             crudRestaurantView.getTextFieldNumeroDiTelefono().setDisable(false);
             crudRestaurantView.getListViewFotoPath().setDisable(false);
-            crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(true);
-            crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
-            crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(true);
-            crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+            crudRestaurantView.getComboBoxOrarioAperturaMattutina().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioChiusuraMattutina().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioAperturaSerale().setDisable(false);
+            crudRestaurantView.getComboBoxOrarioChiusuraSerale().setDisable(false);
             crudRestaurantView.getButtonCaricaFoto().setDisable(true);
             crudRestaurantView.getListViewFotoPath().setDisable(true);
         });
@@ -548,6 +548,10 @@ public class CrudRestaurantController extends CrudController {
         if (restaurants != null) {
             List<String> typeOfCuisineDesired = getTypeOfCuisineWithFormData();
             restaurants.removeIf(restaurant -> !restaurant.getTypeOfCuisine().containsAll(typeOfCuisineDesired));
+            String openingTimeDesired = getOpeningTimeWithFormData();
+            //CrudDialoger.showAlertDialog(openingTimeDesired); // dbg
+            if (!openingTimeDesired.contains("null"))
+                restaurants.removeIf(restaurant -> !restaurant.getOpeningTime().equals(openingTimeDesired));
             final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
             fillColumnsWithData();
             crudRestaurantView.getTableView().setItems(data);

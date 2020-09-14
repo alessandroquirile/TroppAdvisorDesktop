@@ -167,10 +167,10 @@ public class CrudAttractionController extends CrudController {
             crudAttractionView.getButtonCaricaFoto().setDisable(false);
             crudAttractionView.getTextFieldNumeroDiTelefono().setDisable(false);
             crudAttractionView.getListViewFotoPath().setDisable(false);
-            crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(true);
-            crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
-            crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
-            crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
+            crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(false);
+            crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(false);
+            crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(false);
+            crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(false);
             crudAttractionView.getButtonCaricaFoto().setDisable(true);
             crudAttractionView.getListViewFotoPath().setDisable(true);
         });
@@ -509,6 +509,10 @@ public class CrudAttractionController extends CrudController {
                 : attractionDAO.retrieveByQuery(query, currentPage, currentPageSize);
 
         if (attractions != null) {
+            String openingTimeDesired = getOpeningTimeWithFormData();
+            //CrudDialoger.showAlertDialog(openingTimeDesired); // dbg
+            if (!openingTimeDesired.contains("null"))
+                attractions.removeIf(attraction -> !attraction.getOpeningTime().equals(openingTimeDesired));
             final ObservableList<Object> data = FXCollections.observableArrayList(attractions);
             fillColumnsWithData();
             crudAttractionView.getTableView().setItems(data);
@@ -533,10 +537,6 @@ public class CrudAttractionController extends CrudController {
         final String provincia = getProvincia();
         final String prezzoMedio = getPrezzoMedio();
         String certificatoDiEccellenza = String.valueOf(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        /*final String orarioAperturaMattutina = getOrarioAperturaMattutina();
-        final String orarioChiusuraMattutina = getOrarioChiusuraMattutina();
-        final String orarioAperturaSerale = getOrarioAperturaSerale();
-        final String orarioChiusuraSerale = getOrarioChiusuraSerale();*/
         boolean concatena = false;
 
         if (!nome.isEmpty()) {
@@ -628,21 +628,6 @@ public class CrudAttractionController extends CrudController {
                 }
             }
         }
-
-        crudAttractionView.getComboBoxOrarioAperturaMattutina().setDisable(true);
-        crudAttractionView.getComboBoxOrarioChiusuraMattutina().setDisable(true);
-        crudAttractionView.getComboBoxOrarioAperturaSerale().setDisable(true);
-        crudAttractionView.getComboBoxOrarioChiusuraSerale().setDisable(true);
-        // Bug
-        /*if (orarioAperturaMattutina != null && orarioChiusuraMattutina != null && orarioAperturaSerale != null && orarioChiusuraSerale != null) {
-            String openingTime = orarioAperturaMattutina + " - " + orarioChiusuraMattutina +
-                    " " + orarioAperturaSerale + " - " + orarioChiusuraSerale;
-            if (concatena)
-                query += ";openingTime==\"" + openingTime + "\"";
-            else
-                query += "openingTime==\"" + openingTime + "\"";
-        }*/
-
         return query;
     }
 
