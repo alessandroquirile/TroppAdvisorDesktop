@@ -48,7 +48,7 @@ public class LoginController extends Controller {
             formChecker = formCheckerFactory.getFormChecker(this);
 
             if (formChecker.formHasSomeEmptyField(this)) {
-                CrudDialoger.showAlertDialog(this, "Riempire tutti i campi");
+                CrudDialoger.showAlertDialog("Riempire tutti i campi");
             } else {
                 if (InputValidator.isValid(email)) {
                     Account account = new Account(email, password);
@@ -56,14 +56,14 @@ public class LoginController extends Controller {
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                     try {
                         if (!accountDAO.login(account))
-                            CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante il login");
+                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante il login");
                         else
                             loadSelectTypeScene();
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    CrudDialoger.showAlertDialog(this, "Pattern email non valido");
+                    CrudDialoger.showAlertDialog("Pattern email non valido");
                 }
             }
         });

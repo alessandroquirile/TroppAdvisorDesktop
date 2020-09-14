@@ -253,11 +253,10 @@ public class CrudHotelController extends CrudController {
             hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
             Hotel selectedHotel = getSelectedHotelFromTableView();
             if (selectedHotel != null) {
-                if (CrudDialoger.areYouSureToDelete(this, selectedHotel.getName())) {
+                if (CrudDialoger.areYouSureToDelete(selectedHotel.getName())) {
                     try {
                         if (!hotelDAO.delete(selectedHotel))
-                            CrudDialoger.showAlertDialog(this,
-                                    "Qualcosa è andato storto durante la cancellazione");
+                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -430,7 +429,7 @@ public class CrudHotelController extends CrudController {
                 }
             } else {
                 if (formChecker.formHasSomeEmptyField(this)) {
-                    CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+                    CrudDialoger.showAlertDialog("Riempi tutti i campi");
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
@@ -446,16 +445,16 @@ public class CrudHotelController extends CrudController {
                                         imagesSelectedToDelete = null;
                                     }
                                 } else {
-                                    CrudDialoger.showAlertDialog(this, "CAP non valido");
+                                    CrudDialoger.showAlertDialog("CAP non valido");
                                 }
                             } else {
-                                CrudDialoger.showAlertDialog(this, "Numero civico non valido");
+                                CrudDialoger.showAlertDialog("Numero civico non valido");
                             }
                         } else {
-                            CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
+                            CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                         }
                     } else {
-                        CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
+                        CrudDialoger.showAlertDialog("Numero di telefono non valido");
                     }
                 }
             }
@@ -467,7 +466,7 @@ public class CrudHotelController extends CrudController {
 
         query = getQuery(query);
 
-        CrudDialoger.showAlertDialog(this, query); // dbg
+        CrudDialoger.showAlertDialog(query); // dbg
 
         daoFactory = DAOFactory.getInstance();
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
@@ -483,7 +482,7 @@ public class CrudHotelController extends CrudController {
             crudHotelView.getTableView().setDisable(false);
             //retrieving = false;
         } else {
-            CrudDialoger.showAlertDialog(this, "Non sono stati trovati hotel con questi criteri: " + query +
+            CrudDialoger.showAlertDialog("Non sono stati trovati hotel con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
         }
         disableCRUDButtons();
@@ -609,9 +608,9 @@ public class CrudHotelController extends CrudController {
     private void doInsert(Hotel hotel) {
         try {
             if (!hotelDAO.add(hotel))
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'inserimento");
+                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
             else
-                CrudDialoger.showAlertDialog(this, "Inserimento avvenuto");
+                CrudDialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -634,7 +633,7 @@ public class CrudHotelController extends CrudController {
             //CrudDialoger.showAlertDialog(this, image); // dbg
             if (file.isAbsolute()) {
                 //File file = new File(image);
-                CrudDialoger.showAlertDialog(this, image + " da inserire"); // dbg
+                CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
@@ -645,7 +644,7 @@ public class CrudHotelController extends CrudController {
                 }
                 try {
                     if (hotelDAO.updateHotelSingleImageFromHotelCollection(hotel, imageHostUrl) || imageHostUrl == null)
-                        CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto");
+                        CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -653,7 +652,7 @@ public class CrudHotelController extends CrudController {
         }
         try {
             if (!hotelDAO.update(hotel))
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'update di hotel");
+                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'update di hotel");
             else
                 updateImages(hotel, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
@@ -667,9 +666,9 @@ public class CrudHotelController extends CrudController {
             try {
                 //System.out.println(clickedHotel);
                 if (!cityDAO.delete(clickedHotel))
-                    CrudDialoger.showAlertDialog(this, "Non è stato possibile eliminare"); // dbg
+                    CrudDialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
                 if (!cityDAO.insert(hotel))
-                    CrudDialoger.showAlertDialog(this, "Non è stato possibile inserire"); // dbg
+                    CrudDialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -685,14 +684,14 @@ public class CrudHotelController extends CrudController {
         if (images != null) {
             for (String imageUrl : images) {
                 if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !hotelDAO.deleteHotelSingleImageFromHotelCollection(hotel, imageUrl))
-                    CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
+                    CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
 
     private void buttonAiutoClicked() {
-        crudHotelView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog(this));
+        crudHotelView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
     }
 
     private void buttonCaricaClicked() {
@@ -711,7 +710,7 @@ public class CrudHotelController extends CrudController {
                 crudHotelView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
             }
         } else {
-            CrudDialoger.showAlertDialog(this, "I file selezionati non sono validi");
+            CrudDialoger.showAlertDialog("I file selezionati non sono validi");
         }
     }
 

@@ -269,11 +269,10 @@ public class CrudAttractionController extends CrudController {
             attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
             Attraction selectedAttraction = getSelectedAttractionFromTableView();
             if (selectedAttraction != null) {
-                if (CrudDialoger.areYouSureToDelete(this, selectedAttraction.getName())) {
+                if (CrudDialoger.areYouSureToDelete(selectedAttraction.getName())) {
                     try {
                         if (!attractionDAO.delete(selectedAttraction))
-                            CrudDialoger.showAlertDialog(this,
-                                    "Qualcosa è andato storto durante la cancellazione");
+                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -456,7 +455,7 @@ public class CrudAttractionController extends CrudController {
                 }
             } else {
                 if (formChecker.formHasSomeEmptyField(this)) {
-                    CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+                    CrudDialoger.showAlertDialog("Riempi tutti i campi");
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
@@ -474,22 +473,22 @@ public class CrudAttractionController extends CrudController {
                                                 imagesSelectedToDelete = null;
                                             }
                                         } else {
-                                            CrudDialoger.showAlertDialog(this, "Orario serale non valido");
+                                            CrudDialoger.showAlertDialog("Orario serale non valido");
                                         }
                                     } else {
-                                        CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
+                                        CrudDialoger.showAlertDialog("Orario mattutino non valido");
                                     }
                                 } else {
-                                    CrudDialoger.showAlertDialog(this, "CAP non valido");
+                                    CrudDialoger.showAlertDialog("CAP non valido");
                                 }
                             } else {
-                                CrudDialoger.showAlertDialog(this, "Numero civico non valido");
+                                CrudDialoger.showAlertDialog("Numero civico non valido");
                             }
                         } else {
-                            CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
+                            CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                         }
                     } else {
-                        CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
+                        CrudDialoger.showAlertDialog("Numero di telefono non valido");
                     }
                 }
             }
@@ -501,7 +500,7 @@ public class CrudAttractionController extends CrudController {
 
         query = getQuery(query);
 
-        CrudDialoger.showAlertDialog(this, query); // dbg
+        CrudDialoger.showAlertDialog(query); // dbg
 
         daoFactory = DAOFactory.getInstance();
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
@@ -517,7 +516,7 @@ public class CrudAttractionController extends CrudController {
             crudAttractionView.getTableView().setDisable(false);
             //retrieving = false;
         } else {
-            CrudDialoger.showAlertDialog(this, "Non sono state trovate attrazioni con questi criteri: " + query +
+            CrudDialoger.showAlertDialog("Non sono state trovate attrazioni con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
         }
         disableCRUDButtons();
@@ -650,9 +649,9 @@ public class CrudAttractionController extends CrudController {
     private void doInsert(Attraction attraction) {
         try {
             if (!attractionDAO.add(attraction))
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'inserimento");
+                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
             else
-                CrudDialoger.showAlertDialog(this, "Inserimento avvenuto");
+                CrudDialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -674,7 +673,7 @@ public class CrudAttractionController extends CrudController {
             //CrudDialoger.showAlertDialog(this, image); // dbg
             if (file.isAbsolute()) {
                 //File file = new File(image);
-                CrudDialoger.showAlertDialog(this, image + " da inserire"); // dbg
+                CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
@@ -685,7 +684,7 @@ public class CrudAttractionController extends CrudController {
                 }
                 try {
                     if (attractionDAO.updateAttractionSingleImageFromAttractionCollection(attraction, imageHostUrl) || imageHostUrl == null)
-                        CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto");
+                        CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -693,7 +692,7 @@ public class CrudAttractionController extends CrudController {
         }
         try {
             if (!attractionDAO.update(attraction))
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'update di attraction");
+                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'update di attraction");
             else
                 updateImages(attraction, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
@@ -707,9 +706,9 @@ public class CrudAttractionController extends CrudController {
             try {
                 //System.out.println(clickedAttraction);
                 if (!cityDAO.delete(clickedAttraction))
-                    CrudDialoger.showAlertDialog(this, "Non è stato possibile eliminare"); // dbg
+                    CrudDialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
                 if (!cityDAO.insert(attraction))
-                    CrudDialoger.showAlertDialog(this, "Non è stato possibile inserire"); // dbg
+                    CrudDialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -725,14 +724,14 @@ public class CrudAttractionController extends CrudController {
         if (images != null) {
             for (String imageUrl : images) {
                 if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
-                    CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
+                    CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata"); //
         }
     }
 
     private void buttonAiutoClicked() {
-        crudAttractionView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog(this));
+        crudAttractionView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
     }
 
     private void buttonCaricaClicked() {
@@ -751,7 +750,7 @@ public class CrudAttractionController extends CrudController {
                 crudAttractionView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
             }
         } else {
-            CrudDialoger.showAlertDialog(this, "I file selezionati non sono validi");
+            CrudDialoger.showAlertDialog("I file selezionati non sono validi");
         }
     }
 

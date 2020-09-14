@@ -272,11 +272,10 @@ public class CrudRestaurantController extends CrudController {
             restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
             Restaurant selectedRestaurant = getSelectedRestaurantFromTableView();
             if (selectedRestaurant != null) {
-                if (CrudDialoger.areYouSureToDelete(this, selectedRestaurant.getName())) {
+                if (CrudDialoger.areYouSureToDelete(selectedRestaurant.getName())) {
                     try {
                         if (!restaurantDAO.delete(selectedRestaurant))
-                            CrudDialoger.showAlertDialog(this,
-                                    "Qualcosa è andato storto durante la cancellazione");
+                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -493,7 +492,7 @@ public class CrudRestaurantController extends CrudController {
                 }
             } else {
                 if (formChecker.formHasSomeEmptyField(this)) {
-                    CrudDialoger.showAlertDialog(this, "Riempi tutti i campi");
+                    CrudDialoger.showAlertDialog("Riempi tutti i campi");
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
@@ -511,22 +510,22 @@ public class CrudRestaurantController extends CrudController {
                                                 imagesSelectedToDelete = null;
                                             }
                                         } else {
-                                            CrudDialoger.showAlertDialog(this, "Orario serale non valido");
+                                            CrudDialoger.showAlertDialog("Orario serale non valido");
                                         }
                                     } else {
-                                        CrudDialoger.showAlertDialog(this, "Orario mattutino non valido");
+                                        CrudDialoger.showAlertDialog("Orario mattutino non valido");
                                     }
                                 } else {
-                                    CrudDialoger.showAlertDialog(this, "CAP non valido");
+                                    CrudDialoger.showAlertDialog("CAP non valido");
                                 }
                             } else {
-                                CrudDialoger.showAlertDialog(this, "Numero civico non valido");
+                                CrudDialoger.showAlertDialog("Numero civico non valido");
                             }
                         } else {
-                            CrudDialoger.showAlertDialog(this, "Prezzo medio non valido. Inserire un intero");
+                            CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                         }
                     } else {
-                        CrudDialoger.showAlertDialog(this, "Numero di telefono non valido");
+                        CrudDialoger.showAlertDialog("Numero di telefono non valido");
                     }
                 }
             }
@@ -538,7 +537,7 @@ public class CrudRestaurantController extends CrudController {
 
         query = getQuery(query);
 
-        CrudDialoger.showAlertDialog(this, query); // dbg
+        CrudDialoger.showAlertDialog(query); // dbg
 
         daoFactory = DAOFactory.getInstance();
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
@@ -556,7 +555,7 @@ public class CrudRestaurantController extends CrudController {
             crudRestaurantView.getTableView().setDisable(false);
             //retrieving = false;
         } else {
-            CrudDialoger.showAlertDialog(this, "Non sono stati trovati ristoranti con questi criteri: " + query +
+            CrudDialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
         }
         disableCRUDButtons();
@@ -681,9 +680,9 @@ public class CrudRestaurantController extends CrudController {
     private void doInsert(Restaurant restaurant) {
         try {
             if (!restaurantDAO.add(restaurant))
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'inserimento");
+                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
             else
-                CrudDialoger.showAlertDialog(this, "Inserimento avvenuto");
+                CrudDialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -706,7 +705,7 @@ public class CrudRestaurantController extends CrudController {
             //CrudDialoger.showAlertDialog(this, image); // dbg
             if (file.isAbsolute()) {
                 //File file = new File(image);
-                CrudDialoger.showAlertDialog(this, image + " da inserire"); // dbg
+                CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
@@ -717,7 +716,7 @@ public class CrudRestaurantController extends CrudController {
                 }
                 try {
                     if (restaurantDAO.updateRestaurantSingleImageFromRestaurantCollection(restaurant, imageHostUrl) || imageHostUrl == null)
-                        CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto");
+                        CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -725,7 +724,7 @@ public class CrudRestaurantController extends CrudController {
         }
         try {
             if (!restaurantDAO.update(restaurant))
-                CrudDialoger.showAlertDialog(this, "Qualcosa è andato storto durante l'update di restaurant");
+                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'update di restaurant");
             else
                 updateImages(restaurant, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
@@ -739,9 +738,9 @@ public class CrudRestaurantController extends CrudController {
             try {
                 //System.out.println(clickedRestaurant);
                 if (!cityDAO.delete(clickedRestaurant))
-                    CrudDialoger.showAlertDialog(this, "Non è stato possibile eliminare"); // dbg
+                    CrudDialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
                 if (!cityDAO.insert(restaurant))
-                    CrudDialoger.showAlertDialog(this, "Non è stato possibile inserire"); // dbg
+                    CrudDialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -757,14 +756,14 @@ public class CrudRestaurantController extends CrudController {
         if (images != null) {
             for (String imageUrl : images) {
                 if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
-                    CrudDialoger.showAlertDialog(this, "Modifica non avvenuta");
+                    CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
 
     private void buttonAiutoClicked() {
-        crudRestaurantView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog(this));
+        crudRestaurantView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
     }
 
     private void buttonCaricaClicked() {
@@ -783,7 +782,7 @@ public class CrudRestaurantController extends CrudController {
                 crudRestaurantView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
             }
         } else {
-            CrudDialoger.showAlertDialog(this, "I file selezionati non sono validi");
+            CrudDialoger.showAlertDialog("I file selezionati non sono validi");
         }
     }
 
