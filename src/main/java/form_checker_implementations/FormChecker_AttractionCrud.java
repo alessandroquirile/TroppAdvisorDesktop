@@ -16,10 +16,11 @@ public class FormChecker_AttractionCrud implements FormChecker {
                 crudAttractionController.getNumeroCivico().isEmpty() ||
                 crudAttractionController.getProvincia().isEmpty() ||
                 crudAttractionController.getCAP().isEmpty() ||
-                crudAttractionController.getCittà().isEmpty() ||
+                crudAttractionController.getCity().isEmpty() ||
                 crudAttractionController.getPrezzoMedio().isEmpty() ||
                 crudAttractionController.getNumeroDiTelefono().isEmpty() ||
                 crudAttractionController.getTipoIndirizzo() == null ||
+                crudAttractionController.getOpeningTime().isEmpty() ||
                 Bindings.isEmpty(crudAttractionController.getImagesFromListView()).get();
 
     }

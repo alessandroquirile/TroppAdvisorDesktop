@@ -4,9 +4,9 @@ import controllers.CrudRestaurantController;
 import controllers_utils.TypeOfCuisineItem;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,6 +15,8 @@ import java.util.ResourceBundle;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class CrudRestaurantView extends CrudView {
+    @FXML
+    private TextField textFieldOpeningTime;
     @FXML
     private TableColumn<Object, String> tableColumnTipoDiCucina;
     @FXML
@@ -25,14 +27,6 @@ public class CrudRestaurantView extends CrudView {
     private TableView<TypeOfCuisineItem> tableViewTypeOfCuisine;
     @FXML
     private TableColumn<Object, String> tableColumnOrarioApertura;
-    @FXML
-    private ComboBox<String> comboBoxOrarioAperturaMattutina;
-    @FXML
-    private ComboBox<String> comboBoxOrarioChiusuraMattutina;
-    @FXML
-    private ComboBox<String> comboBoxOrarioAperturaSerale;
-    @FXML
-    private ComboBox<String> comboBoxOrarioChiusuraSerale;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,19 +68,7 @@ public class CrudRestaurantView extends CrudView {
         return tableViewTypeOfCuisine;
     }
 
-    public ComboBox<String> getComboBoxOrarioAperturaMattutina() {
-        return comboBoxOrarioAperturaMattutina;
-    }
-
-    public ComboBox<String> getComboBoxOrarioChiusuraMattutina() {
-        return comboBoxOrarioChiusuraMattutina;
-    }
-
-    public ComboBox<String> getComboBoxOrarioAperturaSerale() {
-        return comboBoxOrarioAperturaSerale;
-    }
-
-    public ComboBox<String> getComboBoxOrarioChiusuraSerale() {
-        return comboBoxOrarioChiusuraSerale;
+    public TextField getTextFieldOpeningTime() {
+        return textFieldOpeningTime;
     }
 }

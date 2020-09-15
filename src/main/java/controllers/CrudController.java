@@ -19,6 +19,7 @@ public abstract class CrudController extends Controller {
     protected FormCheckerFactory formCheckerFactory;
     protected FormChecker formChecker;
     protected boolean retrieving = false;
+    protected boolean modifying = false;
     protected ObservableList<String> imagesSelectedToDelete;
     protected ImageDAO imageDAO;
 

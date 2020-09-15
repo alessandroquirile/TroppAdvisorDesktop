@@ -113,7 +113,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getTextFieldPrezzoMedio().setDisable(true);
         crudHotelView.getChoiceBoxIndirizzo().setDisable(true);
         crudHotelView.getTextFieldCAP().setDisable(true);
-        crudHotelView.getTextFieldCittà().setDisable(true);
+        crudHotelView.getTextFieldCity().setDisable(true);
         crudHotelView.getCheckBoxCertificatoDiEccellenza().setDisable(true);
         crudHotelView.getButtonCaricaFoto().setDisable(true);
         crudHotelView.getListViewFotoPath().setDisable(true);
@@ -203,7 +203,7 @@ public class CrudHotelController extends CrudController {
 
     public void enableAllTextFields() {
         crudHotelView.getTextFieldCAP().setDisable(false);
-        crudHotelView.getTextFieldCittà().setDisable(false);
+        crudHotelView.getTextFieldCity().setDisable(false);
         crudHotelView.getTextFieldNome().setDisable(false);
         crudHotelView.getTextFieldNumeroDiTelefono().setDisable(false);
         crudHotelView.getTextFieldPrezzoMedio().setDisable(false);
@@ -227,9 +227,13 @@ public class CrudHotelController extends CrudController {
 
     public void buttonModificaClicked() {
         crudHotelView.getButtonModifica().setOnAction(event -> {
+            modifying = true;
+            retrieving = false;
             crudHotelView.getButtonInserisci().setDisable(true);
             crudHotelView.getButtonConferma().setDisable(false);
             crudHotelView.getButtonAnnulla().setDisable(false);
+            crudHotelView.getButtonCerca().setDisable(true);
+            crudHotelView.getButtonModifica().setDisable(true);
             enableAllTextFields();
             enableAllChoiceBoxes();
             crudHotelView.getButtonCaricaFoto().setDisable(false);
@@ -264,7 +268,7 @@ public class CrudHotelController extends CrudController {
     private void clearTextFields() {
         crudHotelView.getTextFieldNome().setText("");
         crudHotelView.getTextFieldCAP().setText("");
-        crudHotelView.getTextFieldCittà().setText("");
+        crudHotelView.getTextFieldCity().setText("");
         crudHotelView.getTextFieldPrezzoMedio().setText("");
         crudHotelView.getTextFieldNumeroDiTelefono().setText("");
         crudHotelView.getTextFieldStrada().setText("");
@@ -339,7 +343,7 @@ public class CrudHotelController extends CrudController {
         setProperStarsIntoStarsChoiceBox(hotel);
         crudHotelView.getTextFieldStrada().setText(hotel.getStreet());
         crudHotelView.getTxtFieldNumeroCivico().setText(hotel.getHouseNumber());
-        crudHotelView.getTextFieldCittà().setText(hotel.getCity());
+        crudHotelView.getTextFieldCity().setText(hotel.getCity());
         crudHotelView.getTextFieldCAP().setText(hotel.getPostalCode());
         crudHotelView.getTextFieldProvincia().setText(hotel.getProvince());
         crudHotelView.getTextFieldPrezzoMedio().setText(String.valueOf(hotel.getAvaragePrice()));
@@ -428,12 +432,11 @@ public class CrudHotelController extends CrudController {
                                     Hotel hotel = getHotelWithFormData();
                                     daoFactory = DAOFactory.getInstance();
                                     hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
-                                    if (crudHotelView.getButtonModifica().isDisable()) {
-                                        doInsert(hotel);
-                                    } else {
+                                    if (modifying) {
                                         doUpdate(hotel);
                                         imagesSelectedToDelete = null;
-                                    }
+                                    } else
+                                        doInsert(hotel);
                                 } else {
                                     CrudDialoger.showAlertDialog("CAP non valido");
                                 }
@@ -485,7 +488,7 @@ public class CrudHotelController extends CrudController {
         final Integer stelle = getStars();
         final String strada = getStrada();
         final String civico = getNumeroCivico();
-        final String città = getCittà();
+        final String city = getCity();
         final String cap = getCAP();
         final String provincia = getProvincia();
         final String prezzoMedio = getPrezzoMedio();
@@ -539,11 +542,11 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
-        if (!città.isEmpty()) {
+        if (!city.isEmpty()) {
             if (concatena)
-                query += ";address.city==\"" + città + "\"";
+                query += ";address.city==\"" + city + "\"";
             else {
-                query += "address.city==\"" + città + "\"";
+                query += "address.city==\"" + city + "\"";
                 concatena = true;
             }
         }
@@ -576,19 +579,15 @@ public class CrudHotelController extends CrudController {
         if (crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
             if (concatena)
                 query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
-            else {
+            else
                 query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
-                concatena = true;
-            }
         } else {
             if (!CrudDialoger.ignoreExcellence()) {
                 certificatoDiEccellenza = "false";
                 if (concatena)
                     query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
-                else {
+                else
                     query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
-                    concatena = true;
-                }
             }
         }
 
@@ -732,14 +731,14 @@ public class CrudHotelController extends CrudController {
                 crudHotelView.getChoiceBoxIndirizzo().getValue(),
                 crudHotelView.getTextFieldStrada().getText(),
                 crudHotelView.getTxtFieldNumeroCivico().getText(),
-                crudHotelView.getTextFieldCittà().getText(),
+                crudHotelView.getTextFieldCity().getText(),
                 crudHotelView.getTextFieldProvincia().getText(),
                 crudHotelView.getTextFieldCAP().getText());
     }
 
     private String getEligibleStringAddressForGeocoding() {
         return crudHotelView.getChoiceBoxIndirizzo().getValue() + " " + crudHotelView.getTextFieldStrada().getText() + ", " +
-                crudHotelView.getTxtFieldNumeroCivico().getText() + ", " + crudHotelView.getTextFieldCittà().getText() + ", " + crudHotelView.getTextFieldCAP().getText() +
+                crudHotelView.getTxtFieldNumeroCivico().getText() + ", " + crudHotelView.getTextFieldCity().getText() + ", " + crudHotelView.getTextFieldCAP().getText() +
                 ", " + crudHotelView.getTextFieldProvincia().getText();
     }
 
@@ -755,6 +754,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getButtonAnnulla().setOnAction(event -> {
             setViewsAsDefault();
             retrieving = false;
+            modifying = false;
         });
     }
 
@@ -786,8 +786,8 @@ public class CrudHotelController extends CrudController {
         return this.crudHotelView.getTextFieldCAP().getText();
     }
 
-    public String getCittà() {
-        return this.crudHotelView.getTextFieldCittà().getText();
+    public String getCity() {
+        return this.crudHotelView.getTextFieldCity().getText();
     }
 
     public String getPrezzoMedio() {

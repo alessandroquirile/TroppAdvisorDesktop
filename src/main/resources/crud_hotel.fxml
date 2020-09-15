@@ -47,7 +47,7 @@
     <TextField fx:id="textFieldCAP" disable="true" layoutX="642.0" layoutY="201.0" prefHeight="26.0" prefWidth="88.0"
                promptText="CAP"/>
     <Label layoutX="29.0" layoutY="238.0" text="Provincia di"/>
-    <TextField fx:id="textFieldCittà" disable="true" layoutX="430.0" layoutY="201.0" prefHeight="26.0" prefWidth="204.0"
+    <TextField fx:id="textFieldCity" disable="true" layoutX="430.0" layoutY="201.0" prefHeight="26.0" prefWidth="204.0"
                promptText="Città"/>
     <Label layoutX="24.0" layoutY="303.0" text="Prezzo medio"/>
     <Label layoutX="14.0" layoutY="368.0" text="Certificato d'eccellenza"/>

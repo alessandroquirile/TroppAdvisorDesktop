@@ -61,4 +61,32 @@ public abstract class InputValidator {
         Matcher matcher = emailPattern.matcher(email);
         return matcher.find();
     }
+
+    public static boolean isValidOpeningTime(String openingTime) {
+        return isValidHhMm(openingTime) || isValidHhMmDashHhMm(openingTime) || isValidOpeningTimeHhMmHhMmHhMmHhMm(openingTime);
+    }
+
+    // hh:mm
+    private static boolean isValidHhMm(String openingTime) {
+        String openingTimeHhMmRegexp = "/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/";
+        Pattern pattern = Pattern.compile(openingTimeHhMmRegexp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(openingTime);
+        return matcher.find();
+    }
+
+    // hh:mm - hh:mm
+    private static boolean isValidHhMmDashHhMm(String openingTime) {
+        String regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
+        Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(openingTime);
+        return matcher.find();
+    }
+
+    // hh:mm - hh:mm hh:mm - hh:mm
+    private static boolean isValidOpeningTimeHhMmHhMmHhMmHhMm(String openingTime) {
+        String regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
+        Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(openingTime);
+        return matcher.find();
+    }
 }

@@ -16,7 +16,7 @@ public class FormChecker_HotelCrud implements FormChecker {
                 crudHotelController.getNumeroCivico().isEmpty() ||
                 crudHotelController.getProvincia().isEmpty() ||
                 crudHotelController.getCAP().isEmpty() ||
-                crudHotelController.getCittà().isEmpty() ||
+                crudHotelController.getCity().isEmpty() ||
                 crudHotelController.getPrezzoMedio().isEmpty() ||
                 crudHotelController.getNumeroDiTelefono().isEmpty() ||
                 crudHotelController.getTipoIndirizzo() == null ||

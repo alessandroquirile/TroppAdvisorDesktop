@@ -3,8 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
+            minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
             xmlns="http://javafx.com/javafx/11.0.1" fx:controller="views.CrudAttractionView">
     <Button fx:id="buttonInserisci" layoutX="166.0" layoutY="27.0" mnemonicParsing="false"
             style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Inserisci"
@@ -47,7 +46,7 @@
     <TextField fx:id="textFieldCAP" disable="true" layoutX="642.0" layoutY="201.0" prefHeight="26.0" prefWidth="88.0"
                promptText="CAP"/>
     <Label layoutX="29.0" layoutY="238.0" text="Provincia di"/>
-    <TextField fx:id="textFieldCittà" disable="true" layoutX="430.0" layoutY="201.0" prefHeight="26.0" prefWidth="204.0"
+    <TextField fx:id="textFieldCity" disable="true" layoutX="430.0" layoutY="201.0" prefHeight="26.0" prefWidth="204.0"
                promptText="Città"/>
     <Label layoutX="24.0" layoutY="303.0" text="Prezzo medio"/>
     <Label layoutX="14.0" layoutY="368.0" text="Certificato d'eccellenza"/>
@@ -68,16 +67,7 @@
                prefWidth="69.0" promptText="Civico"/>
     <TextField fx:id="textFieldProvincia" disable="true" layoutX="27.0" layoutY="266.0" prefHeight="26.0"
                prefWidth="701.0" promptText="Provincia  di"/>
-    <Label layoutX="19.0" layoutY="413.0" text="Orario mattutino"/>
-    <ComboBox fx:id="comboBoxOrarioAperturaMattutina" disable="true" layoutX="155.0" layoutY="408.0" prefHeight="26.0"
-              prefWidth="101.0"/>
-    <ComboBox fx:id="comboBoxOrarioChiusuraMattutina" disable="true" layoutX="261.0" layoutY="408.0" prefHeight="26.0"
-              prefWidth="101.0"/>
-    <ComboBox fx:id="comboBoxOrarioAperturaSerale" disable="true" layoutX="155.0" layoutY="444.0" prefHeight="26.0"
-              prefWidth="101.0"/>
-    <ComboBox fx:id="comboBoxOrarioChiusuraSerale" disable="true" layoutX="261.0" layoutY="444.0" prefHeight="26.0"
-              prefWidth="101.0"/>
-    <Label layoutX="19.0" layoutY="449.0" text="Orario serale"/>
+    <Label layoutX="19.0" layoutY="413.0" text="Orario lavorativo"/>
     <Button fx:id="buttonMostraAvanti" layoutX="728.0" layoutY="421.0" mnemonicParsing="false" text="Mostra avanti"/>
     <Button fx:id="buttonMostraIndietro" layoutX="586.0" layoutY="422.0" mnemonicParsing="false"
             text="Mostra indietro"/>
@@ -85,4 +75,5 @@
             text="Elimina foto selezionate"/>
     <Button fx:id="buttonCerca" layoutX="248.0" layoutY="27.0" mnemonicParsing="false"
             style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Cerca"/>
+    <TextField fx:id="textFieldOpeningTime" disable="true" layoutX="143.0" layoutY="408.0" promptText="hh:mm - hh:mm"/>
 </AnchorPane>

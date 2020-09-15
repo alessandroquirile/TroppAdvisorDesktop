@@ -36,7 +36,7 @@ public abstract class CrudView implements Initializable {
     @FXML
     protected ChoiceBox<String> choiceBoxIndirizzo;
     @FXML
-    protected javafx.scene.control.TextField textFieldCittà;
+    protected javafx.scene.control.TextField textFieldCity;
     @FXML
     protected CheckBox checkBoxCertificatoDiEccellenza;
     @FXML
@@ -136,8 +136,8 @@ public abstract class CrudView implements Initializable {
         return choiceBoxIndirizzo;
     }
 
-    public TextField getTextFieldCittà() {
-        return textFieldCittà;
+    public TextField getTextFieldCity() {
+        return textFieldCity;
     }
 
     public CheckBox getCheckBoxCertificatoDiEccellenza() {
