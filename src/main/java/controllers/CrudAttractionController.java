@@ -453,15 +453,13 @@ public class CrudAttractionController extends CrudController {
 
         if (attractions != null) {
             String openingTimeDesired = getOpeningTimeWithFormData();
-            //CrudDialoger.showAlertDialog(openingTimeDesired); // dbg
-            if (!openingTimeDesired.contains("null"))
+            if (!openingTimeDesired.isEmpty())
                 attractions.removeIf(attraction -> !attraction.getOpeningTime().equals(openingTimeDesired));
             final ObservableList<Object> data = FXCollections.observableArrayList(attractions);
             fillColumnsWithData();
             crudAttractionView.getTableView().setItems(data);
             System.out.println(attractions); // dbg
             crudAttractionView.getTableView().setDisable(false);
-            //retrieving = false;
         } else {
             CrudDialoger.showAlertDialog("Non sono state trovate attrazioni con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);

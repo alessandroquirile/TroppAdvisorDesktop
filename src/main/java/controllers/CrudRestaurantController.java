@@ -492,14 +492,13 @@ public class CrudRestaurantController extends CrudController {
             restaurants.removeIf(restaurant -> !restaurant.getTypeOfCuisine().containsAll(typeOfCuisineDesired));
             String openingTimeDesired = getOpeningTimeWithFormData();
             //CrudDialoger.showAlertDialog(openingTimeDesired); // dbg
-            if (!openingTimeDesired.contains("null"))
+            if (!openingTimeDesired.isEmpty())
                 restaurants.removeIf(restaurant -> !restaurant.getOpeningTime().equals(openingTimeDesired));
             final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
             fillColumnsWithData();
             crudRestaurantView.getTableView().setItems(data);
-            System.out.println(restaurants); // dbg
+            System.out.println(restaurants);
             crudRestaurantView.getTableView().setDisable(false);
-            //retrieving = false;
         } else {
             CrudDialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
