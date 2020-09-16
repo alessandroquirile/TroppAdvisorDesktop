@@ -1,7 +1,6 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
@@ -14,8 +13,8 @@ public class Review implements Serializable {
     private String user;
     private Boolean isAnonymous;
     private String accomodationId;
-    private Date addedDate;
-    private Date lastModificationDate;
+    private String addedDate;
+    private String lastModificationDate;
 
     public String getId() {
         return id;
@@ -73,19 +72,19 @@ public class Review implements Serializable {
         this.accomodationId = accomodationId;
     }
 
-    public Date getAddedDate() {
+    public String getAddedDate() {
         return addedDate;
     }
 
-    public void setAddedDate(Date addedDate) {
+    public void setAddedDate(String addedDate) {
         this.addedDate = addedDate;
     }
 
-    public Date getLastModificationDate() {
+    public String getLastModificationDate() {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(Date lastModificationDate) {
+    public void setLastModificationDate(String lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
     }
 }
