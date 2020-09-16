@@ -69,7 +69,7 @@ public class LoginController extends Controller {
         });
     }
 
-    public void loadSelectTypeScene() throws IOException {
+    private void loadSelectTypeScene() throws IOException {
         AnchorPane pane = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));
         loginView.getRootPane().getChildren().setAll(pane);
     }

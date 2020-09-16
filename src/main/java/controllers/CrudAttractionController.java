@@ -136,7 +136,7 @@ public class CrudAttractionController extends CrudController {
         return (Stage) this.getCrudAttractionView().getRootPane().getScene().getWindow();
     }
 
-    private void buttonCercaClicked() {
+    public void buttonCercaClicked() {
         crudAttractionView.getButtonCerca().setOnAction(event -> {
             retrieving = true;
             enableAllTextFields();
@@ -154,7 +154,7 @@ public class CrudAttractionController extends CrudController {
         });
     }
 
-    private void listViewFotoPathClicked() {
+    public void listViewFotoPathClicked() {
         crudAttractionView.getListViewFotoPath().setOnMouseClicked(event -> {
             if (!crudAttractionView.getListViewFotoPath().getSelectionModel().getSelectedItems().isEmpty())
                 crudAttractionView.getButtonEliminaFotoSelezionate().setDisable(false);
@@ -197,7 +197,7 @@ public class CrudAttractionController extends CrudController {
         });
     }
 
-    public void enableAllTextFields() {
+    private void enableAllTextFields() {
         crudAttractionView.getTextFieldOpeningTime().setDisable(false);
         crudAttractionView.getTextFieldCAP().setDisable(false);
         crudAttractionView.getTextFieldCity().setDisable(false);
@@ -210,12 +210,12 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getTextFieldNumeroDiTelefono().setDisable(false);
     }
 
-    public void enableAllChoiceBoxes() {
+    private void enableAllChoiceBoxes() {
         crudAttractionView.getCheckBoxCertificatoDiEccellenza().setDisable(false);
         crudAttractionView.getChoiceBoxIndirizzo().setDisable(false);
     }
 
-    public void disableCRUDButtons() {
+    private void disableCRUDButtons() {
         crudAttractionView.getButtonCerca().setDisable(true);
         crudAttractionView.getButtonInserisci().setDisable(true);
         crudAttractionView.getButtonModifica().setDisable(true);
@@ -276,10 +276,9 @@ public class CrudAttractionController extends CrudController {
     private void initializeChoiceBoxIndirizzo() {
         ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
         crudAttractionView.getChoiceBoxIndirizzo().setItems(observableList);
-        //crudAttractionView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
-    public void loadAttractionsIntoTableView(int page, int size) {
+    private void loadAttractionsIntoTableView(int page, int size) {
         daoFactory = DAOFactory.getInstance();
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
         try {
@@ -310,7 +309,7 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getTableColumnImmagini().setCellValueFactory(new PropertyValueFactory<>("images"));
     }
 
-    private void tableViewClicked() {
+    public void tableViewClicked() {
         crudAttractionView.getTableView().setOnMouseClicked(event -> {
             Attraction selectedAttraction = getSelectedAttractionFromTableView();
             if (selectedAttraction != null) {
@@ -363,21 +362,21 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getTextFieldOpeningTime().setText(attraction.getOpeningTime());
     }
 
-    private void buttonMostraAvantiClicked() {
+    public void buttonMostraAvantiClicked() {
         crudAttractionView.getButtonMostraAvanti().setOnAction(event -> {
             if (!crudAttractionView.getTableView().getItems().isEmpty())
                 loadAttractionsIntoTableView(++currentPage, currentPageSize);
         });
     }
 
-    private void buttonMostraIndietroClicked() {
+    public void buttonMostraIndietroClicked() {
         crudAttractionView.getButtonMostraIndietro().setOnAction(event -> {
             if (currentPage != 0)
                 loadAttractionsIntoTableView(--currentPage, currentPageSize);
         });
     }
 
-    private void buttonConfermaClicked() {
+    public void buttonConfermaClicked() {
         crudAttractionView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();
             String prezzoMedio = getPrezzoMedio();
@@ -642,15 +641,15 @@ public class CrudAttractionController extends CrudController {
         }
     }
 
-    private void buttonAiutoClicked() {
+    public void buttonAiutoClicked() {
         crudAttractionView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
     }
 
-    private void buttonCaricaClicked() {
+    public void buttonCaricaClicked() {
         crudAttractionView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem());
     }
 
-    public void multiFileSelectionFromFileSystem() {
+    private void multiFileSelectionFromFileSystem() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         FileChooser.ExtensionFilter imageFilter =
@@ -666,7 +665,7 @@ public class CrudAttractionController extends CrudController {
         }
     }
 
-    private void buttonEliminaFotoSelezionataClicked() {
+    public void buttonEliminaFotoSelezionataClicked() {
         crudAttractionView.getButtonEliminaFotoSelezionate().setOnAction(event -> {
             ObservableList<String> imagesSelectedToDelete2 = crudAttractionView.getListViewFotoPath().getSelectionModel().getSelectedItems();
             imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
@@ -674,7 +673,7 @@ public class CrudAttractionController extends CrudController {
         });
     }
 
-    private void buttonAnnullaClicked() {
+    public void buttonAnnullaClicked() {
         crudAttractionView.getButtonAnnulla().setOnAction(event -> {
             setViewsAsDefault();
             retrieving = false;

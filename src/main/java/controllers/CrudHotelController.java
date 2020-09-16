@@ -137,7 +137,7 @@ public class CrudHotelController extends CrudController {
         }
     }
 
-    private void buttonCercaClicked() {
+    public void buttonCercaClicked() {
         crudHotelView.getButtonCerca().setOnAction(e -> {
             retrieving = true;
             enableAllTextFields();
@@ -167,7 +167,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getButtonIndietro().setOnAction(event -> showSelectTypeStage());
     }
 
-    public void showSelectTypeStage() {
+    private void showSelectTypeStage() {
         try {
             closeCurrentStage();
             Parent parent = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));
@@ -180,7 +180,7 @@ public class CrudHotelController extends CrudController {
         }
     }
 
-    public void closeCurrentStage() {
+    private void closeCurrentStage() {
         getStage().close();
     }
 
@@ -200,7 +200,7 @@ public class CrudHotelController extends CrudController {
         });
     }
 
-    public void enableAllTextFields() {
+    private void enableAllTextFields() {
         crudHotelView.getTextFieldCAP().setDisable(false);
         crudHotelView.getTextFieldCity().setDisable(false);
         crudHotelView.getTextFieldNome().setDisable(false);
@@ -211,13 +211,13 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getTextFieldProvincia().setDisable(false);
     }
 
-    public void enableAllChoiceBoxes() {
+    private void enableAllChoiceBoxes() {
         crudHotelView.getCheckBoxCertificatoDiEccellenza().setDisable(false);
         crudHotelView.getChoiceBoxIndirizzo().setDisable(false);
         crudHotelView.getChoiceBoxNumeroStelle().setDisable(false);
     }
 
-    public void disableCRUDButtons() {
+    private void disableCRUDButtons() {
         crudHotelView.getButtonCerca().setDisable(true);
         crudHotelView.getButtonInserisci().setDisable(true);
         crudHotelView.getButtonModifica().setDisable(true);
@@ -278,7 +278,6 @@ public class CrudHotelController extends CrudController {
     private void initializeChoiceBoxIndirizzo() {
         ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
         crudHotelView.getChoiceBoxIndirizzo().setItems(observableList);
-        //crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
     private void initializeChoiceBoxNumeroStelle() {
@@ -291,7 +290,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
-    public void loadHotelsIntoTableView(int page, int size) {
+    private void loadHotelsIntoTableView(int page, int size) {
         daoFactory = DAOFactory.getInstance();
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
         try {
@@ -322,7 +321,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getTableColumnImmagini().setCellValueFactory(new PropertyValueFactory<>("images"));
     }
 
-    private void tableViewClicked() {
+    public void tableViewClicked() {
         crudHotelView.getTableView().setOnMouseClicked(event -> {
             Hotel selectedHotel = getSelectedHotelFromTableView();
             if (selectedHotel != null) {
@@ -384,21 +383,21 @@ public class CrudHotelController extends CrudController {
         }
     }
 
-    private void buttonMostraAvantiClicked() {
+    public void buttonMostraAvantiClicked() {
         crudHotelView.getButtonMostraAvanti().setOnAction(event -> {
             if (!crudHotelView.getTableView().getItems().isEmpty())
                 loadHotelsIntoTableView(++currentPage, currentPageSize);
         });
     }
 
-    private void buttonMostraIndietroClicked() {
+    public void buttonMostraIndietroClicked() {
         crudHotelView.getButtonMostraIndietro().setOnAction(event -> {
             if (currentPage != 0)
                 loadHotelsIntoTableView(--currentPage, currentPageSize);
         });
     }
 
-    private void buttonConfermaClicked() {
+    public void buttonConfermaClicked() {
         crudHotelView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();
             String prezzoMedio = getPrezzoMedio();
@@ -668,15 +667,15 @@ public class CrudHotelController extends CrudController {
         }
     }
 
-    private void buttonAiutoClicked() {
+    public void buttonAiutoClicked() {
         crudHotelView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
     }
 
-    private void buttonCaricaClicked() {
+    public void buttonCaricaClicked() {
         crudHotelView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem());
     }
 
-    public void multiFileSelectionFromFileSystem() {
+    private void multiFileSelectionFromFileSystem() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         FileChooser.ExtensionFilter imageFilter =

@@ -135,7 +135,7 @@ public class CrudRestaurantController extends CrudController {
         loadRestaurantsIntoTableView(currentPage, currentPageSize);
     }
 
-    private void buttonCercaClicked() {
+    public void buttonCercaClicked() {
         crudRestaurantView.getButtonCerca().setOnAction(event -> {
             retrieving = true;
             enableAllTextFields();
@@ -166,7 +166,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getButtonIndietro().setOnAction(event -> showSelectTypeStage());
     }
 
-    public void showSelectTypeStage() {
+    private void showSelectTypeStage() {
         try {
             closeCurrentStage();
             Parent parent = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));
@@ -179,7 +179,7 @@ public class CrudRestaurantController extends CrudController {
         }
     }
 
-    public void closeCurrentStage() {
+    private void closeCurrentStage() {
         getStage().close();
     }
 
@@ -199,7 +199,7 @@ public class CrudRestaurantController extends CrudController {
         });
     }
 
-    public void enableAllTextFields() {
+    private void enableAllTextFields() {
         crudRestaurantView.getTextFieldOpeningTime().setDisable(false);
         crudRestaurantView.getTextFieldCAP().setDisable(false);
         crudRestaurantView.getTextFieldCity().setDisable(false);
@@ -211,12 +211,12 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getTextFieldProvincia().setDisable(false);
     }
 
-    public void enableAllChoiceBoxes() {
+    private void enableAllChoiceBoxes() {
         crudRestaurantView.getCheckBoxCertificatoDiEccellenza().setDisable(false);
         crudRestaurantView.getChoiceBoxIndirizzo().setDisable(false);
     }
 
-    public void disableCRUDButtons() {
+    private void disableCRUDButtons() {
         crudRestaurantView.getButtonCerca().setDisable(true);
         crudRestaurantView.getButtonInserisci().setDisable(true);
         crudRestaurantView.getButtonModifica().setDisable(true);
@@ -294,7 +294,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getTypeOfCuisineSelectColumn().setCellValueFactory(new PropertyValueFactory<>("checkBox"));
     }
 
-    public void loadRestaurantsIntoTableView(int page, int size) {
+    private void loadRestaurantsIntoTableView(int page, int size) {
         daoFactory = DAOFactory.getInstance();
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         try {
@@ -326,7 +326,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getTableColumnImmagini().setCellValueFactory(new PropertyValueFactory<>("images"));
     }
 
-    private void tableViewClicked() {
+    public void tableViewClicked() {
         crudRestaurantView.getTableView().setOnMouseClicked(event -> {
             Restaurant selectedRestaurant = getSelectedRestaurantFromTableView();
             if (selectedRestaurant != null) {
@@ -412,7 +412,7 @@ public class CrudRestaurantController extends CrudController {
         });
     }
 
-    private void buttonConfermaClicked() {
+    public void buttonConfermaClicked() {
         crudRestaurantView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();
             String prezzoMedio = getPrezzoMedio();
@@ -680,15 +680,15 @@ public class CrudRestaurantController extends CrudController {
         }
     }
 
-    private void buttonAiutoClicked() {
+    public void buttonAiutoClicked() {
         crudRestaurantView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
     }
 
-    private void buttonCaricaClicked() {
+    public void buttonCaricaClicked() {
         crudRestaurantView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem());
     }
 
-    public void multiFileSelectionFromFileSystem() {
+    private void multiFileSelectionFromFileSystem() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         FileChooser.ExtensionFilter imageFilter =
@@ -704,7 +704,7 @@ public class CrudRestaurantController extends CrudController {
         }
     }
 
-    private void buttonEliminaFotoSelezionataClicked() {
+    public void buttonEliminaFotoSelezionataClicked() {
         crudRestaurantView.getButtonEliminaFotoSelezionate().setOnAction(event -> {
             ObservableList<String> imagesSelectedToDelete2 = crudRestaurantView.getListViewFotoPath().getSelectionModel().getSelectedItems();
             imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
@@ -712,7 +712,7 @@ public class CrudRestaurantController extends CrudController {
         });
     }
 
-    private void buttonAnnullaClicked() {
+    public void buttonAnnullaClicked() {
         crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
             setViewsAsDefault();
             retrieving = false;
