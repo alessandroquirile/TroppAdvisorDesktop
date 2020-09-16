@@ -179,8 +179,7 @@ public class CrudAttractionController extends CrudController {
     }
 
     public void closeCurrentStage() {
-        Stage thisStage = getStage();
-        thisStage.close();
+        getStage().close();
     }
 
     public void buttonInserisciClicked() {
@@ -366,21 +365,15 @@ public class CrudAttractionController extends CrudController {
 
     private void buttonMostraAvantiClicked() {
         crudAttractionView.getButtonMostraAvanti().setOnAction(event -> {
-            System.out.println("Premuto Mostra avanti");
-            if (!crudAttractionView.getTableView().getItems().isEmpty()) {
-                currentPage++;
-                loadAttractionsIntoTableView(currentPage, currentPageSize);
-            }
+            if (!crudAttractionView.getTableView().getItems().isEmpty())
+                loadAttractionsIntoTableView(++currentPage, currentPageSize);
         });
     }
 
     private void buttonMostraIndietroClicked() {
         crudAttractionView.getButtonMostraIndietro().setOnAction(event -> {
-            System.out.println("Premuto mostra indietro");
-            if (currentPage != 0) {
-                currentPage--;
-                loadAttractionsIntoTableView(currentPage, currentPageSize);
-            }
+            if (currentPage != 0)
+                loadAttractionsIntoTableView(--currentPage, currentPageSize);
         });
     }
 
@@ -439,9 +432,7 @@ public class CrudAttractionController extends CrudController {
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
-        String query = "";
-
-        query = createQuery(query);
+        String query = getQuery();
 
         CrudDialoger.showAlertDialog(query); // dbg
 
@@ -458,7 +449,6 @@ public class CrudAttractionController extends CrudController {
             final ObservableList<Object> data = FXCollections.observableArrayList(attractions);
             fillColumnsWithData();
             crudAttractionView.getTableView().setItems(data);
-            System.out.println(attractions); // dbg
             crudAttractionView.getTableView().setDisable(false);
         } else {
             CrudDialoger.showAlertDialog("Non sono state trovate attrazioni con questi criteri: " + query +
@@ -467,7 +457,8 @@ public class CrudAttractionController extends CrudController {
         disableCRUDButtons();
     }
 
-    private String createQuery(String query) {
+    private String getQuery() {
+        String query = "";
         final String nome = getNome();
         final String numeroDiTelefono = getNumeroDiTelefono();
         final String tipoIndirizzo = getTipoIndirizzo();
@@ -550,7 +541,6 @@ public class CrudAttractionController extends CrudController {
             }
         }
 
-        // Se selezionato il certificato di eccellenza, inseriscilo
         if (crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
             if (concatena)
                 query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
@@ -684,6 +674,14 @@ public class CrudAttractionController extends CrudController {
         });
     }
 
+    private void buttonAnnullaClicked() {
+        crudAttractionView.getButtonAnnulla().setOnAction(event -> {
+            setViewsAsDefault();
+            retrieving = false;
+            modifying = false;
+        });
+    }
+
     private Attraction getAttractionWithFormData() {
         Attraction attraction = new Attraction();
         attraction.setName(crudAttractionView.getTextFieldNome().getText());
@@ -721,14 +719,6 @@ public class CrudAttractionController extends CrudController {
 
     private String getOpeningTimeWithFormData() {
         return crudAttractionView.getTextFieldOpeningTime().getText();
-    }
-
-    private void buttonAnnullaClicked() {
-        crudAttractionView.getButtonAnnulla().setOnAction(event -> {
-            setViewsAsDefault();
-            retrieving = false;
-            modifying = false;
-        });
     }
 
     public String getNome() {

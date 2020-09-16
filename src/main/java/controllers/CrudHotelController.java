@@ -181,8 +181,7 @@ public class CrudHotelController extends CrudController {
     }
 
     public void closeCurrentStage() {
-        Stage thisStage = getStage();
-        thisStage.close();
+        getStage().close();
     }
 
     public void buttonInserisciClicked() {
@@ -387,21 +386,15 @@ public class CrudHotelController extends CrudController {
 
     private void buttonMostraAvantiClicked() {
         crudHotelView.getButtonMostraAvanti().setOnAction(event -> {
-            System.out.println("Premuto Mostra avanti");
-            if (!crudHotelView.getTableView().getItems().isEmpty()) {
-                currentPage++;
-                loadHotelsIntoTableView(currentPage, currentPageSize);
-            }
+            if (!crudHotelView.getTableView().getItems().isEmpty())
+                loadHotelsIntoTableView(++currentPage, currentPageSize);
         });
     }
 
     private void buttonMostraIndietroClicked() {
         crudHotelView.getButtonMostraIndietro().setOnAction(event -> {
-            System.out.println("Premuto mostra indietro");
-            if (currentPage != 0) {
-                currentPage--;
-                loadHotelsIntoTableView(currentPage, currentPageSize);
-            }
+            if (currentPage != 0)
+                loadHotelsIntoTableView(--currentPage, currentPageSize);
         });
     }
 
@@ -455,9 +448,7 @@ public class CrudHotelController extends CrudController {
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
-        String query = "";
-
-        query = createQuery(query);
+        String query = getQuery();
 
         CrudDialoger.showAlertDialog(query); // dbg
 
@@ -471,9 +462,7 @@ public class CrudHotelController extends CrudController {
             final ObservableList<Object> data = FXCollections.observableArrayList(hotels);
             fillColumnsWithData();
             crudHotelView.getTableView().setItems(data);
-            System.out.println(hotels); // dbg
             crudHotelView.getTableView().setDisable(false);
-            //retrieving = false;
         } else {
             CrudDialoger.showAlertDialog("Non sono stati trovati hotel con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
@@ -481,7 +470,8 @@ public class CrudHotelController extends CrudController {
         disableCRUDButtons();
     }
 
-    private String createQuery(String query) {
+    private String getQuery() {
+        String query = "";
         final String nome = getNome();
         final String numeroDiTelefono = getNumeroDiTelefono();
         final String tipoIndirizzo = getTipoIndirizzo();
@@ -575,7 +565,6 @@ public class CrudHotelController extends CrudController {
             }
         }
 
-        // Se selezionato il certificato di eccellenza, inseriscilo
         if (crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
             if (concatena)
                 query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
@@ -711,6 +700,14 @@ public class CrudHotelController extends CrudController {
         });
     }
 
+    private void buttonAnnullaClicked() {
+        crudHotelView.getButtonAnnulla().setOnAction(event -> {
+            setViewsAsDefault();
+            retrieving = false;
+            modifying = false;
+        });
+    }
+
     private Hotel getHotelWithFormData() {
         Hotel hotel = new Hotel();
         hotel.setName(crudHotelView.getTextFieldNome().getText());
@@ -748,14 +745,6 @@ public class CrudHotelController extends CrudController {
 
     private String getCurrentDate() {
         return new Date().toString();
-    }
-
-    private void buttonAnnullaClicked() {
-        crudHotelView.getButtonAnnulla().setOnAction(event -> {
-            setViewsAsDefault();
-            retrieving = false;
-            modifying = false;
-        });
     }
 
     public String getNome() {

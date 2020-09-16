@@ -180,8 +180,7 @@ public class CrudRestaurantController extends CrudController {
     }
 
     public void closeCurrentStage() {
-        Stage thisStage = getStage();
-        thisStage.close();
+        getStage().close();
     }
 
     public void buttonInserisciClicked() {
@@ -280,7 +279,6 @@ public class CrudRestaurantController extends CrudController {
     private void initializeChoiceBoxIndirizzo() {
         ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
         crudRestaurantView.getChoiceBoxIndirizzo().setItems(observableList);
-        //crudRestaurantView.getChoiceBoxIndirizzo().getSelectionModel().selectFirst();
     }
 
     private void initializeTableViewTypeOfCuisine() {
@@ -402,21 +400,15 @@ public class CrudRestaurantController extends CrudController {
 
     private void buttonMostraAvantiClicked() {
         crudRestaurantView.getButtonMostraAvanti().setOnAction(event -> {
-            System.out.println("Premuto Mostra avanti");
-            if (!crudRestaurantView.getTableView().getItems().isEmpty()) {
-                currentPage++;
-                loadRestaurantsIntoTableView(currentPage, currentPageSize);
-            }
+            if (!crudRestaurantView.getTableView().getItems().isEmpty())
+                loadRestaurantsIntoTableView(++currentPage, currentPageSize);
         });
     }
 
     private void buttonMostraIndietroClicked() {
         crudRestaurantView.getButtonMostraIndietro().setOnAction(event -> {
-            System.out.println("Premuto mostra indietro");
-            if (currentPage != 0) {
-                currentPage--;
-                loadRestaurantsIntoTableView(currentPage, currentPageSize);
-            }
+            if (currentPage != 0)
+                loadRestaurantsIntoTableView(--currentPage, currentPageSize);
         });
     }
 
@@ -475,9 +467,7 @@ public class CrudRestaurantController extends CrudController {
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
-        String query = "";
-
-        query = createQuery(query);
+        String query = getQuery();
 
         CrudDialoger.showAlertDialog(query); // dbg
 
@@ -491,13 +481,11 @@ public class CrudRestaurantController extends CrudController {
             List<String> typeOfCuisineDesired = getTypeOfCuisineWithFormData();
             restaurants.removeIf(restaurant -> !restaurant.getTypeOfCuisine().containsAll(typeOfCuisineDesired));
             String openingTimeDesired = getOpeningTimeWithFormData();
-            //CrudDialoger.showAlertDialog(openingTimeDesired); // dbg
             if (!openingTimeDesired.isEmpty())
                 restaurants.removeIf(restaurant -> !restaurant.getOpeningTime().equals(openingTimeDesired));
             final ObservableList<Object> data = FXCollections.observableArrayList(restaurants);
             fillColumnsWithData();
             crudRestaurantView.getTableView().setItems(data);
-            System.out.println(restaurants);
             crudRestaurantView.getTableView().setDisable(false);
         } else {
             CrudDialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri: " + query +
@@ -506,7 +494,8 @@ public class CrudRestaurantController extends CrudController {
         disableCRUDButtons();
     }
 
-    private String createQuery(String query) {
+    private String getQuery() {
+        String query = "";
         final String nome = getNome();
         final String numeroDiTelefono = getNumeroDiTelefono();
         final String tipoIndirizzo = getTipoIndirizzo();
@@ -589,7 +578,6 @@ public class CrudRestaurantController extends CrudController {
             }
         }
 
-        // Se selezionato il certificato di eccellenza, inseriscilo
         if (crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
             if (concatena)
                 query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
@@ -724,6 +712,14 @@ public class CrudRestaurantController extends CrudController {
         });
     }
 
+    private void buttonAnnullaClicked() {
+        crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
+            setViewsAsDefault();
+            retrieving = false;
+            modifying = false;
+        });
+    }
+
     private Restaurant getRestaurantWithFormData() {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(crudRestaurantView.getTextFieldNome().getText());
@@ -775,14 +771,6 @@ public class CrudRestaurantController extends CrudController {
 
     private String getOpeningTimeWithFormData() {
         return crudRestaurantView.getTextFieldOpeningTime().getText();
-    }
-
-    private void buttonAnnullaClicked() {
-        crudRestaurantView.getButtonAnnulla().setOnAction(event -> {
-            setViewsAsDefault();
-            retrieving = false;
-            modifying = false;
-        });
     }
 
     public CrudRestaurantView getCrudRestaurantView() {
