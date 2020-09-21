@@ -21,7 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Address;
 import models.Attraction;
-import models_helpers.Point;
+import models.Point;
 import utils.ConfigFileReader;
 import views.CrudAttractionView;
 

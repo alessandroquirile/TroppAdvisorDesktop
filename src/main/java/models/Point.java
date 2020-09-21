@@ -1,4 +1,4 @@
-package models_helpers;
+package models;
 
 import java.io.Serializable;
 

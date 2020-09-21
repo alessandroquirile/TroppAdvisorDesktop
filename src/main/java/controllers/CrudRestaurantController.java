@@ -18,8 +18,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Address;
+import models.Point;
 import models.Restaurant;
-import models_helpers.Point;
 import utils.ConfigFileReader;
 import views.CrudRestaurantView;
 

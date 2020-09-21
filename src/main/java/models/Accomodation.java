@@ -1,7 +1,5 @@
 package models;
 
-import models_helpers.Point;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,7 +15,6 @@ public abstract class Accomodation implements Serializable {
     protected Address address;
     protected Point point;
     protected List<Review> reviews;
-    //protected Integer totalReviews;
     protected Long totalReviews;
     protected Long totalRating;
     protected List<String> images;
