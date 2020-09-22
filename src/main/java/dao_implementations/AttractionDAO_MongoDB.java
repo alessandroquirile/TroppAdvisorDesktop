@@ -2,6 +2,7 @@ package dao_implementations;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import controllers_utils.CrudDialoger;
 import controllers_utils.ObjectMapperCreator;
 import dao_interfaces.AttractionDAO;
 import dao_interfaces.CityDAO;
@@ -10,6 +11,7 @@ import factories.DAOFactory;
 import models.Attraction;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.AuthenticationResult;
 import utils.ConfigFileReader;
 
 import java.io.File;
@@ -32,6 +34,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
     private DAOFactory daoFactory;
     private ImageDAO imageDAO;
     private CityDAO cityDAO;
+    private AuthenticationResult authenticationResult;
 
     @Override
     public boolean add(Attraction attraction) throws IOException, InterruptedException {
@@ -49,16 +52,23 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
+        CrudDialoger.showAlertDialog(request.headers().toString());
+
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.body() + " " + response.headers()); // dbg
 
         if (response.statusCode() == 200) {
             for (String imagePath : attraction.getImages()) {
@@ -67,7 +77,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String endpoint = imageDAO.loadFileIntoBucket(file);
                 Attraction parsedAttraction = getParsedAttractionFromJson(objectMapper, response);
-                if (updateAttractionSingleImageFromAttractionCollection(parsedAttraction, endpoint))
+                if (!updateAttractionSingleImageFromAttractionCollection(parsedAttraction, endpoint))
                     return false;
             }
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
@@ -79,14 +89,17 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public List<Attraction> retrieveAt(int page, int size) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/find-all/?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/find-all?";
         URL += "page=" + page + "&size=" + size;
+
+        authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
                 .header("accept", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .uri(URI.create(URL))
                 .build();
 
@@ -106,7 +119,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public List<Attraction> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/search-by-rsql-no-point?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/search-by-rsql-no-point?";
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
         else
@@ -114,13 +127,15 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
         System.out.println("URL: " + URL);
 
+        authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
                 .header("accept", "application/json")
-                .uri(URI.create(URL)) // bug qui, URISyntaxException
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
+                .uri(URI.create(URL))
                 .build();
 
         HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -154,7 +169,8 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         if (!cityDAO.delete(attraction) || !imageDAO.deleteAllAccomodationImagesFromBucket(attraction))
             return false;
         else {
-            String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/delete-by-id";
+            authenticationResult = AuthenticationResult.getInstance();
+            String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-by-id";
             URL += "/" + attraction.getId();
             HttpClient httpClient = HttpClient.newHttpClient();
             HttpRequest httpRequest = HttpRequest
@@ -162,6 +178,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
                     .DELETE()
                     .uri(URI.create(URL))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                     .build();
 
             HttpResponse<String> response = httpClient.send(httpRequest,
@@ -175,7 +192,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public boolean update(Attraction attraction) throws IOException, InterruptedException {
-        final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/update";
+        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/update";
 
         final Map<String, Object> values = new HashMap<>();
         values.put("id", attraction.getId());
@@ -191,11 +208,14 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -210,7 +230,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public boolean deleteAttractionSingleImageFromAttractionCollection(Attraction attraction, String imageUrl) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/delete-image";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-image";
         URL += "/" + attraction.getId();
 
         System.out.println(attraction);
@@ -221,11 +241,14 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -239,7 +262,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public boolean updateAttractionSingleImageFromAttractionCollection(Attraction attraction, String endpoint) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/update-images";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/update-images";
         URL += "/" + attraction.getId();
 
         final Map<String, Object> values = new HashMap<>();
@@ -248,24 +271,27 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
+        System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
 
-        return response.statusCode() != 200;
+        return response.statusCode() == 200;
     }
 
     private String getUrlInsertFor(Attraction attraction) {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/attraction/insert?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/insert?";
         URL = URL.concat("latitude=" + attraction.getPoint().getX());
         URL = URL.concat("&longitude=" + attraction.getPoint().getY());
         return URL;

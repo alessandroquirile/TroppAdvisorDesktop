@@ -10,6 +10,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import utils.AuthenticationResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,22 +24,27 @@ import java.nio.charset.StandardCharsets;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class ImageDAO_S3 implements ImageDAO {
+
+    private AuthenticationResult authenticationResult;
+
     @Override
     public boolean deleteAllAccomodationImagesFromBucket(Accomodation accomodation) throws IOException, InterruptedException {
-        if (accomodation.getImages() != null) {
-            for (String imageS3Url : accomodation.getImages()) {
-                if (!deleteThisImageFromBucket(imageS3Url))
-                    return false;
-            }
-            return true;
-        } else
+        if (accomodation.getImages() == null)
             return false;
+
+        for (String imageS3Url : accomodation.getImages())
+            if (!deleteThisImageFromBucket(imageS3Url))
+                return false;
+
+        return true;
     }
 
     @Override
     public boolean deleteThisImageFromBucket(String imageS3Url) throws IOException, InterruptedException {
-        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/s3/delete-file/?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/s3/delete-file?";
         URL += "url=" + imageS3Url;
+
+        authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
@@ -46,6 +52,7 @@ public class ImageDAO_S3 implements ImageDAO {
                 .DELETE()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .build();
 
         HttpResponse<String> response = httpClient.send(httpRequest,

@@ -10,6 +10,7 @@ import factories.DAOFactory;
 import models.Hotel;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.AuthenticationResult;
 import utils.ConfigFileReader;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
     private DAOFactory daoFactory;
     private ImageDAO imageDAO;
     private CityDAO cityDAO;
+    private AuthenticationResult authenticationResult;
 
     @Override
     public boolean add(Hotel hotel) throws IOException, InterruptedException {
@@ -49,11 +51,14 @@ public class HotelDAO_MongoDB implements HotelDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -67,7 +72,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String endpoint = imageDAO.loadFileIntoBucket(file);
                 Hotel parsedHotel = getParsedHotelFromJson(objectMapper, response);
-                if (updateHotelSingleImageFromHotelCollection(parsedHotel, endpoint))
+                if (!updateHotelSingleImageFromHotelCollection(parsedHotel, endpoint))
                     return false;
             }
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
@@ -79,14 +84,17 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public List<Hotel> retrieveAt(int page, int size) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/find-all/?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/find-all?";
         URL += "page=" + page + "&size=" + size;
+
+        authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
                 .header("accept", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .uri(URI.create(URL))
                 .build();
 
@@ -110,7 +118,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public List<Hotel> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/search-by-rsql-no-point?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/search-by-rsql-no-point?";
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
         else
@@ -118,13 +126,15 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
         System.out.println("URL: " + URL);
 
+        authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
                 .header("accept", "application/json")
-                .uri(URI.create(URL)) // bug qui, URISyntaxException
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
+                .uri(URI.create(URL))
                 .build();
 
         HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -158,14 +168,18 @@ public class HotelDAO_MongoDB implements HotelDAO {
         if (!cityDAO.delete(hotel) || !imageDAO.deleteAllAccomodationImagesFromBucket(hotel))
             return false;
         else {
-            String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/delete-by-id";
+            String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-by-id";
             URL += "/" + hotel.getId();
             HttpClient httpClient = HttpClient.newHttpClient();
+
+            authenticationResult = AuthenticationResult.getInstance();
+
             HttpRequest httpRequest = HttpRequest
                     .newBuilder()
                     .DELETE()
                     .uri(URI.create(URL))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                     .build();
 
             HttpResponse<String> response = httpClient.send(httpRequest,
@@ -179,7 +193,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public boolean update(Hotel hotel) throws IOException, InterruptedException {
-        final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/update";
+        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/update";
 
         final Map<String, Object> values = new HashMap<>();
         values.put("id", hotel.getId());
@@ -195,11 +209,14 @@ public class HotelDAO_MongoDB implements HotelDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -214,7 +231,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public boolean deleteHotelSingleImageFromHotelCollection(Hotel hotel, String imageUrl) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/delete-image";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-image";
         URL += "/" + hotel.getId();
 
         System.out.println(hotel);
@@ -225,11 +242,14 @@ public class HotelDAO_MongoDB implements HotelDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -243,7 +263,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public boolean updateHotelSingleImageFromHotelCollection(Hotel hotel, String endpoint) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/update-images";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/update-images";
         URL += "/" + hotel.getId();
 
         final Map<String, Object> values = new HashMap<>();
@@ -252,11 +272,14 @@ public class HotelDAO_MongoDB implements HotelDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -265,11 +288,11 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
         //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
 
-        return response.statusCode() != 200;
+        return response.statusCode() == 200;
     }
 
     private String getUrlInsertFor(Hotel hotel) {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/hotel/insert?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/insert?";
         URL = URL.concat("latitude=" + hotel.getPoint().getX());
         URL = URL.concat("&longitude=" + hotel.getPoint().getY());
         return URL;

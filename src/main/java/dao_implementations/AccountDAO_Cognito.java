@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers_utils.ObjectMapperCreator;
 import dao_interfaces.AccountDAO;
 import models.Account;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,7 +40,20 @@ public class AccountDAO_Cognito implements AccountDAO {
 
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
-        //System.out.println("Header:\n" +httpResponses.headers() + "\nBody:\n" + httpResponses.body()); // dbg
+
+        //System.out.println("Header:\n" +response.headers() + "\nBody:\n" + response.body()); // dbg
+
+        JSONObject jsonObject = new JSONObject(response.body());
+        JSONObject authenticationResult = (JSONObject) jsonObject.get("authenticationResult");
+
+        account.setIdToken(authenticationResult.getString("idToken"));
+        account.setTokenType(authenticationResult.getString("tokenType"));
+        account.setAccessToken(authenticationResult.getString("accessToken"));
+        account.setTokenExpiresIn(authenticationResult.getInt("expiresIn"));
+        account.setRefreshToken(authenticationResult.getString("refreshToken"));
+
+        System.out.println(account.getAuthenticationResult().toString()); // dbg
+
         return response.statusCode() == 200;
     }
 

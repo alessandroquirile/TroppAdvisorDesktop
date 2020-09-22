@@ -10,6 +10,7 @@ import factories.DAOFactory;
 import models.Restaurant;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.AuthenticationResult;
 import utils.ConfigFileReader;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
     private DAOFactory daoFactory;
     private ImageDAO imageDAO;
     private CityDAO cityDAO;
+    private AuthenticationResult authenticationResult;
 
     @Override
     public boolean add(Restaurant restaurant) throws IOException, InterruptedException {
@@ -50,11 +52,14 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -68,7 +73,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String endpoint = imageDAO.loadFileIntoBucket(file);
                 Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
-                if (updateRestaurantSingleImageFromRestaurantCollection(parsedRestaurant, endpoint))
+                if (!updateRestaurantSingleImageFromRestaurantCollection(parsedRestaurant, endpoint))
                     return false;
             }
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
@@ -80,14 +85,17 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public List<Restaurant> retrieveAt(int page, int size) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/find-all/?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/find-all?";
         URL += "page=" + page + "&size=" + size;
+
+        authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
                 .header("accept", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .uri(URI.create(URL))
                 .build();
 
@@ -111,7 +119,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public List<Restaurant> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/search-by-rsql-no-point?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/search-by-rsql-no-point?";
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
         else
@@ -120,12 +128,15 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         System.out.println("URL: " + URL);
 
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
                 .header("accept", "application/json")
-                .uri(URI.create(URL)) // bug qui, URISyntaxException
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
+                .uri(URI.create(URL))
                 .build();
 
         HttpResponse<String> httpResponses = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
@@ -159,14 +170,18 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllAccomodationImagesFromBucket(restaurant))
             return false;
         else {
-            String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-by-id";
+            String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/delete-by-id";
             URL += "/" + restaurant.getId();
             HttpClient httpClient = HttpClient.newHttpClient();
+
+            authenticationResult = AuthenticationResult.getInstance();
+
             HttpRequest httpRequest = HttpRequest
                     .newBuilder()
                     .DELETE()
                     .uri(URI.create(URL))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                     .build();
 
             HttpResponse<String> response = httpClient.send(httpRequest,
@@ -178,7 +193,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public boolean update(Restaurant restaurant) throws IOException, InterruptedException {
-        final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update";
+        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/update";
 
         assert restaurant.getTypeOfCuisine() != null;
         final Map<String, Object> values = new HashMap<>();
@@ -196,11 +211,14 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -215,7 +233,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public boolean deleteRestaurantSingleImageFromRestaurantCollection(Restaurant restaurant, String imageUrl) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/delete-image";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/delete-image";
         URL += "/" + restaurant.getId();
 
         System.out.println(restaurant);
@@ -226,11 +244,14 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -244,7 +265,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public boolean updateRestaurantSingleImageFromRestaurantCollection(Restaurant restaurant, String endpoint) throws IOException, InterruptedException {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/update-images";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/update-images";
         URL += "/" + restaurant.getId();
 
         final Map<String, Object> values = new HashMap<>();
@@ -253,11 +274,14 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
+        authenticationResult = AuthenticationResult.getInstance();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
                 .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                 .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
@@ -266,11 +290,11 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
         //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
 
-        return response.statusCode() != 200;
+        return response.statusCode() == 200;
     }
 
     private String getUrlInsertFor(Restaurant restaurant) {
-        String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/restaurant/insert?";
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/insert?";
         URL = URL.concat("latitude=" + restaurant.getPoint().getX());
         URL = URL.concat("&longitude=" + restaurant.getPoint().getY());
         return URL;

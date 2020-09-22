@@ -620,7 +620,7 @@ public class CrudHotelController extends CrudController {
                     e.printStackTrace();
                 }
                 try {
-                    if (hotelDAO.updateHotelSingleImageFromHotelCollection(hotel, imageHostUrl) || imageHostUrl == null)
+                    if (!hotelDAO.updateHotelSingleImageFromHotelCollection(hotel, imageHostUrl) || imageHostUrl == null)
                         CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();

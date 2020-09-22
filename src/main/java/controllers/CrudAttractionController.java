@@ -594,7 +594,7 @@ public class CrudAttractionController extends CrudController {
                     e.printStackTrace();
                 }
                 try {
-                    if (attractionDAO.updateAttractionSingleImageFromAttractionCollection(attraction, imageHostUrl) || imageHostUrl == null)
+                    if (!attractionDAO.updateAttractionSingleImageFromAttractionCollection(attraction, imageHostUrl) || imageHostUrl == null)
                         CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();

@@ -1,5 +1,7 @@
 package models;
 
+import utils.AuthenticationResult;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +10,7 @@ import java.io.Serializable;
 public class Account implements Serializable {
     private String email;
     private String password;
+    private AuthenticationResult authenticationResult;
 
     public Account() {
 
@@ -16,6 +19,31 @@ public class Account implements Serializable {
     public Account(String email, String password) {
         this.email = email;
         this.password = password;
+        this.authenticationResult = AuthenticationResult.getInstance();
+    }
+
+    public String getIdToken() {
+        return this.authenticationResult.getIdToken();
+    }
+
+    public void setIdToken(String idToken) {
+        this.authenticationResult.setIdToken(idToken);
+    }
+
+    public void setTokenType(String tokenType) {
+        this.authenticationResult.setTokenType(tokenType);
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.authenticationResult.setAccessToken(accessToken);
+    }
+
+    public void setTokenExpiresIn(int seconds) {
+        this.authenticationResult.setExpiresIn(seconds);
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.authenticationResult.setRefreshToken(refreshToken);
     }
 
     public String getEmail() {
@@ -34,11 +62,16 @@ public class Account implements Serializable {
         this.password = password;
     }
 
+    public AuthenticationResult getAuthenticationResult() {
+        return authenticationResult;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", authenticationResult=" + authenticationResult +
                 '}';
     }
 }
