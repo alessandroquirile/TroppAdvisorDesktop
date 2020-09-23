@@ -132,9 +132,8 @@ public class CrudHotelController extends CrudController {
 
     @Override
     public void setListenerOnListView(ListView<String> listViewFotoPath) {
-        if (listViewFotoPath.getId().equals("listViewFotoPath")) {
+        if (listViewFotoPath.getId().equals("listViewFotoPath"))
             listViewFotoPathClicked();
-        }
     }
 
     public void buttonCercaClicked() {
@@ -683,9 +682,8 @@ public class CrudHotelController extends CrudController {
         fileChooser.getExtensionFilters().add(imageFilter);
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         if (selectedFiles != null) {
-            for (File selectedFile : selectedFiles) {
+            for (File selectedFile : selectedFiles)
                 crudHotelView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
-            }
         } else {
             CrudDialoger.showAlertDialog("I file selezionati non sono validi");
         }

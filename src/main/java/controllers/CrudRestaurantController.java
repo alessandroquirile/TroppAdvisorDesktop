@@ -124,7 +124,7 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getTextFieldOpeningTime().setDisable(true);
         crudRestaurantView.getButtonCaricaFoto().setDisable(true);
         crudRestaurantView.getListViewFotoPath().setDisable(true);
-        crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // multi select
+        crudRestaurantView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         crudRestaurantView.getListViewFotoPath().getItems().clear();
         crudRestaurantView.getButtonEliminaFotoSelezionate().setDisable(true);
         crudRestaurantView.getTableView().setDisable(false);
