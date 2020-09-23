@@ -3,23 +3,32 @@ package models;
 import utils.AuthenticationResult;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
 public class Account implements Serializable {
     private String email;
-    private String password;
+    private char[] password;
     private AuthenticationResult authenticationResult;
 
     public Account() {
 
     }
 
-    public Account(String email, String password) {
+    public Account(String email, char[] password) {
         this.email = email;
         this.password = password;
-        this.authenticationResult = AuthenticationResult.getInstance();
+        authenticationResult = AuthenticationResult.getInstance();
+    }
+
+    public char[] getPassword() {
+        return password;
+    }
+
+    public void setPassword(char[] password) {
+        this.password = password;
     }
 
     public String getIdToken() {
@@ -54,14 +63,6 @@ public class Account implements Serializable {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public AuthenticationResult getAuthenticationResult() {
         return authenticationResult;
     }
@@ -70,7 +71,7 @@ public class Account implements Serializable {
     public String toString() {
         return "Account{" +
                 "email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", password=" + Arrays.toString(password) +
                 ", authenticationResult=" + authenticationResult +
                 '}';
     }

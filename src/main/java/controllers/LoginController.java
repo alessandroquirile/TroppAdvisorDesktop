@@ -15,6 +15,7 @@ import utils.ConfigFileReader;
 import views.LoginView;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
@@ -42,7 +43,7 @@ public class LoginController extends Controller {
     public void buttonLoginClicked() {
         loginView.getButtonLogin().setOnAction(event -> {
             String email = getEmail();
-            String password = getPassword();
+            char[] password = getPassword().toCharArray();
 
             formCheckerFactory = FormCheckerFactory.getInstance();
             formChecker = formCheckerFactory.getFormChecker(this);
@@ -50,6 +51,7 @@ public class LoginController extends Controller {
             if (formChecker.formHasSomeEmptyField(this)) {
                 CrudDialoger.showAlertDialog("Riempire tutti i campi");
             } else {
+                //CrudDialoger.showAlertDialog(Arrays.toString(password)); // dbg
                 if (InputValidator.isValid(email)) {
                     Account account = new Account(email, password);
                     DAOFactory daoFactory = DAOFactory.getInstance();
@@ -61,6 +63,9 @@ public class LoginController extends Controller {
                             loadSelectTypeScene();
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
+                    } finally {
+                        Arrays.fill(password, '\0');
+                        //CrudDialoger.showAlertDialog(Arrays.toString(password)); // dbg
                     }
                 } else {
                     CrudDialoger.showAlertDialog("Pattern email non valido");
