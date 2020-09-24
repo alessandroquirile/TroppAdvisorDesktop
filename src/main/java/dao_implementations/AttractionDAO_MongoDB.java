@@ -2,7 +2,6 @@ package dao_implementations;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import controllers_utils.CrudDialoger;
 import controllers_utils.ObjectMapperCreator;
 import dao_interfaces.AttractionDAO;
 import dao_interfaces.CityDAO;
@@ -63,7 +62,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        CrudDialoger.showAlertDialog(request.headers().toString());
+        //CrudDialoger.showAlertDialog(request.headers().toString()); // dbg
 
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());

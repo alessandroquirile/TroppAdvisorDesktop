@@ -11,7 +11,6 @@ public abstract class InputValidator {
         String telephoneNumberRegExp = "^([0-9]*-? ?/?[0-9]*)$";
         if (telephoneNumber.length() != 10 && telephoneNumber.length() != 9)
             return false;
-
         Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
         return matcher.find();

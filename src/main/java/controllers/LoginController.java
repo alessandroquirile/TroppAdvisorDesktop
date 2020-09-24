@@ -64,7 +64,7 @@ public class LoginController extends Controller {
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     } finally {
-                        Arrays.fill(password, '\0');
+                        Arrays.fill(password, '\0'); // password protection
                         //CrudDialoger.showAlertDialog(Arrays.toString(password)); // dbg
                     }
                 } else {
