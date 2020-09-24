@@ -90,9 +90,8 @@ public class CrudHotelController extends CrudController {
 
     @Override
     public void setListenerOnTableView(TableView<Object> tableView) {
-        if (tableView.getId().equals("tableView")) {
+        if (tableView.getId().equals("tableView"))
             tableViewClicked();
-        }
     }
 
     @Override
@@ -376,9 +375,8 @@ public class CrudHotelController extends CrudController {
 
     private void setProperImagesIntoListView(Hotel hotel) {
         if (hotel.getImages() != null) {
-            for (String image : hotel.getImages()) {
+            for (String image : hotel.getImages())
                 crudHotelView.getListViewFotoPath().getItems().add(image);
-            }
         }
     }
 
@@ -428,18 +426,14 @@ public class CrudHotelController extends CrudController {
                                         imagesSelectedToDelete = null;
                                     } else
                                         doInsert(hotel);
-                                } else {
+                                } else
                                     CrudDialoger.showAlertDialog("CAP non valido");
-                                }
-                            } else {
+                            } else
                                 CrudDialoger.showAlertDialog("Numero civico non valido");
-                            }
-                        } else {
+                        } else
                             CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
-                        }
-                    } else {
+                    } else
                         CrudDialoger.showAlertDialog("Numero di telefono non valido");
-                    }
                 }
             }
         });
@@ -448,7 +442,7 @@ public class CrudHotelController extends CrudController {
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getQuery();
 
-        CrudDialoger.showAlertDialog(query); // dbg
+        //CrudDialoger.showAlertDialog(query); // dbg
 
         daoFactory = DAOFactory.getInstance();
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
@@ -514,6 +508,7 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!strada.isEmpty()) {
             if (concatena)
                 query += ";address.street==\"" + strada + "\"";
@@ -522,6 +517,7 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!civico.isEmpty()) {
             if (concatena)
                 query += ";address.houseNumber==\"" + civico + "\"";
@@ -530,6 +526,7 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!city.isEmpty()) {
             if (concatena)
                 query += ";address.city==\"" + city + "\"";
@@ -538,6 +535,7 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!cap.isEmpty()) {
             if (concatena)
                 query += ";address.postalCode==\"" + cap + "\"";
@@ -546,6 +544,7 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!provincia.isEmpty()) {
             if (concatena)
                 query += ";address.province==\"" + provincia + "\"";
@@ -554,6 +553,7 @@ public class CrudHotelController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!prezzoMedio.isEmpty()) {
             if (concatena)
                 query += ";avaragePrice==\"" + prezzoMedio + "\"";

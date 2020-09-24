@@ -8,14 +8,13 @@ import java.util.regex.Pattern;
  */
 public abstract class InputValidator {
     public static boolean isValidTelephoneNumber(String telephoneNumber) {
-        String telephoneNumberRegExp = "^([0-9]*\\-?\\ ?\\/?[0-9]*)$";
-        if (telephoneNumber.length() == 10 || telephoneNumber.length() == 9) {
-            Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
-            return matcher.find();
-        } else {
+        String telephoneNumberRegExp = "^([0-9]*-? ?/?[0-9]*)$";
+        if (telephoneNumber.length() != 10 && telephoneNumber.length() != 9)
             return false;
-        }
+
+        Pattern telephoneNumberPattern = Pattern.compile(telephoneNumberRegExp, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = telephoneNumberPattern.matcher(telephoneNumber);
+        return matcher.find();
     }
 
     public static boolean isNumberGreaterOrEqualToZero(String number) {
@@ -25,7 +24,7 @@ public abstract class InputValidator {
         return matcher.find();
     }
 
-    public static boolean isValid(String email) {
+    public static boolean hasValidPattern(String email) {
         String emailRegExp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
         Pattern emailPattern = Pattern.compile(emailRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = emailPattern.matcher(email);
@@ -33,11 +32,11 @@ public abstract class InputValidator {
     }
 
     public static boolean isValidOpeningTime(String openingTime) {
-        return isValidHhMmDashHhMm(openingTime) || isValidOpeningTimeHhMmHhMmHhMmHhMm(openingTime);
+        return isValidSingleOpeningTime(openingTime) || isValidDoubleOpeningTime(openingTime);
     }
 
     // hh:mm - hh:mm
-    private static boolean isValidHhMmDashHhMm(String openingTime) {
+    private static boolean isValidSingleOpeningTime(String openingTime) {
         String regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
         Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(openingTime);
@@ -45,7 +44,7 @@ public abstract class InputValidator {
     }
 
     // hh:mm - hh:mm hh:mm - hh:mm
-    private static boolean isValidOpeningTimeHhMmHhMmHhMmHhMm(String openingTime) {
+    private static boolean isValidDoubleOpeningTime(String openingTime) {
         String regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
         Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(openingTime);

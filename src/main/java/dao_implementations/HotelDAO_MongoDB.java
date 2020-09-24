@@ -65,21 +65,20 @@ public class HotelDAO_MongoDB implements HotelDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == 200) {
-            for (String imagePath : hotel.getImages()) {
-                File file = new File(imagePath);
-                daoFactory = DAOFactory.getInstance();
-                imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-                String endpoint = imageDAO.loadFileIntoBucket(file);
-                Hotel parsedHotel = getParsedHotelFromJson(objectMapper, response);
-                if (!updateHotelSingleImageFromHotelCollection(parsedHotel, endpoint))
-                    return false;
-            }
-            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-            return cityDAO.insert(getParsedHotelFromJson(objectMapper, response));
-        } else {
+        if (response.statusCode() != 200)
             return false;
+
+        for (String imagePath : hotel.getImages()) {
+            File file = new File(imagePath);
+            daoFactory = DAOFactory.getInstance();
+            imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+            String endpoint = imageDAO.loadFileIntoBucket(file);
+            Hotel parsedHotel = getParsedHotelFromJson(objectMapper, response);
+            if (!updateHotelSingleImageFromHotelCollection(parsedHotel, endpoint))
+                return false;
         }
+        cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+        return cityDAO.insert(getParsedHotelFromJson(objectMapper, response));
     }
 
     @Override
@@ -109,10 +108,6 @@ public class HotelDAO_MongoDB implements HotelDAO {
             hotels.add(hotel);
         }
 
-        // dbg
-        /*for (Hotel hotel : hotels) {
-            System.out.println(hotel.getName());
-        }*/
         return hotels;
     }
 
@@ -141,8 +136,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
         List<Hotel> hotels = null;
 
-        // No content
-        if (httpResponses.statusCode() == 204)
+        if (httpResponses.statusCode() == 204) // No content
             return null;
         else if (httpResponses.statusCode() == 200) {
             JSONObject jsonObject = new JSONObject(httpResponses.body());
@@ -155,7 +149,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
             }
         }
 
-        System.out.println("Response: " + httpResponses);
+        //System.out.println("Response: " + httpResponses); // dbg
 
         return hotels;
     }
@@ -167,7 +161,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
         if (!cityDAO.delete(hotel) || !imageDAO.deleteAllAccomodationImagesFromBucket(hotel))
             return false;
-        else {
+
             String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-by-id";
             URL += "/" + hotel.getId();
             HttpClient httpClient = HttpClient.newHttpClient();
@@ -188,7 +182,6 @@ public class HotelDAO_MongoDB implements HotelDAO {
             System.out.println(response.body());
 
             return response.statusCode() == 200;
-        }
     }
 
     @Override
@@ -256,7 +249,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
+        //System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
 
         return response.statusCode() == 200;
     }

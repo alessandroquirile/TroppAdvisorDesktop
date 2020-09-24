@@ -85,9 +85,8 @@ public class CrudAttractionController extends CrudController {
 
     @Override
     public void setListenerOnTableView(TableView<Object> tableView) {
-        if (tableView.getId().equals("tableView")) {
+        if (tableView.getId().equals("tableView"))
             tableViewClicked();
-        }
     }
 
     @Override
@@ -126,9 +125,8 @@ public class CrudAttractionController extends CrudController {
 
     @Override
     public void setListenerOnListView(ListView<String> listViewFotoPath) {
-        if (listViewFotoPath.getId().equals("listViewFotoPath")) {
+        if (listViewFotoPath.getId().equals("listViewFotoPath"))
             listViewFotoPathClicked();
-        }
     }
 
     @Override
@@ -410,21 +408,16 @@ public class CrudAttractionController extends CrudController {
                                             imagesSelectedToDelete = null;
                                         } else
                                             doInsert(attraction);
-                                    } else {
+                                    } else
                                         CrudDialoger.showAlertDialog("Orario non valido");
-                                    }
-                                } else {
+                                } else
                                     CrudDialoger.showAlertDialog("CAP non valido");
-                                }
-                            } else {
+                            } else
                                 CrudDialoger.showAlertDialog("Numero civico non valido");
-                            }
-                        } else {
+                        } else
                             CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
-                        }
-                    } else {
+                    } else
                         CrudDialoger.showAlertDialog("Numero di telefono non valido");
-                    }
                 }
             }
         });
@@ -483,6 +476,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (tipoIndirizzo != null) {
             if (concatena)
                 query += ";address.type==\"" + tipoIndirizzo + "\"";
@@ -491,6 +485,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!strada.isEmpty()) {
             if (concatena)
                 query += ";address.street==\"" + strada + "\"";
@@ -499,6 +494,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!civico.isEmpty()) {
             if (concatena)
                 query += ";address.houseNumber==\"" + civico + "\"";
@@ -507,6 +503,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!city.isEmpty()) {
             if (concatena)
                 query += ";address.city==\"" + city + "\"";
@@ -515,6 +512,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!cap.isEmpty()) {
             if (concatena)
                 query += ";address.postalCode==\"" + cap + "\"";
@@ -523,6 +521,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!provincia.isEmpty()) {
             if (concatena)
                 query += ";address.province==\"" + provincia + "\"";
@@ -531,6 +530,7 @@ public class CrudAttractionController extends CrudController {
                 concatena = true;
             }
         }
+
         if (!prezzoMedio.isEmpty()) {
             if (concatena)
                 query += ";avaragePrice==\"" + prezzoMedio + "\"";

@@ -52,7 +52,7 @@ public class LoginController extends Controller {
                 CrudDialoger.showAlertDialog("Riempire tutti i campi");
             } else {
                 //CrudDialoger.showAlertDialog(Arrays.toString(password)); // dbg
-                if (InputValidator.isValid(email)) {
+                if (InputValidator.hasValidPattern(email)) {
                     Account account = new Account(email, password);
                     DAOFactory daoFactory = DAOFactory.getInstance();
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));

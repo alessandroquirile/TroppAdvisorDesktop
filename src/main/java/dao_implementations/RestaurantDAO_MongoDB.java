@@ -66,21 +66,20 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() == 200) {
-            for (String imagePath : restaurant.getImages()) {
-                File file = new File(imagePath);
-                daoFactory = DAOFactory.getInstance();
-                imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-                String endpoint = imageDAO.loadFileIntoBucket(file);
-                Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
-                if (!updateRestaurantSingleImageFromRestaurantCollection(parsedRestaurant, endpoint))
-                    return false;
-            }
-            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-            return cityDAO.insert(getParsedRestaurantFromJson(objectMapper, response));
-        } else {
+        if (response.statusCode() != 200)
             return false;
+
+        for (String imagePath : restaurant.getImages()) {
+            File file = new File(imagePath);
+            daoFactory = DAOFactory.getInstance();
+            imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+            String endpoint = imageDAO.loadFileIntoBucket(file);
+            Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
+            if (!updateRestaurantSingleImageFromRestaurantCollection(parsedRestaurant, endpoint))
+                return false;
         }
+        cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+        return cityDAO.insert(getParsedRestaurantFromJson(objectMapper, response));
     }
 
     @Override
@@ -110,10 +109,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
             restaurants.add(restaurant);
         }
 
-        // dbg
-        /*for (Restaurant restaurant : restaurants) {
-            System.out.println(restaurant.getName());
-        }*/
         return restaurants;
     }
 
@@ -126,7 +121,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
             URL += "page=" + page + "&size=" + size;
 
         System.out.println("URL: " + URL);
-
 
         authenticationResult = AuthenticationResult.getInstance();
 
@@ -143,8 +137,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
         List<Restaurant> restaurants = null;
 
-        // No content
-        if (httpResponses.statusCode() == 204)
+        if (httpResponses.statusCode() == 204) // No content
             return null;
         else if (httpResponses.statusCode() == 200) {
             JSONObject jsonObject = new JSONObject(httpResponses.body());
@@ -157,7 +150,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
             }
         }
 
-        System.out.println("Response: " + httpResponses);
+        //System.out.println("Response: " + httpResponses); // dbg
 
         return restaurants;
     }
@@ -167,20 +160,21 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         daoFactory = DAOFactory.getInstance();
         imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+
         if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllAccomodationImagesFromBucket(restaurant))
             return false;
-        else {
-            String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/delete-by-id";
-            URL += "/" + restaurant.getId();
-            HttpClient httpClient = HttpClient.newHttpClient();
 
-            authenticationResult = AuthenticationResult.getInstance();
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/delete-by-id";
+        URL += "/" + restaurant.getId();
+        HttpClient httpClient = HttpClient.newHttpClient();
 
-            HttpRequest httpRequest = HttpRequest
-                    .newBuilder()
-                    .DELETE()
-                    .uri(URI.create(URL))
-                    .header("Content-Type", "application/json")
+        authenticationResult = AuthenticationResult.getInstance();
+
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .DELETE()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
                     .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
                     .build();
 
@@ -188,7 +182,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
                     HttpResponse.BodyHandlers.ofString());
 
             return response.statusCode() == 200;
-        }
     }
 
     @Override
@@ -258,7 +251,7 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
+        // System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
 
         return response.statusCode() == 200;
     }
