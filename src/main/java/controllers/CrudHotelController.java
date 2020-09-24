@@ -685,7 +685,7 @@ public class CrudHotelController extends CrudController {
             for (File selectedFile : selectedFiles)
                 crudHotelView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
         } else {
-            CrudDialoger.showAlertDialog("I file selezionati non sono validi");
+            CrudDialoger.showAlertDialog("I file selezionati non sono validi"); // dbg
         }
     }
 

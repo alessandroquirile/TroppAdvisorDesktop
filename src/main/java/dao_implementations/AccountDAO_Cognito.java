@@ -21,7 +21,7 @@ public class AccountDAO_Cognito implements AccountDAO {
 
     @Override
     public boolean login(Account account) throws IOException, InterruptedException {
-        final String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/cognito/admin-login";
+        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/cognito/admin-login";
 
         final Map<String, Object> values = new HashMap<>();
         values.put("key", account.getEmail());
