@@ -10,8 +10,17 @@ import com.byteowls.jopencage.model.JOpenCageReverseRequest;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class Geocoder {
+    private static final String API_KEY = "dba40429c8ae43b78ae293bc0d221fb5";
+
+    public static JOpenCageLatLng reverseGeocoding(String address) {
+        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder(API_KEY);
+        JOpenCageForwardRequest request = new JOpenCageForwardRequest(address);
+        JOpenCageResponse response = jOpenCageGeocoder.forward(request);
+        return response.getFirstPosition();
+    }
+
     public static void forwardGeocodingDemo() {
-        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("dba40429c8ae43b78ae293bc0d221fb5");
+        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder(API_KEY);
 
         JOpenCageReverseRequest request = new JOpenCageReverseRequest(41.40015, 2.15765);
         request.setLanguage("it"); // prioritize results in a specific language using an IETF format language code (italian)
@@ -29,23 +38,12 @@ public class Geocoder {
     }
 
     public static void reverseGeocodingDemo() {
-        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("dba40429c8ae43b78ae293bc0d221fb5");
+        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder(API_KEY);
         JOpenCageForwardRequest request = new JOpenCageForwardRequest("Via Salvo D'Acquisto, 25, San Giorgio a Cremano, 80046, Napoli, Italia");
 
         JOpenCageResponse response = jOpenCageGeocoder.forward(request);
         JOpenCageLatLng firstResultLatLng = response.getFirstPosition(); // get the coordinate pair of the first result
 
         System.out.println(firstResultLatLng.getLat() + ", " + firstResultLatLng.getLng());
-    }
-
-    public static JOpenCageLatLng reverseGeocoding(String address) {
-        JOpenCageGeocoder jOpenCageGeocoder = new JOpenCageGeocoder("dba40429c8ae43b78ae293bc0d221fb5");
-        JOpenCageForwardRequest request = new JOpenCageForwardRequest(address);
-
-        JOpenCageResponse response = jOpenCageGeocoder.forward(request);
-
-        //System.out.println(firstResultLatLng.getLat() + ", " + firstResultLatLng.getLng());
-
-        return response.getFirstPosition();
     }
 }

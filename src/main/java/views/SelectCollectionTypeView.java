@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class SelectCollectionTypeView implements Initializable {
-
     @FXML
     private Button buttonVai;
     @FXML

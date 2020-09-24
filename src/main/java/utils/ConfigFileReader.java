@@ -8,7 +8,6 @@ import java.util.Properties;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class ConfigFileReader {
-
     public static String getProperty(String key) {
         Properties properties = new Properties();
         try {
