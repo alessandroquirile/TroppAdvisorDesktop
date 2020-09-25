@@ -19,7 +19,7 @@ public interface HotelDAO {
 
     boolean update(Hotel hotel) throws IOException, InterruptedException;
 
-    boolean deleteHotelSingleImageFromHotelCollection(Hotel hotel, String imageUrl) throws IOException, InterruptedException;
+    boolean deleteImage(Hotel hotel, String imageUrl) throws IOException, InterruptedException;
 
-    boolean updateHotelSingleImageFromHotelCollection(Hotel hotel, String endpoint) throws IOException, InterruptedException;
+    boolean updateImage(Hotel hotel, String endpoint) throws IOException, InterruptedException;
 }

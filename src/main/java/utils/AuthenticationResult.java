@@ -1,7 +1,5 @@
 package utils;
 
-import java.time.Instant;
-
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
@@ -21,11 +19,6 @@ public class AuthenticationResult {
         if (singletonInstance == null)
             singletonInstance = new AuthenticationResult();
         return singletonInstance;
-    }
-
-    // Non è utilizzato ma potrebbe tornare utile
-    public boolean isExpired(Instant expiration) {
-        return !Instant.now().isBefore(expiration);
     }
 
     public String getIdToken() {

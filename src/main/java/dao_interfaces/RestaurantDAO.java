@@ -19,7 +19,7 @@ public interface RestaurantDAO {
 
     boolean update(Restaurant restaurant) throws IOException, InterruptedException;
 
-    boolean deleteRestaurantSingleImageFromRestaurantCollection(Restaurant restaurant, String imageUrl) throws IOException, InterruptedException;
+    boolean deleteImage(Restaurant restaurant, String imageUrl) throws IOException, InterruptedException;
 
-    boolean updateRestaurantSingleImageFromRestaurantCollection(Restaurant restaurant, String endpoint) throws IOException, InterruptedException;
+    boolean updateImage(Restaurant restaurant, String endpoint) throws IOException, InterruptedException;
 }

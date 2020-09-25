@@ -63,5 +63,4 @@ public class AccountDAO_Cognito implements AccountDAO {
         // System.out.println(account.getAuthenticationResult().toString()); // dbg
         return true;
     }
-
 }

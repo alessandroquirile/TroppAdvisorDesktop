@@ -64,9 +64,8 @@ public class LoginController extends Controller {
                     } finally {
                         Arrays.fill(password, '\0'); // password protection
                     }
-                } else {
+                } else
                     CrudDialoger.showAlertDialog("Pattern email non valido");
-                }
             }
         });
     }

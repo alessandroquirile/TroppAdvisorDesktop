@@ -72,9 +72,9 @@ public class HotelDAO_MongoDB implements HotelDAO {
             File file = new File(imagePath);
             daoFactory = DAOFactory.getInstance();
             imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-            String endpoint = imageDAO.loadFileIntoBucket(file);
+            String endpoint = imageDAO.load(file);
             Hotel parsedHotel = getParsedHotelFromJson(objectMapper, response);
-            if (!updateHotelSingleImageFromHotelCollection(parsedHotel, endpoint))
+            if (!updateImage(parsedHotel, endpoint))
                 return false;
         }
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
@@ -159,7 +159,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
         daoFactory = DAOFactory.getInstance();
         imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        if (!cityDAO.delete(hotel) || !imageDAO.deleteAllAccomodationImagesFromBucket(hotel))
+        if (!cityDAO.delete(hotel) || !imageDAO.deleteAllImages(hotel))
             return false;
 
             String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-by-id";
@@ -223,7 +223,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
     }
 
     @Override
-    public boolean deleteHotelSingleImageFromHotelCollection(Hotel hotel, String imageUrl) throws IOException, InterruptedException {
+    public boolean deleteImage(Hotel hotel, String imageUrl) throws IOException, InterruptedException {
         String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-image";
         URL += "/" + hotel.getId();
 
@@ -255,7 +255,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
     }
 
     @Override
-    public boolean updateHotelSingleImageFromHotelCollection(Hotel hotel, String endpoint) throws IOException, InterruptedException {
+    public boolean updateImage(Hotel hotel, String endpoint) throws IOException, InterruptedException {
         String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/update-images";
         URL += "/" + hotel.getId();
 

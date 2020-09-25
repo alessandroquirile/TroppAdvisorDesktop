@@ -9,16 +9,16 @@ import my_exceptions.TechnologyNotSupportedYetException;
  */
 public class DAOFactory {
 
-    private static DAOFactory daoFactorySingletonInstance = null;
+    private static DAOFactory singletonInstance = null;
 
     private DAOFactory() {
 
     }
 
     public static synchronized DAOFactory getInstance() {
-        if (daoFactorySingletonInstance == null)
-            daoFactorySingletonInstance = new DAOFactory();
-        return daoFactorySingletonInstance;
+        if (singletonInstance == null)
+            singletonInstance = new DAOFactory();
+        return singletonInstance;
     }
 
     public AccountDAO getAccountDAO(String accountStorageTechnology) {

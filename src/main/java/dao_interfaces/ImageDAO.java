@@ -10,9 +10,9 @@ import java.io.IOException;
  */
 public interface ImageDAO {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    boolean deleteAllAccomodationImagesFromBucket(Accomodation accomodation) throws IOException, InterruptedException;
+    boolean deleteAllImages(Accomodation accomodation) throws IOException, InterruptedException;
 
-    boolean deleteThisImageFromBucket(String imageUrl) throws IOException, InterruptedException;
+    boolean delete(String imageUrl) throws IOException, InterruptedException;
 
-    String loadFileIntoBucket(File file) throws IOException;
+    String load(File file) throws IOException;
 }

@@ -627,12 +627,12 @@ public class CrudRestaurantController extends CrudController {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
                 try {
-                    imageHostUrl = imageDAO.loadFileIntoBucket(file); // carica su s3
+                    imageHostUrl = imageDAO.load(file); // carica su s3
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    if (!restaurantDAO.updateRestaurantSingleImageFromRestaurantCollection(restaurant, imageHostUrl) || imageHostUrl == null)
+                    if (!restaurantDAO.updateImage(restaurant, imageHostUrl) || imageHostUrl == null)
                         CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
@@ -672,8 +672,8 @@ public class CrudRestaurantController extends CrudController {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.deleteThisImageFromBucket(imageUrl) ||
-                        !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
+                if (!imageDAO.delete(imageUrl) ||
+                        !restaurantDAO.deleteImage(restaurant, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata");

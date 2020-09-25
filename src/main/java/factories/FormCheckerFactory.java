@@ -11,16 +11,16 @@ import form_checker_interfaces.FormChecker;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class FormCheckerFactory {
-    private static FormCheckerFactory formCheckerFactorySingletonInstance = null;
+    private static FormCheckerFactory singletonInstance = null;
 
     private FormCheckerFactory() {
 
     }
 
     public static synchronized FormCheckerFactory getInstance() {
-        if (formCheckerFactorySingletonInstance == null)
-            formCheckerFactorySingletonInstance = new FormCheckerFactory();
-        return formCheckerFactorySingletonInstance;
+        if (singletonInstance == null)
+            singletonInstance = new FormCheckerFactory();
+        return singletonInstance;
     }
 
     public FormChecker getFormChecker(Controller controller) {
@@ -33,6 +33,6 @@ public class FormCheckerFactory {
         else if (controller instanceof CrudAttractionController)
             return new FormChecker_AttractionCrud();
         else
-            throw new RuntimeException(controller.toString() + " inesistente");
+            throw new RuntimeException(controller.toString() + " does not exist");
     }
 }

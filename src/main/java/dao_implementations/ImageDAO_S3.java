@@ -28,19 +28,19 @@ public class ImageDAO_S3 implements ImageDAO {
     private AuthenticationResult authenticationResult;
 
     @Override
-    public boolean deleteAllAccomodationImagesFromBucket(Accomodation accomodation) throws IOException, InterruptedException {
+    public boolean deleteAllImages(Accomodation accomodation) throws IOException, InterruptedException {
         if (accomodation.getImages() == null)
             return false;
 
         for (String imageS3Url : accomodation.getImages())
-            if (!deleteThisImageFromBucket(imageS3Url))
+            if (!delete(imageS3Url))
                 return false;
 
         return true;
     }
 
     @Override
-    public boolean deleteThisImageFromBucket(String imageS3Url) throws IOException, InterruptedException {
+    public boolean delete(String imageS3Url) throws IOException, InterruptedException {
         String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/s3/delete-file?";
         URL += "url=" + imageS3Url;
 
@@ -64,7 +64,7 @@ public class ImageDAO_S3 implements ImageDAO {
     }
 
     @Override
-    public String loadFileIntoBucket(File file) throws IOException {
+    public String load(File file) throws IOException {
         final String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/s3/upload-file";
         CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPost request = new HttpPost(URL);

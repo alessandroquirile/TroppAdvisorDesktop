@@ -76,9 +76,9 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
             File file = new File(imagePath);
             daoFactory = DAOFactory.getInstance();
             imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-            String endpoint = imageDAO.loadFileIntoBucket(file);
+            String endpoint = imageDAO.load(file);
             Attraction parsedAttraction = getParsedAttractionFromJson(objectMapper, response);
-            if (!updateAttractionSingleImageFromAttractionCollection(parsedAttraction, endpoint))
+            if (!updateImage(parsedAttraction, endpoint))
                 return false;
         }
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
@@ -164,7 +164,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
 
-        if (!cityDAO.delete(attraction) || !imageDAO.deleteAllAccomodationImagesFromBucket(attraction))
+        if (!cityDAO.delete(attraction) || !imageDAO.deleteAllImages(attraction))
             return false;
 
             authenticationResult = AuthenticationResult.getInstance();
@@ -226,7 +226,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
     }
 
     @Override
-    public boolean deleteAttractionSingleImageFromAttractionCollection(Attraction attraction, String imageUrl) throws IOException, InterruptedException {
+    public boolean deleteImage(Attraction attraction, String imageUrl) throws IOException, InterruptedException {
         String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-image";
         URL += "/" + attraction.getId();
 
@@ -258,7 +258,7 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
     }
 
     @Override
-    public boolean updateAttractionSingleImageFromAttractionCollection(Attraction attraction, String endpoint) throws IOException, InterruptedException {
+    public boolean updateImage(Attraction attraction, String endpoint) throws IOException, InterruptedException {
         String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/update-images";
         URL += "/" + attraction.getId();
 

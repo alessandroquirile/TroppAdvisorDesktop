@@ -589,12 +589,12 @@ public class CrudAttractionController extends CrudController {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
                 try {
-                    imageHostUrl = imageDAO.loadFileIntoBucket(file); // carica su s3
+                    imageHostUrl = imageDAO.load(file); // carica su s3
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    if (!attractionDAO.updateAttractionSingleImageFromAttractionCollection(attraction, imageHostUrl) || imageHostUrl == null)
+                    if (!attractionDAO.updateImage(attraction, imageHostUrl) || imageHostUrl == null)
                         CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
@@ -634,8 +634,8 @@ public class CrudAttractionController extends CrudController {
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.deleteThisImageFromBucket(imageUrl) ||
-                        !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
+                if (!imageDAO.delete(imageUrl) ||
+                        !attractionDAO.deleteImage(attraction, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata"); //

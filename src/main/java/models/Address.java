@@ -14,6 +14,7 @@ public class Address implements Serializable {
     private String postalCode;
 
     public Address() {
+
     }
 
     public Address(String type, String street, String houseNumber, String city, String province, String postalCode) {

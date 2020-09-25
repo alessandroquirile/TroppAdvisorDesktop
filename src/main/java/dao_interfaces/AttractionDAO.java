@@ -19,7 +19,7 @@ public interface AttractionDAO {
 
     boolean update(Attraction attraction) throws IOException, InterruptedException;
 
-    boolean deleteAttractionSingleImageFromAttractionCollection(Attraction attraction, String imageUrl) throws IOException, InterruptedException;
+    boolean deleteImage(Attraction attraction, String imageUrl) throws IOException, InterruptedException;
 
-    boolean updateAttractionSingleImageFromAttractionCollection(Attraction attraction, String endpoint) throws IOException, InterruptedException;
+    boolean updateImage(Attraction attraction, String endpoint) throws IOException, InterruptedException;
 }

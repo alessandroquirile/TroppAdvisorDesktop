@@ -614,12 +614,12 @@ public class CrudHotelController extends CrudController {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
                 try {
-                    imageHostUrl = imageDAO.loadFileIntoBucket(file); // carica su s3
+                    imageHostUrl = imageDAO.load(file); // carica su s3
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    if (!hotelDAO.updateHotelSingleImageFromHotelCollection(hotel, imageHostUrl) || imageHostUrl == null)
+                    if (!hotelDAO.updateImage(hotel, imageHostUrl) || imageHostUrl == null)
                         CrudDialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
@@ -659,7 +659,7 @@ public class CrudHotelController extends CrudController {
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !hotelDAO.deleteHotelSingleImageFromHotelCollection(hotel, imageUrl))
+                if (!imageDAO.delete(imageUrl) || !hotelDAO.deleteImage(hotel, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
