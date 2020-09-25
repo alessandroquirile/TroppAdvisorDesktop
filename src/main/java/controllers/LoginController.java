@@ -35,9 +35,8 @@ public class LoginController extends Controller {
     }
 
     public void setListenerOn(Button buttonLogin) {
-        if (buttonLogin.getId().equals("buttonLogin")) {
+        if (buttonLogin.getId().equals("buttonLogin"))
             buttonLoginClicked();
-        }
     }
 
     public void buttonLoginClicked() {
@@ -51,21 +50,19 @@ public class LoginController extends Controller {
             if (formChecker.formHasSomeEmptyField(this)) {
                 CrudDialoger.showAlertDialog("Riempire tutti i campi");
             } else {
-                //CrudDialoger.showAlertDialog(Arrays.toString(password)); // dbg
                 if (InputValidator.hasValidPattern(email)) {
                     Account account = new Account(email, password);
                     DAOFactory daoFactory = DAOFactory.getInstance();
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                     try {
                         if (!accountDAO.login(account))
-                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante il login");
+                            CrudDialoger.showAlertDialog("Credenziali errate");
                         else
                             loadSelectTypeScene();
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     } finally {
                         Arrays.fill(password, '\0'); // password protection
-                        //CrudDialoger.showAlertDialog(Arrays.toString(password)); // dbg
                     }
                 } else {
                     CrudDialoger.showAlertDialog("Pattern email non valido");

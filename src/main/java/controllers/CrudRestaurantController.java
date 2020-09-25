@@ -672,7 +672,8 @@ public class CrudRestaurantController extends CrudController {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
+                if (!imageDAO.deleteThisImageFromBucket(imageUrl) ||
+                        !restaurantDAO.deleteRestaurantSingleImageFromRestaurantCollection(restaurant, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
@@ -695,11 +696,8 @@ public class CrudRestaurantController extends CrudController {
         fileChooser.getExtensionFilters().add(imageFilter);
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         if (selectedFiles != null) {
-            for (File selectedFile : selectedFiles) {
+            for (File selectedFile : selectedFiles)
                 crudRestaurantView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
-            }
-        } else {
-            CrudDialoger.showAlertDialog("I file selezionati non sono validi");
         }
     }
 

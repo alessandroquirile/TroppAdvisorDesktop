@@ -22,4 +22,3 @@ public class TypeOfCuisineItem {
         return checkBox;
     }
 }
-

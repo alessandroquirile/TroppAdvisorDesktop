@@ -634,7 +634,8 @@ public class CrudAttractionController extends CrudController {
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.deleteThisImageFromBucket(imageUrl) || !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
+                if (!imageDAO.deleteThisImageFromBucket(imageUrl) ||
+                        !attractionDAO.deleteAttractionSingleImageFromAttractionCollection(attraction, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata"); //
@@ -657,11 +658,8 @@ public class CrudAttractionController extends CrudController {
         fileChooser.getExtensionFilters().add(imageFilter);
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
         if (selectedFiles != null) {
-            for (File selectedFile : selectedFiles) {
+            for (File selectedFile : selectedFiles)
                 crudAttractionView.getListViewFotoPath().getItems().add(selectedFile.getAbsolutePath());
-            }
-        } else {
-            CrudDialoger.showAlertDialog("I file selezionati non sono validi");
         }
     }
 
