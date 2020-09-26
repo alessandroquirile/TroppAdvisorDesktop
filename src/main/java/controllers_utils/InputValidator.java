@@ -31,7 +31,7 @@ public abstract class InputValidator {
     }
 
     public static boolean isValidOpeningTime(String openingTime) {
-        return isValidSingleOpeningTime(openingTime) || isValidDoubleOpeningTime(openingTime);
+        return isValidSingleOpeningTime(openingTime) || isValidTwoOpeningTime(openingTime);
     }
 
     // hh:mm - hh:mm
@@ -43,7 +43,7 @@ public abstract class InputValidator {
     }
 
     // hh:mm - hh:mm hh:mm - hh:mm
-    private static boolean isValidDoubleOpeningTime(String openingTime) {
+    private static boolean isValidTwoOpeningTime(String openingTime) {
         String regexp = "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] - (0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$";
         Pattern pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(openingTime);

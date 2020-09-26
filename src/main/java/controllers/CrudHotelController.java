@@ -475,103 +475,103 @@ public class CrudHotelController extends CrudController {
         final String provincia = getProvincia();
         final String prezzoMedio = getPrezzoMedio();
         String certificatoDiEccellenza = String.valueOf(crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        boolean concatena = false;
+        boolean concatenate = false;
 
         if (!nome.isEmpty()) {
             query += "name==\"" + nome + "\"";
-            concatena = true;
+            concatenate = true;
         }
 
         if (!numeroDiTelefono.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";phoneNumber==\"" + numeroDiTelefono + "\"";
             else {
                 query += "phoneNumber==\"" + numeroDiTelefono + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (stelle != null) {
-            if (concatena)
+            if (concatenate)
                 query += ";stars==\"" + stelle + "\"";
             else {
                 query += "stars==\"" + stelle + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (tipoIndirizzo != null) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.type==\"" + tipoIndirizzo + "\"";
             else {
                 query += "address.type==\"" + tipoIndirizzo + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!strada.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.street==\"" + strada + "\"";
             else {
                 query += "address.street==\"" + strada + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!civico.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.houseNumber==\"" + civico + "\"";
             else {
                 query += "address.houseNumber==\"" + civico + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!city.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.city==\"" + city + "\"";
             else {
                 query += "address.city==\"" + city + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!cap.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.postalCode==\"" + cap + "\"";
             else {
                 query += "address.postalCode==\"" + cap + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!provincia.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.province==\"" + provincia + "\"";
             else {
                 query += "address.province==\"" + provincia + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!prezzoMedio.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";avaragePrice==\"" + prezzoMedio + "\"";
             else {
                 query += "avaragePrice==\"" + prezzoMedio + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
-            if (concatena)
+            if (concatenate)
                 query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
             else
                 query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
         } else {
             if (!CrudDialoger.ignoreExcellence()) {
                 certificatoDiEccellenza = "false";
-                if (concatena)
+                if (concatenate)
                     query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
                 else
                     query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";

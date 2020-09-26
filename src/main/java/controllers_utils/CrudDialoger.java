@@ -19,9 +19,8 @@ public abstract class CrudDialoger {
         alert.getDialogPane().setHeaderText(alertMessage);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
+            if (result.get() == ButtonType.OK)
                 alert.close();
-            }
         }
     }
 

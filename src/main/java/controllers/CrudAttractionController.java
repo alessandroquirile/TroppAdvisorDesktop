@@ -461,94 +461,94 @@ public class CrudAttractionController extends CrudController {
         final String provincia = getProvincia();
         final String prezzoMedio = getPrezzoMedio();
         String certificatoDiEccellenza = String.valueOf(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        boolean concatena = false;
+        boolean concatenate = false;
 
         if (!nome.isEmpty()) {
             query += "name==\"" + nome + "\"";
-            concatena = true;
+            concatenate = true;
         }
 
         if (!numeroDiTelefono.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";phoneNumber==\"" + numeroDiTelefono + "\"";
             else {
                 query += "phoneNumber==\"" + numeroDiTelefono + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (tipoIndirizzo != null) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.type==\"" + tipoIndirizzo + "\"";
             else {
                 query += "address.type==\"" + tipoIndirizzo + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!strada.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.street==\"" + strada + "\"";
             else {
                 query += "address.street==\"" + strada + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!civico.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.houseNumber==\"" + civico + "\"";
             else {
                 query += "address.houseNumber==\"" + civico + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!city.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.city==\"" + city + "\"";
             else {
                 query += "address.city==\"" + city + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!cap.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.postalCode==\"" + cap + "\"";
             else {
                 query += "address.postalCode==\"" + cap + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!provincia.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";address.province==\"" + provincia + "\"";
             else {
                 query += "address.province==\"" + provincia + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (!prezzoMedio.isEmpty()) {
-            if (concatena)
+            if (concatenate)
                 query += ";avaragePrice==\"" + prezzoMedio + "\"";
             else {
                 query += "avaragePrice==\"" + prezzoMedio + "\"";
-                concatena = true;
+                concatenate = true;
             }
         }
 
         if (crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected()) {
-            if (concatena)
+            if (concatenate)
                 query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
             else
                 query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
         } else {
             if (!CrudDialoger.ignoreExcellence()) {
                 certificatoDiEccellenza = "false";
-                if (concatena)
+                if (concatenate)
                     query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
                 else
                     query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
@@ -589,7 +589,7 @@ public class CrudAttractionController extends CrudController {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
                 try {
-                    imageHostUrl = imageDAO.load(file); // carica su s3
+                    imageHostUrl = imageDAO.load(file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -634,8 +634,7 @@ public class CrudAttractionController extends CrudController {
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.delete(imageUrl) ||
-                        !attractionDAO.deleteImage(attraction, imageUrl))
+                if (!imageDAO.delete(imageUrl) || !attractionDAO.deleteImage(attraction, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata"); //
