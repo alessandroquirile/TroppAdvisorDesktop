@@ -378,7 +378,6 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();
             String prezzoMedio = getPrezzoMedio();
-            String numeroCivico = getNumeroCivico();
             String cap = getCAP();
             String openingTime = getOpeningTimeWithFormData();
 

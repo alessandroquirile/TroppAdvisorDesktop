@@ -413,7 +413,6 @@ public class CrudRestaurantController extends CrudController {
         crudRestaurantView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();
             String prezzoMedio = getPrezzoMedio();
-            String numeroCivico = getNumeroCivico();
             String cap = getCAP();
             String openingTime = getOpeningTimeWithFormData();
 

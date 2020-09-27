@@ -398,7 +398,6 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();
             String prezzoMedio = getPrezzoMedio();
-            String numeroCivico = getNumeroCivico();
             String cap = getCAP();
 
             formCheckerFactory = FormCheckerFactory.getInstance();
