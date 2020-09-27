@@ -432,23 +432,20 @@ public class CrudRestaurantController extends CrudController {
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                                if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                    if (InputValidator.isValidOpeningTime(openingTime)) {
-                                        Restaurant restaurant = getRestaurantWithFormData();
-                                        daoFactory = DAOFactory.getInstance();
-                                        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                        if (modifying) {
-                                            doUpdate(restaurant);
-                                            imagesSelectedToDelete = null;
-                                        } else
-                                            doInsert(restaurant);
+                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                if (InputValidator.isValidOpeningTime(openingTime)) {
+                                    Restaurant restaurant = getRestaurantWithFormData();
+                                    daoFactory = DAOFactory.getInstance();
+                                    restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                    if (modifying) {
+                                        doUpdate(restaurant);
+                                        imagesSelectedToDelete = null;
                                     } else
-                                        CrudDialoger.showAlertDialog("Orario non valido");
+                                        doInsert(restaurant);
                                 } else
-                                    CrudDialoger.showAlertDialog("CAP non valido");
+                                    CrudDialoger.showAlertDialog("Orario non valido");
                             } else
-                                CrudDialoger.showAlertDialog("Numero civico non valido");
+                                CrudDialoger.showAlertDialog("CAP non valido");
                         } else
                             CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                     } else

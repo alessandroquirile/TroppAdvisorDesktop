@@ -162,26 +162,26 @@ public class HotelDAO_MongoDB implements HotelDAO {
         if (!cityDAO.delete(hotel) || !imageDAO.deleteAllImages(hotel))
             return false;
 
-            String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-by-id";
-            URL += "/" + hotel.getId();
-            HttpClient httpClient = HttpClient.newHttpClient();
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-by-id";
+        URL += "/" + hotel.getId();
+        HttpClient httpClient = HttpClient.newHttpClient();
 
-            authenticationResult = AuthenticationResult.getInstance();
+        authenticationResult = AuthenticationResult.getInstance();
 
-            HttpRequest httpRequest = HttpRequest
-                    .newBuilder()
-                    .DELETE()
-                    .uri(URI.create(URL))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
-                    .build();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .DELETE()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
+                .build();
 
-            HttpResponse<String> response = httpClient.send(httpRequest,
-                    HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = httpClient.send(httpRequest,
+                HttpResponse.BodyHandlers.ofString());
 
-            System.out.println(response.body());
+        System.out.println(response.body());
 
-            return response.statusCode() == 200;
+        return response.statusCode() == 200;
     }
 
     @Override

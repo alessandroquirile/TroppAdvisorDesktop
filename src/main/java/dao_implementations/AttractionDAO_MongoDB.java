@@ -167,24 +167,24 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         if (!cityDAO.delete(attraction) || !imageDAO.deleteAllImages(attraction))
             return false;
 
-            authenticationResult = AuthenticationResult.getInstance();
-            String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-by-id";
-            URL += "/" + attraction.getId();
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpRequest httpRequest = HttpRequest
-                    .newBuilder()
-                    .DELETE()
-                    .uri(URI.create(URL))
-                    .header("Content-Type", "application/json")
-                    .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
-                    .build();
+        authenticationResult = AuthenticationResult.getInstance();
+        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-by-id";
+        URL += "/" + attraction.getId();
+        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpRequest httpRequest = HttpRequest
+                .newBuilder()
+                .DELETE()
+                .uri(URI.create(URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", authenticationResult.getTokenType() + " " + authenticationResult.getIdToken())
+                .build();
 
-            HttpResponse<String> response = httpClient.send(httpRequest,
-                    HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = httpClient.send(httpRequest,
+                HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("delete (attraction) response: " + response);
+        System.out.println("delete (attraction) response: " + response);
 
-            return response.statusCode() == 200;
+        return response.statusCode() == 200;
     }
 
     @Override

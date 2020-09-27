@@ -397,23 +397,20 @@ public class CrudAttractionController extends CrudController {
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                                if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                    if (InputValidator.isValidOpeningTime(openingTime)) {
-                                        Attraction attraction = getAttractionWithFormData();
-                                        daoFactory = DAOFactory.getInstance();
-                                        attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
-                                        if (modifying) {
-                                            doUpdate(attraction);
-                                            imagesSelectedToDelete = null;
-                                        } else
-                                            doInsert(attraction);
+                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                if (InputValidator.isValidOpeningTime(openingTime)) {
+                                    Attraction attraction = getAttractionWithFormData();
+                                    daoFactory = DAOFactory.getInstance();
+                                    attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
+                                    if (modifying) {
+                                        doUpdate(attraction);
+                                        imagesSelectedToDelete = null;
                                     } else
-                                        CrudDialoger.showAlertDialog("Orario non valido");
+                                        doInsert(attraction);
                                 } else
-                                    CrudDialoger.showAlertDialog("CAP non valido");
+                                    CrudDialoger.showAlertDialog("Orario non valido");
                             } else
-                                CrudDialoger.showAlertDialog("Numero civico non valido");
+                                CrudDialoger.showAlertDialog("CAP non valido");
                         } else
                             CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                     } else

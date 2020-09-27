@@ -416,20 +416,17 @@ public class CrudHotelController extends CrudController {
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(numeroCivico)) {
-                                if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                    Hotel hotel = getHotelWithFormData();
-                                    daoFactory = DAOFactory.getInstance();
-                                    hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
-                                    if (modifying) {
-                                        doUpdate(hotel);
-                                        imagesSelectedToDelete = null;
-                                    } else
-                                        doInsert(hotel);
+                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                                Hotel hotel = getHotelWithFormData();
+                                daoFactory = DAOFactory.getInstance();
+                                hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
+                                if (modifying) {
+                                    doUpdate(hotel);
+                                    imagesSelectedToDelete = null;
                                 } else
-                                    CrudDialoger.showAlertDialog("CAP non valido");
+                                    doInsert(hotel);
                             } else
-                                CrudDialoger.showAlertDialog("Numero civico non valido");
+                                CrudDialoger.showAlertDialog("CAP non valido");
                         } else
                             CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                     } else
