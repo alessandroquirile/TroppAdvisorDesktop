@@ -112,7 +112,7 @@ public class HotelDAO_MongoDB implements HotelDAO {
     }
 
     @Override
-    public List<Hotel> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException {
+    public List<Hotel> retrieveAt(String query, int page, int size) throws IOException, InterruptedException {
         String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/search-by-rsql-no-point?";
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;

@@ -13,7 +13,7 @@ public interface RestaurantDAO {
 
     List<Restaurant> retrieveAt(int page, int size) throws IOException, InterruptedException;
 
-    List<Restaurant> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException;
+    List<Restaurant> retrieveAt(String query, int page, int size) throws IOException, InterruptedException;
 
     boolean delete(Restaurant restaurant) throws IOException, InterruptedException;
 

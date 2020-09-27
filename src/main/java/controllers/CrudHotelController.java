@@ -448,7 +448,7 @@ public class CrudHotelController extends CrudController {
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
 
         List<Hotel> hotels = (query.equals("")) ? hotelDAO.retrieveAt(currentPage, currentPageSize)
-                : hotelDAO.retrieveByQuery(query, currentPage, currentPageSize);
+                : hotelDAO.retrieveAt(query, currentPage, currentPageSize);
 
         if (hotels != null) {
             final ObservableList<Object> data = FXCollections.observableArrayList(hotels);

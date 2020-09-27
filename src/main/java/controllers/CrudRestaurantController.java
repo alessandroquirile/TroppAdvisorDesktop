@@ -467,7 +467,7 @@ public class CrudRestaurantController extends CrudController {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
 
         List<Restaurant> restaurants = (query.equals("")) ? restaurantDAO.retrieveAt(currentPage, currentPageSize)
-                : restaurantDAO.retrieveByQuery(query, currentPage, currentPageSize);
+                : restaurantDAO.retrieveAt(query, currentPage, currentPageSize);
 
         if (restaurants != null) {
             List<String> typeOfCuisineDesired = getTypeOfCuisineWithFormData();

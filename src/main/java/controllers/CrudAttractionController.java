@@ -432,7 +432,7 @@ public class CrudAttractionController extends CrudController {
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
 
         List<Attraction> attractions = (query.equals("")) ? attractionDAO.retrieveAt(currentPage, currentPageSize)
-                : attractionDAO.retrieveByQuery(query, currentPage, currentPageSize);
+                : attractionDAO.retrieveAt(query, currentPage, currentPageSize);
 
         if (attractions != null) {
             String openingTimeDesired = getOpeningTimeWithFormData();
