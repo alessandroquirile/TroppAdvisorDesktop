@@ -3,7 +3,9 @@ package controllers;
 import dao_interfaces.ImageDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
+import factories.GeocoderFactory;
 import form_checker_interfaces.FormChecker;
+import geocoding.Geocoder;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -18,6 +20,8 @@ public abstract class CrudController extends Controller {
     protected int currentPageSize = 150;
     protected FormCheckerFactory formCheckerFactory;
     protected FormChecker formChecker;
+    protected GeocoderFactory geocoderFactory;
+    protected Geocoder geocoder;
     protected boolean retrieving = false;
     protected boolean modifying = false;
     protected ObservableList<String> imagesSelectedToDelete;

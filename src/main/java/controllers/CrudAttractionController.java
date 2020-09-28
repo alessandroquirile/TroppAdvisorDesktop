@@ -6,7 +6,7 @@ import dao_interfaces.AttractionDAO;
 import dao_interfaces.CityDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import geocoding.Geocoder;
+import factories.GeocoderFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -682,8 +682,10 @@ public class CrudAttractionController extends CrudController {
         attraction.setPhoneNumber(crudAttractionView.getTextFieldNumeroDiTelefono().getText());
         attraction.setHasCertificateOfExcellence(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
         attraction.setImages(crudAttractionView.getListViewFotoPath().getItems());
-        attraction.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),
-                Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLng()));
+        geocoderFactory = GeocoderFactory.getInstance();
+        geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
+        attraction.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding()).getLatitude(),
+                geocoder.forward(getEligibleStringAddressForGeocoding()).getLongitude()));
         attraction.setAddedDate(getCurrentDate());
         attraction.setOpeningTime(getOpeningTimeWithFormData());
         return attraction;

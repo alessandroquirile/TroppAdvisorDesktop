@@ -6,7 +6,7 @@ import dao_interfaces.CityDAO;
 import dao_interfaces.HotelDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import geocoding.Geocoder;
+import factories.GeocoderFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -708,8 +708,10 @@ public class CrudHotelController extends CrudController {
         hotel.setPhoneNumber(crudHotelView.getTextFieldNumeroDiTelefono().getText());
         hotel.setHasCertificateOfExcellence(crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected());
         hotel.setImages(crudHotelView.getListViewFotoPath().getItems());
-        hotel.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),
-                Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLng()));
+        geocoderFactory = GeocoderFactory.getInstance();
+        geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
+        hotel.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding()).getLatitude(),
+                geocoder.forward(getEligibleStringAddressForGeocoding()).getLongitude()));
         hotel.setAddedDate(getCurrentDate());
         return hotel;
     }

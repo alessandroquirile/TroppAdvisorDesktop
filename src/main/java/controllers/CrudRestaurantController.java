@@ -7,7 +7,7 @@ import dao_interfaces.CityDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import geocoding.Geocoder;
+import factories.GeocoderFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -722,8 +722,10 @@ public class CrudRestaurantController extends CrudController {
         restaurant.setHasCertificateOfExcellence(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
         restaurant.setImages(crudRestaurantView.getListViewFotoPath().getItems());
         restaurant.setTypeOfCuisine(getTypeOfCuisineWithFormData());
-        restaurant.setPoint(new Point(Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLat(),
-                Geocoder.reverseGeocoding(getEligibleStringAddressForGeocoding()).getLng()));
+        geocoderFactory = GeocoderFactory.getInstance();
+        geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
+        restaurant.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding()).getLatitude(),
+                geocoder.forward(getEligibleStringAddressForGeocoding()).getLongitude()));
         restaurant.setAddedDate(getCurrentDate());
         restaurant.setOpeningTime(getOpeningTimeWithFormData());
         return restaurant;
