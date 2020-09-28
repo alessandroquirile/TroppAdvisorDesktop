@@ -392,9 +392,9 @@ public class CrudAttractionController extends CrudController {
                 }
             } else {
                 if (formChecker.formHasSomeEmptyField(this)) {
-                    CrudDialoger.showAlertDialog("Riempi tutti i campi");
+                    CrudDialoger.showAlertDialog("Riempi i campi obbligatori");
                 } else {
-                    if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                    if (InputValidator.isValidTelephoneNumber(telephoneNumber) || telephoneNumber.isEmpty()) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
                             if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
                                 if (InputValidator.isValidOpeningTime(openingTime)) {
