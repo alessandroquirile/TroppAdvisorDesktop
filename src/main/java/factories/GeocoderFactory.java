@@ -1,7 +1,7 @@
 package factories;
 
-import geocoding.Geocoder;
-import geocoding.Geocoding_APIPositionStack;
+import geocoder_implementations.Geocoder_APIPositionStack;
+import geocoder_interfaces.Geocoder;
 import my_exceptions.TechnologyNotSupportedYetException;
 
 /**
@@ -22,7 +22,7 @@ public class GeocoderFactory {
 
     public Geocoder getGeocoder(String geocoderTechnology) {
         if (geocoderTechnology.equals("api_position_stack"))
-            return new Geocoding_APIPositionStack();
+            return new Geocoder_APIPositionStack();
         else
             throw new TechnologyNotSupportedYetException(geocoderTechnology);
     }

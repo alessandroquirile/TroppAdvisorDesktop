@@ -5,7 +5,7 @@ import factories.DAOFactory;
 import factories.FormCheckerFactory;
 import factories.GeocoderFactory;
 import form_checker_interfaces.FormChecker;
-import geocoding.Geocoder;
+import geocoder_interfaces.Geocoder;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;

@@ -1,4 +1,4 @@
-package geocoding;
+package geocoder_interfaces;
 
 import utils.GeocodingResponse;
 

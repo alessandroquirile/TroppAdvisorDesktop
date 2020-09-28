@@ -1,7 +1,8 @@
-package geocoding;
+package geocoder_implementations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers_utils.ObjectMapperCreator;
+import geocoder_interfaces.Geocoder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import utils.GeocodingResponse;
@@ -17,10 +18,10 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class Geocoding_APIPositionStack implements Geocoder {
+public class Geocoder_APIPositionStack implements Geocoder {
     private static final String API_KEY = "3986e2581d9bf3b4767b73a37e478373";
 
-    public Geocoding_APIPositionStack() {
+    public Geocoder_APIPositionStack() {
 
     }
 
