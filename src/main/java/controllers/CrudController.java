@@ -476,6 +476,10 @@ public abstract class CrudController extends Controller {
         return !clickedAccomodation.getCity().equals(accomodation.getCity());
     }
 
+    protected boolean hasToBeInserted(File file) {
+        return file.isAbsolute();
+    }
+
     protected String getCurrentDate() {
         return new Date().toString();
     }

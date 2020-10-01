@@ -266,14 +266,14 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
     }
 
     @Override
-    public boolean updateImage(Restaurant restaurant, String endpoint) throws IOException, InterruptedException {
+    public boolean updateImage(Restaurant restaurant, String imageHostUrl) throws IOException, InterruptedException {
         String URL = getBaseUrl();
         URL = URL.concat("/" + REPOSITORY);
         URL = URL.concat("/update-images");
         URL = URL.concat("/" + restaurant.getId());
 
         final Map<String, Object> values = new HashMap<>();
-        values.put("url", endpoint);
+        values.put("url", imageHostUrl);
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);

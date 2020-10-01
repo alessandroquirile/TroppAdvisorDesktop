@@ -142,7 +142,7 @@ public class CrudRestaurantController extends CrudController {
     @Override
     protected void populateTextFieldsWithSelectedAccomodationData(Accomodation accomodation, CrudView crudView) {
         super.populateTextFieldsWithSelectedAccomodationData(accomodation, crudView);
-        setProperOpeningHourIntoCheckBox((Restaurant) accomodation); // solo per attrazioni e ristoranti
+        setProperOpeningHourIntoCheckBox((Restaurant) accomodation);
         setProperOpeningHourIntoCheckBox((Restaurant) accomodation);
         setProperTypeOfCuisineIntoListView((Restaurant) accomodation);
     }
@@ -257,7 +257,7 @@ public class CrudRestaurantController extends CrudController {
 
         for (String image : getImagesFromListView()) {
             File file = new File(image);
-            if (file.isAbsolute()) {
+            if (hasToBeInserted(file)) {
                 CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));

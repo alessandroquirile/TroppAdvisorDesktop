@@ -210,7 +210,7 @@ public class CrudHotelController extends CrudController {
 
         for (String image : getImagesFromListView()) {
             File file = new File(image);
-            if (file.isAbsolute()) {
+            if (hasToBeInserted(file)) {
                 CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
