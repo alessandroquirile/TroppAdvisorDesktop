@@ -9,6 +9,14 @@ public class Restaurant extends Accomodation {
     private List<String> typeOfCuisine;
     private String openingTime;
 
+    public Restaurant() {
+
+    }
+
+    public Restaurant(Accomodation accomodation) {
+        super(accomodation);
+    }
+
     public List<String> getTypeOfCuisine() {
         return typeOfCuisine;
     }

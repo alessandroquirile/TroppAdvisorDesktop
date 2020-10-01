@@ -6,14 +6,12 @@ import dao_interfaces.CityDAO;
 import dao_interfaces.HotelDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import factories.GeocoderFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import models.Accomodation;
 import models.Hotel;
-import models.Point;
 import utils.ConfigFileReader;
 import views.CrudHotelView;
 import views.CrudView;
@@ -138,7 +136,7 @@ public class CrudHotelController extends CrudController {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
                             if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                Hotel hotel = getHotelByFormData();
+                                Hotel hotel = (Hotel) getAccomodationByFormData(crudHotelView);
                                 daoFactory = DAOFactory.getInstance();
                                 hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
                                 if (modifying) {
@@ -328,7 +326,14 @@ public class CrudHotelController extends CrudController {
         return hotel;
     }*/
 
-    private Hotel getHotelByFormData() {
+    @Override
+    protected Accomodation getAccomodationByFormData(CrudView crudView) {
+        Hotel hotel = new Hotel(super.getAccomodationByFormData(crudHotelView));
+        hotel.setStars(crudHotelView.getChoiceBoxNumeroStelle().getValue());
+        return hotel;
+    }
+
+    /*private Hotel getHotelByFormData() {
         Hotel hotel = new Hotel();
         hotel.setName(crudHotelView.getTextFieldNome().getText());
         hotel.setStars(crudHotelView.getChoiceBoxNumeroStelle().getValue());
@@ -343,7 +348,7 @@ public class CrudHotelController extends CrudController {
                 geocoder.forward(getEligibleStringAddressForGeocoding(crudHotelView)).getLongitude()));
         hotel.setAddedDate(getCurrentDate());
         return hotel;
-    }
+    }*/
 
     public CrudHotelView getCrudHotelView() {
         return crudHotelView;

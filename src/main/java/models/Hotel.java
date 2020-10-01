@@ -6,6 +6,14 @@ package models;
 public class Hotel extends Accomodation {
     private Integer stars;
 
+    public Hotel() {
+
+    }
+
+    public Hotel(Accomodation accomodation) {
+        super(accomodation);
+    }
+
     public Integer getStars() {
         return stars;
     }

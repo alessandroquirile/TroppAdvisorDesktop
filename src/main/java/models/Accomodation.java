@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public abstract class Accomodation implements Serializable {
+public class Accomodation implements Serializable {
     protected String id;
     protected String name;
     protected Integer avarageRating;
@@ -21,6 +21,27 @@ public abstract class Accomodation implements Serializable {
     protected boolean hasCertificateOfExcellence;
     protected String addedDate;
     protected String lastModificationDate;
+
+    public Accomodation() {
+
+    }
+
+    public Accomodation(Accomodation accomodation) {
+        this.id = accomodation.id;
+        this.name = accomodation.name;
+        this.avarageRating = accomodation.avarageRating;
+        this.avaragePrice = accomodation.avaragePrice;
+        this.phoneNumber = accomodation.phoneNumber;
+        this.address = accomodation.address;
+        this.point = accomodation.point;
+        this.reviews = accomodation.reviews;
+        this.totalReviews = accomodation.totalReviews;
+        this.totalRating = accomodation.totalRating;
+        this.images = accomodation.images;
+        this.hasCertificateOfExcellence = accomodation.hasCertificateOfExcellence;
+        this.addedDate = accomodation.addedDate;
+        this.lastModificationDate = accomodation.lastModificationDate;
+    }
 
     public String getId() {
         return id;

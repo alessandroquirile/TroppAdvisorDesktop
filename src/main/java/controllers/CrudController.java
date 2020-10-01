@@ -20,6 +20,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Accomodation;
 import models.Address;
+import models.Point;
+import utils.ConfigFileReader;
 import views.CrudView;
 
 import java.io.File;
@@ -347,10 +349,10 @@ public abstract class CrudController extends Controller {
         return (Accomodation) crudView.getTableView().getSelectionModel().getSelectedItem();
     }
 
-    /*protected Accomodation getAccomodationByFormData(CrudView crudView) {
+    protected Accomodation getAccomodationByFormData(CrudView crudView) {
         Accomodation accomodation = new Accomodation();
         accomodation.setName(crudView.getTextFieldNome().getText());
-        accomodation.setAddress(getAddressWithFormData(crudView));
+        accomodation.setAddress(getAddressByFormData(crudView));
         accomodation.setAvaragePrice(Integer.parseInt(crudView.getTextFieldPrezzoMedio().getText()));
         accomodation.setPhoneNumber(crudView.getTextFieldNumeroDiTelefono().getText());
         accomodation.setHasCertificateOfExcellence(crudView.getCheckBoxCertificatoDiEccellenza().isSelected());
@@ -360,9 +362,8 @@ public abstract class CrudController extends Controller {
         accomodation.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLatitude(),
                 geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLongitude()));
         accomodation.setAddedDate(getCurrentDate());
-        ///accomodation.setOpeningTime(getOpeningTimeWithFormData()); // solo per ristoranti e attrazioni
         return accomodation;
-    }*/
+    }
 
     protected String getQuery(CrudView crudView) {
         String query = "";

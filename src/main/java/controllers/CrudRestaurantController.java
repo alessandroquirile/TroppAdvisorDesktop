@@ -7,14 +7,12 @@ import dao_interfaces.CityDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import factories.GeocoderFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import models.Accomodation;
-import models.Point;
 import models.Restaurant;
 import utils.ConfigFileReader;
 import views.CrudRestaurantView;
@@ -188,7 +186,7 @@ public class CrudRestaurantController extends CrudController {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
                             if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
                                 if (InputValidator.isValidOpeningTime(openingTime)) {
-                                    Restaurant restaurant = getRestaurantByFormData();
+                                    Restaurant restaurant = (Restaurant) getAccomodationByFormData(crudRestaurantView);
                                     daoFactory = DAOFactory.getInstance();
                                     restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
                                     if (modifying) {
@@ -378,28 +376,10 @@ public class CrudRestaurantController extends CrudController {
             typeOfCuisineItem.getCheckBox().setSelected(false);
     }
 
-    /*@Override
+    @Override
     protected Accomodation getAccomodationByFormData(CrudView crudView) {
-        Restaurant restaurant = (Restaurant) super.getAccomodationByFormData(crudView);
-        restaurant.setTypeOfCuisine(getTypeOfCuisineWithFormData());
-        restaurant.setOpeningTime(getOpeningTimeWithFormData());
-        return restaurant;
-    }*/
-
-    private Restaurant getRestaurantByFormData() {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(crudRestaurantView.getTextFieldNome().getText());
-        restaurant.setAddress(getAddressByFormData(crudRestaurantView));
-        restaurant.setAvaragePrice(Integer.parseInt(crudRestaurantView.getTextFieldPrezzoMedio().getText()));
-        restaurant.setPhoneNumber(crudRestaurantView.getTextFieldNumeroDiTelefono().getText());
-        restaurant.setHasCertificateOfExcellence(crudRestaurantView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        restaurant.setImages(crudRestaurantView.getListViewFotoPath().getItems());
+        Restaurant restaurant = new Restaurant(super.getAccomodationByFormData(crudRestaurantView));
         restaurant.setTypeOfCuisine(getTypeOfCuisineByFormData());
-        geocoderFactory = GeocoderFactory.getInstance();
-        geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
-        restaurant.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding(crudRestaurantView)).getLatitude(),
-                geocoder.forward(getEligibleStringAddressForGeocoding(crudRestaurantView)).getLongitude()));
-        restaurant.setAddedDate(getCurrentDate());
         restaurant.setOpeningTime(getOpeningTimeByFormData());
         return restaurant;
     }

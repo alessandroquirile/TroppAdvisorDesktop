@@ -6,14 +6,12 @@ import dao_interfaces.AttractionDAO;
 import dao_interfaces.CityDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
-import factories.GeocoderFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import models.Accomodation;
 import models.Attraction;
-import models.Point;
 import utils.ConfigFileReader;
 import views.CrudAttractionView;
 import views.CrudView;
@@ -138,7 +136,7 @@ public class CrudAttractionController extends CrudController {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
                             if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
                                 if (InputValidator.isValidOpeningTime(openingTime)) {
-                                    Attraction attraction = getAttractionByFormData();
+                                    Attraction attraction = (Attraction) getAccomodationByFormData(crudAttractionView);
                                     daoFactory = DAOFactory.getInstance();
                                     attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
                                     if (modifying) {
@@ -295,26 +293,9 @@ public class CrudAttractionController extends CrudController {
         }
     }
 
-    /*@Override
+    @Override
     protected Accomodation getAccomodationByFormData(CrudView crudView) {
-        /*Attraction attraction = new Attraction(super.getAccomodationByFormData(crudAttractionView));
-        attraction.setOpeningTime(getOpeningTimeWithFormData());
-        return attraction;
-    }*/
-
-    private Attraction getAttractionByFormData() {
-        Attraction attraction = new Attraction();
-        attraction.setName(crudAttractionView.getTextFieldNome().getText());
-        attraction.setAddress(getAddressByFormData(crudAttractionView));
-        attraction.setAvaragePrice(Integer.parseInt(crudAttractionView.getTextFieldPrezzoMedio().getText()));
-        attraction.setPhoneNumber(crudAttractionView.getTextFieldNumeroDiTelefono().getText());
-        attraction.setHasCertificateOfExcellence(crudAttractionView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        attraction.setImages(crudAttractionView.getListViewFotoPath().getItems());
-        geocoderFactory = GeocoderFactory.getInstance();
-        geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
-        attraction.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding(crudAttractionView)).getLatitude(),
-                geocoder.forward(getEligibleStringAddressForGeocoding(crudAttractionView)).getLongitude()));
-        attraction.setAddedDate(getCurrentDate());
+        Attraction attraction = new Attraction(super.getAccomodationByFormData(crudAttractionView));
         attraction.setOpeningTime(getOpeningTimeByFormData());
         return attraction;
     }
@@ -362,10 +343,6 @@ public class CrudAttractionController extends CrudController {
     public ObservableList<String> getImagesFromListView() {
         return this.crudAttractionView.getListViewFotoPath().getItems();
     }
-
-    /*public Attraction getSelectedAttractionFromTableView() {
-        return (Attraction) crudAttractionView.getTableView().getSelectionModel().getSelectedItem();
-    }*/
 
     public CrudAttractionView getCrudAttractionView() {
         return crudAttractionView;
