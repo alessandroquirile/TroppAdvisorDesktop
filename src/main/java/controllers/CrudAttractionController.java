@@ -37,8 +37,6 @@ public class CrudAttractionController extends CrudController {
     public void setViewsAsDefault(CrudView crudView) {
         super.setViewsAsDefault(crudAttractionView);
         crudAttractionView.getTextFieldOpeningTime().setDisable(true);
-        initializeBoxes(crudAttractionView);
-        clearTextFields(crudAttractionView);
         loadAttractionsIntoTableView(currentPage, currentPageSize);
     }
 
@@ -234,7 +232,7 @@ public class CrudAttractionController extends CrudController {
             e.printStackTrace();
         }
 
-        if (!clickedAttraction.getCity().equals(attraction.getCity())) {
+        if (hasChangedCity(clickedAttraction, attraction)) {
             daoFactory = DAOFactory.getInstance();
             CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {

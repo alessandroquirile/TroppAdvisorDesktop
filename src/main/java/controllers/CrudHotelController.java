@@ -41,11 +41,9 @@ public class CrudHotelController extends CrudController {
     @Override
     public void setViewsAsDefault(CrudView crudView) {
         super.setViewsAsDefault(crudHotelView);
-        initializeBoxes(crudHotelView);
         crudHotelView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
         crudHotelView.getChoiceBoxNumeroStelle().getSelectionModel().clearSelection();
         crudHotelView.getChoiceBoxNumeroStelle().setDisable(true);
-        clearTextFields(crudHotelView);
         loadHotelsIntoTableView(currentPage, currentPageSize);
     }
 
@@ -239,7 +237,7 @@ public class CrudHotelController extends CrudController {
             e.printStackTrace();
         }
 
-        if (!clickedHotel.getCity().equals(hotel.getCity())) {
+        if (hasChangedCity(clickedHotel, hotel)) {
             daoFactory = DAOFactory.getInstance();
             CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {

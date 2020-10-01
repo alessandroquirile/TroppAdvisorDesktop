@@ -29,9 +29,8 @@ public class FormChecker_RestaurantCrud implements FormChecker {
 
     private boolean hasAtLeastOneTypeOfCuisineSelected(ObservableList<TypeOfCuisineItem> typeOfCuisineItems) {
         for (TypeOfCuisineItem typeOfCuisineItem : typeOfCuisineItems) {
-            if (typeOfCuisineItem.getCheckBox().isSelected()) {
+            if (typeOfCuisineItem.getCheckBox().isSelected())
                 return true;
-            }
         }
         return false;
     }

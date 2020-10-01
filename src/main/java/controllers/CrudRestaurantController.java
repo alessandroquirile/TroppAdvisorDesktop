@@ -46,8 +46,6 @@ public class CrudRestaurantController extends CrudController {
         super.setViewsAsDefault(crudRestaurantView);
         crudRestaurantView.getTableViewTypeOfCuisine().setDisable(true);
         crudRestaurantView.getTextFieldOpeningTime().setDisable(true);
-        initializeBoxes(crudRestaurantView);
-        clearTextFields(crudRestaurantView);
         loadRestaurantsIntoTableView(currentPage, currentPageSize);
     }
 
@@ -265,7 +263,7 @@ public class CrudRestaurantController extends CrudController {
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
                 try {
-                    imageHostUrl = imageDAO.load(file); // carica su s3
+                    imageHostUrl = imageDAO.load(file);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -286,7 +284,7 @@ public class CrudRestaurantController extends CrudController {
             e.printStackTrace();
         }
 
-        if (!clickedRestaurant.getCity().equals(restaurant.getCity())) {
+        if (hasChangedCity(clickedRestaurant, restaurant)) {
             daoFactory = DAOFactory.getInstance();
             CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
@@ -308,8 +306,7 @@ public class CrudRestaurantController extends CrudController {
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
         if (images != null) {
             for (String imageUrl : images) {
-                if (!imageDAO.delete(imageUrl) ||
-                        !restaurantDAO.deleteImage(restaurant, imageUrl))
+                if (!imageDAO.delete(imageUrl) || !restaurantDAO.deleteImage(restaurant, imageUrl))
                     CrudDialoger.showAlertDialog("Modifica non avvenuta");
             }
         }

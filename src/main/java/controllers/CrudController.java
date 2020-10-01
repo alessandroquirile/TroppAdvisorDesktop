@@ -472,6 +472,10 @@ public abstract class CrudController extends Controller {
         return query;
     }
 
+    protected boolean hasChangedCity(Accomodation clickedAccomodation, Accomodation accomodation) {
+        return !clickedAccomodation.getCity().equals(accomodation.getCity());
+    }
+
     protected String getCurrentDate() {
         return new Date().toString();
     }
