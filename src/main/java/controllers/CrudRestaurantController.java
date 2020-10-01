@@ -1,6 +1,6 @@
 package controllers;
 
-import controllers_utils.CrudDialoger;
+import controllers_utils.Dialoger;
 import controllers_utils.InputValidator;
 import controllers_utils.TypeOfCuisineItem;
 import dao_interfaces.CityDAO;
@@ -99,10 +99,10 @@ public class CrudRestaurantController extends CrudController {
             restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
             Restaurant selectedRestaurant = (Restaurant) getSelectedAccomodationFromTableView(crudRestaurantView);
             if (selectedRestaurant != null) {
-                if (CrudDialoger.areYouSureToDelete(selectedRestaurant.getName())) {
+                if (Dialoger.areYouSureToDelete(selectedRestaurant.getName())) {
                     try {
                         if (!restaurantDAO.delete(selectedRestaurant))
-                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
+                            Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -182,7 +182,7 @@ public class CrudRestaurantController extends CrudController {
                 }
             } else {
                 if (formChecker.formHasSomeEmptyField(this)) {
-                    CrudDialoger.showAlertDialog("Riempi tutti i campi");
+                    Dialoger.showAlertDialog("Riempi tutti i campi");
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
@@ -197,13 +197,13 @@ public class CrudRestaurantController extends CrudController {
                                     } else
                                         doInsert(restaurant);
                                 } else
-                                    CrudDialoger.showAlertDialog("Orario non valido");
+                                    Dialoger.showAlertDialog("Orario non valido");
                             } else
-                                CrudDialoger.showAlertDialog("CAP non valido");
+                                Dialoger.showAlertDialog("CAP non valido");
                         } else
-                            CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                            Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                     } else
-                        CrudDialoger.showAlertDialog("Numero di telefono non valido");
+                        Dialoger.showAlertDialog("Numero di telefono non valido");
                 }
             }
         });
@@ -212,7 +212,7 @@ public class CrudRestaurantController extends CrudController {
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getQuery(crudRestaurantView);
 
-        CrudDialoger.showAlertDialog(query); // dbg - attenzione non deve tener conto dei tipi di cucina (verrà tenuto conto dopo)
+        Dialoger.showAlertDialog(query); // dbg - attenzione non deve tener conto dei tipi di cucina (verrà tenuto conto dopo)
 
         daoFactory = DAOFactory.getInstance();
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
@@ -231,7 +231,7 @@ public class CrudRestaurantController extends CrudController {
             crudRestaurantView.getTableView().setItems(data);
             crudRestaurantView.getTableView().setDisable(false);
         } else {
-            CrudDialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri: " + query +
+            Dialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
         }
         disableCRUDButtons(crudRestaurantView);
@@ -240,9 +240,9 @@ public class CrudRestaurantController extends CrudController {
     private void doInsert(Restaurant restaurant) {
         try {
             if (!restaurantDAO.add(restaurant))
-                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                Dialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
             else
-                CrudDialoger.showAlertDialog("Inserimento avvenuto");
+                Dialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -258,7 +258,7 @@ public class CrudRestaurantController extends CrudController {
         for (String image : getImagesFromListView()) {
             File file = new File(image);
             if (hasToBeInserted(file)) {
-                CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
+                Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
@@ -269,7 +269,7 @@ public class CrudRestaurantController extends CrudController {
                 }
                 try {
                     if (!restaurantDAO.updateImage(restaurant, imageHostUrl) || imageHostUrl == null)
-                        CrudDialoger.showAlertDialog("Qualcosa è andato storto");
+                        Dialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -277,7 +277,7 @@ public class CrudRestaurantController extends CrudController {
         }
         try {
             if (!restaurantDAO.update(restaurant))
-                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'update di restaurant");
+                Dialoger.showAlertDialog("Qualcosa è andato storto durante l'update di restaurant");
             else
                 updateImages(restaurant, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
@@ -289,9 +289,9 @@ public class CrudRestaurantController extends CrudController {
             CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
                 if (!cityDAO.delete(clickedRestaurant))
-                    CrudDialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
+                    Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
                 if (!cityDAO.insert(restaurant))
-                    CrudDialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
+                    Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -307,7 +307,7 @@ public class CrudRestaurantController extends CrudController {
         if (images != null) {
             for (String imageUrl : images) {
                 if (!imageDAO.delete(imageUrl) || !restaurantDAO.deleteImage(restaurant, imageUrl))
-                    CrudDialoger.showAlertDialog("Modifica non avvenuta");
+                    Dialoger.showAlertDialog("Modifica non avvenuta");
             }
         }
     }

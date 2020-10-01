@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public abstract class CrudDialoger {
+public abstract class Dialoger {
     public static void showAlertDialog(String alertMessage) {
         Alert.AlertType alertType = Alert.AlertType.INFORMATION;
         Alert alert = new Alert(alertType, "");
@@ -51,7 +51,6 @@ public abstract class CrudDialoger {
         }
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean ignoreExcellence() {
         ButtonType yes = new ButtonType("Ignora certificato di eccellenza", ButtonBar.ButtonData.YES);
         ButtonType no = new ButtonType("Cerca strutture senza certificato di eccellenza", ButtonBar.ButtonData.NO);

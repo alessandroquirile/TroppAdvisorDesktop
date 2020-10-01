@@ -1,6 +1,6 @@
 package controllers;
 
-import controllers_utils.CrudDialoger;
+import controllers_utils.Dialoger;
 import dao_interfaces.ImageDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
@@ -138,7 +138,7 @@ public abstract class CrudController extends Controller {
     }
 
     protected void buttonAiutoClicked(CrudView crudView) {
-        crudView.getButtonAiuto().setOnAction(event -> CrudDialoger.showHelpDialog());
+        crudView.getButtonAiuto().setOnAction(event -> Dialoger.showHelpDialog());
     }
 
     protected void buttonCaricaClicked(CrudView crudView) {
@@ -461,7 +461,7 @@ public abstract class CrudController extends Controller {
             else
                 query += "certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";
         } else {
-            if (!CrudDialoger.ignoreExcellence()) {
+            if (!Dialoger.ignoreExcellence()) {
                 certificatoDiEccellenza = "false";
                 if (concatenate)
                     query += ";certificateOfExcellence==\"" + certificatoDiEccellenza + "\"";

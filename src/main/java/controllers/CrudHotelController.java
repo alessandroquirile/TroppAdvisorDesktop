@@ -1,6 +1,6 @@
 package controllers;
 
-import controllers_utils.CrudDialoger;
+import controllers_utils.Dialoger;
 import controllers_utils.InputValidator;
 import dao_interfaces.CityDAO;
 import dao_interfaces.HotelDAO;
@@ -60,10 +60,10 @@ public class CrudHotelController extends CrudController {
             hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
             Hotel selectedHotel = (Hotel) getSelectedAccomodationFromTableView(crudHotelView);
             if (selectedHotel != null) {
-                if (CrudDialoger.areYouSureToDelete(selectedHotel.getName())) {
+                if (Dialoger.areYouSureToDelete(selectedHotel.getName())) {
                     try {
                         if (!hotelDAO.delete(selectedHotel))
-                            CrudDialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
+                            Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -133,7 +133,7 @@ public class CrudHotelController extends CrudController {
                 }
             } else {
                 if (formChecker.formHasSomeEmptyField(this)) {
-                    CrudDialoger.showAlertDialog("Riempi tutti i campi");
+                    Dialoger.showAlertDialog("Riempi tutti i campi");
                 } else {
                     if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                         if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
@@ -147,11 +147,11 @@ public class CrudHotelController extends CrudController {
                                 } else
                                     doInsert(hotel);
                             } else
-                                CrudDialoger.showAlertDialog("CAP non valido");
+                                Dialoger.showAlertDialog("CAP non valido");
                         } else
-                            CrudDialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                            Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
                     } else
-                        CrudDialoger.showAlertDialog("Numero di telefono non valido");
+                        Dialoger.showAlertDialog("Numero di telefono non valido");
                 }
             }
         });
@@ -172,7 +172,7 @@ public class CrudHotelController extends CrudController {
             crudHotelView.getTableView().setItems(data);
             crudHotelView.getTableView().setDisable(false);
         } else {
-            CrudDialoger.showAlertDialog("Non sono stati trovati hotel con questi criteri: " + query +
+            Dialoger.showAlertDialog("Non sono stati trovati hotel con questi criteri: " + query +
                     "&page=" + currentPage + "&size=" + currentPageSize);
         }
         disableCRUDButtons(crudHotelView);
@@ -193,9 +193,9 @@ public class CrudHotelController extends CrudController {
     private void doInsert(Hotel hotel) {
         try {
             if (!hotelDAO.add(hotel))
-                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
+                Dialoger.showAlertDialog("Qualcosa è andato storto durante l'inserimento");
             else
-                CrudDialoger.showAlertDialog("Inserimento avvenuto");
+                Dialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -211,7 +211,7 @@ public class CrudHotelController extends CrudController {
         for (String image : getImagesFromListView()) {
             File file = new File(image);
             if (hasToBeInserted(file)) {
-                CrudDialoger.showAlertDialog(image + " da inserire"); // dbg
+                Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl = null;
@@ -222,7 +222,7 @@ public class CrudHotelController extends CrudController {
                 }
                 try {
                     if (!hotelDAO.updateImage(hotel, imageHostUrl) || imageHostUrl == null)
-                        CrudDialoger.showAlertDialog("Qualcosa è andato storto");
+                        Dialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -230,7 +230,7 @@ public class CrudHotelController extends CrudController {
         }
         try {
             if (!hotelDAO.update(hotel))
-                CrudDialoger.showAlertDialog("Qualcosa è andato storto durante l'update di hotel");
+                Dialoger.showAlertDialog("Qualcosa è andato storto durante l'update di hotel");
             else
                 updateImages(hotel, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
@@ -242,9 +242,9 @@ public class CrudHotelController extends CrudController {
             CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
                 if (!cityDAO.delete(clickedHotel))
-                    CrudDialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
+                    Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
                 if (!cityDAO.insert(hotel))
-                    CrudDialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
+                    Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -315,7 +315,7 @@ public class CrudHotelController extends CrudController {
         if (images != null) {
             for (String imageUrl : images) {
                 if (!imageDAO.delete(imageUrl) || !hotelDAO.deleteImage(hotel, imageUrl))
-                    CrudDialoger.showAlertDialog("Modifica non avvenuta");
+                    Dialoger.showAlertDialog("Modifica non avvenuta");
             }
             //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }

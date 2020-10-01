@@ -1,6 +1,6 @@
 package controllers;
 
-import controllers_utils.CrudDialoger;
+import controllers_utils.Dialoger;
 import controllers_utils.InputValidator;
 import dao_interfaces.AccountDAO;
 import factories.DAOFactory;
@@ -48,7 +48,7 @@ public class LoginController extends Controller {
             formChecker = formCheckerFactory.getFormChecker(this);
 
             if (formChecker.formHasSomeEmptyField(this)) {
-                CrudDialoger.showAlertDialog("Riempire tutti i campi");
+                Dialoger.showAlertDialog("Riempire tutti i campi");
             } else {
                 if (InputValidator.hasValidPattern(email)) {
                     Account account = new Account(email, password);
@@ -56,7 +56,7 @@ public class LoginController extends Controller {
                     AccountDAO accountDAO = daoFactory.getAccountDAO(ConfigFileReader.getProperty("account_storage_technology"));
                     try {
                         if (!accountDAO.login(account))
-                            CrudDialoger.showAlertDialog("Credenziali errate");
+                            Dialoger.showAlertDialog("Credenziali errate");
                         else
                             loadSelectTypeScene();
                     } catch (IOException | InterruptedException e) {
@@ -65,7 +65,7 @@ public class LoginController extends Controller {
                         Arrays.fill(password, '\0'); // password protection
                     }
                 } else
-                    CrudDialoger.showAlertDialog("Pattern email non valido");
+                    Dialoger.showAlertDialog("Pattern email non valido");
             }
         });
     }
