@@ -47,8 +47,7 @@ public class Geocoder_APIPositionStack implements Geocoder {
         }
 
         GeocodingResponse geocodingResponse = null;
-        assert response != null;
-        if (response.statusCode() == 200) {
+        if (response != null && response.statusCode() == 200) {
             JSONObject jsonObject = new JSONObject(response.body());
             JSONArray jsonArray = jsonObject.getJSONArray("data");
             ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();

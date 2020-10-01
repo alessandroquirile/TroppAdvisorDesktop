@@ -78,6 +78,14 @@ public abstract class Accomodation implements Serializable {
         return totalRating;
     }
 
+    public Double getLatitude() {
+        return getPoint().getX();
+    }
+
+    public Double getLongitude() {
+        return getPoint().getY();
+    }
+
     /*public Integer getTotalReviews() {
         return totalReviews;
     }

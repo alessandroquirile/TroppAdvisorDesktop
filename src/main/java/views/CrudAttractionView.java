@@ -20,21 +20,21 @@ public class CrudAttractionView extends CrudView {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudAttractionController crudAttractionController = new CrudAttractionController(this);
-        crudAttractionController.setListenerOn(buttonInserisci);
-        crudAttractionController.setListenerOn(buttonElimina);
-        crudAttractionController.setListenerOn(buttonModifica);
-        crudAttractionController.setListenerOn(buttonAnnulla);
-        crudAttractionController.setListenerOn(buttonIndietro);
-        crudAttractionController.setListenerOn(buttonConferma);
-        crudAttractionController.setListenerOn(buttonAiuto);
-        crudAttractionController.setListenerOn(buttonCaricaFoto);
-        crudAttractionController.setListenerOn(buttonMostraAvanti);
-        crudAttractionController.setListenerOn(buttonMostraIndietro);
-        crudAttractionController.setListenerOn(buttonCerca);
-        crudAttractionController.setListenerOn(buttonEliminaFotoSelezionate);
+        crudAttractionController.setListenerOn(buttonInserisci, this);
+        crudAttractionController.setListenerOn(buttonElimina, this);
+        crudAttractionController.setListenerOn(buttonModifica, this);
+        crudAttractionController.setListenerOn(buttonAnnulla, this);
+        crudAttractionController.setListenerOn(buttonIndietro, this);
+        crudAttractionController.setListenerOn(buttonConferma, this);
+        crudAttractionController.setListenerOn(buttonAiuto, this);
+        crudAttractionController.setListenerOn(buttonCaricaFoto, this);
+        crudAttractionController.setListenerOn(buttonMostraAvanti, this);
+        crudAttractionController.setListenerOn(buttonMostraIndietro, this);
+        crudAttractionController.setListenerOn(buttonCerca, this);
+        crudAttractionController.setListenerOn(buttonEliminaFotoSelezionate, this);
         crudAttractionController.setListenerOnTableView(tableView);
-        crudAttractionController.setListenerOnListView(listViewFotoPath);
-        crudAttractionController.setViewsAsDefault();
+        crudAttractionController.setListenerOnListView(listViewFotoPath, this);
+        crudAttractionController.setViewsAsDefault(this);
     }
 
     public TableColumn<Object, String> getTableColumnOrarioApertura() {

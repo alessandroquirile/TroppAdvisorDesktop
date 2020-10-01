@@ -6,6 +6,14 @@ package models;
 public class Attraction extends Accomodation {
     private String openingTime;
 
+    /*public Attraction() {
+
+    }
+
+    public Attraction(Accomodation accomodation) {
+        super();
+    }*/
+
     public String getOpeningTime() {
         return openingTime;
     }

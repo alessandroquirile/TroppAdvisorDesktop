@@ -1,12 +1,12 @@
 package dao_implementations;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers_utils.ObjectMapperCreator;
 import dao_interfaces.CityDAO;
 import dao_interfaces.ImageDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
+import models.Accomodation;
 import models.Restaurant;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,15 +29,20 @@ import java.util.Map;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class RestaurantDAO_MongoDB implements RestaurantDAO {
+public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
     private DAOFactory daoFactory;
     private ImageDAO imageDAO;
     private CityDAO cityDAO;
     private AuthenticationResult authenticationResult;
+    private static final String REPOSITORY = "restaurant";
 
     @Override
     public boolean add(Restaurant restaurant) throws IOException, InterruptedException {
-        final String URL = getUrlInsertFor(restaurant);
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/insert?");
+        URL = URL.concat("latitude=" + restaurant.getLatitude());
+        URL = URL.concat("&longitude=" + restaurant.getLongitude());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("name", restaurant.getName());
@@ -74,18 +79,21 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
             daoFactory = DAOFactory.getInstance();
             imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
             String endpoint = imageDAO.load(file);
-            Restaurant parsedRestaurant = getParsedRestaurantFromJson(objectMapper, response);
+            Restaurant parsedRestaurant = (Restaurant) getParsedAccomodationFromJson(objectMapper, response, this);
             if (!updateImage(parsedRestaurant, endpoint))
                 return false;
         }
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        return cityDAO.insert(getParsedRestaurantFromJson(objectMapper, response));
+        return cityDAO.insert((Accomodation) getParsedAccomodationFromJson(objectMapper, response, this));
     }
 
     @Override
     public List<Restaurant> retrieveAt(int page, int size) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/find-all?";
-        URL += "page=" + page + "&size=" + size;
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/find-all?");
+        URL = URL.concat("page=" + page);
+        URL = URL.concat("&size=" + size);
 
         authenticationResult = AuthenticationResult.getInstance();
 
@@ -114,7 +122,10 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public List<Restaurant> retrieveAt(String query, int page, int size) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/search-by-rsql-no-point?";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/search-by-rsql-no-point?");
+
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
         else
@@ -150,8 +161,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
             }
         }
 
-        //System.out.println("Response: " + httpResponses); // dbg
-
         return restaurants;
     }
 
@@ -164,8 +173,11 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         if (!cityDAO.delete(restaurant) || !imageDAO.deleteAllImages(restaurant))
             return false;
 
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/delete-by-id";
-        URL += "/" + restaurant.getId();
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-by-id");
+        URL = URL.concat("/" + restaurant.getId());
+
         HttpClient httpClient = HttpClient.newHttpClient();
 
         authenticationResult = AuthenticationResult.getInstance();
@@ -186,7 +198,9 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
 
     @Override
     public boolean update(Restaurant restaurant) throws IOException, InterruptedException {
-        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/update";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/update");
 
         assert restaurant.getTypeOfCuisine() != null;
         final Map<String, Object> values = new HashMap<>();
@@ -218,18 +232,15 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println(restaurant + "\n");
-        //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
-
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean deleteImage(Restaurant restaurant, String imageUrl) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/delete-image";
-        URL += "/" + restaurant.getId();
-
-        System.out.println(restaurant);
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-image");
+        URL = URL.concat("/" + restaurant.getId());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", imageUrl);
@@ -251,15 +262,15 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        // System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
-
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean updateImage(Restaurant restaurant, String endpoint) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/update-images";
-        URL += "/" + restaurant.getId();
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/update-images");
+        URL = URL.concat("/" + restaurant.getId());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", endpoint);
@@ -281,20 +292,6 @@ public class RestaurantDAO_MongoDB implements RestaurantDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
-
         return response.statusCode() == 200;
-    }
-
-    private String getUrlInsertFor(Restaurant restaurant) {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/restaurant/insert?";
-        URL = URL.concat("latitude=" + restaurant.getPoint().getX());
-        URL = URL.concat("&longitude=" + restaurant.getPoint().getY());
-        return URL;
-    }
-
-    private Restaurant getParsedRestaurantFromJson(ObjectMapper objectMapper, HttpResponse<String> response) throws IOException {
-        return objectMapper.readValue(response.body(), new TypeReference<Restaurant>() {
-        });
     }
 }

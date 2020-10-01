@@ -31,21 +31,21 @@ public class CrudRestaurantView extends CrudView {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudRestaurantController crudRestaurantController = new CrudRestaurantController(this);
-        crudRestaurantController.setListenerOn(buttonInserisci);
-        crudRestaurantController.setListenerOn(buttonCerca);
-        crudRestaurantController.setListenerOn(buttonElimina);
-        crudRestaurantController.setListenerOn(buttonModifica);
-        crudRestaurantController.setListenerOn(buttonAnnulla);
-        crudRestaurantController.setListenerOn(buttonIndietro);
-        crudRestaurantController.setListenerOn(buttonConferma);
-        crudRestaurantController.setListenerOn(buttonAiuto);
-        crudRestaurantController.setListenerOn(buttonCaricaFoto);
-        crudRestaurantController.setListenerOn(buttonMostraAvanti);
-        crudRestaurantController.setListenerOn(buttonMostraIndietro);
-        crudRestaurantController.setListenerOn(buttonEliminaFotoSelezionate);
+        crudRestaurantController.setListenerOn(buttonInserisci, this);
+        crudRestaurantController.setListenerOn(buttonCerca, this);
+        crudRestaurantController.setListenerOn(buttonElimina, this);
+        crudRestaurantController.setListenerOn(buttonModifica, this);
+        crudRestaurantController.setListenerOn(buttonAnnulla, this);
+        crudRestaurantController.setListenerOn(buttonIndietro, this);
+        crudRestaurantController.setListenerOn(buttonConferma, this);
+        crudRestaurantController.setListenerOn(buttonAiuto, this);
+        crudRestaurantController.setListenerOn(buttonCaricaFoto, this);
+        crudRestaurantController.setListenerOn(buttonMostraAvanti, this);
+        crudRestaurantController.setListenerOn(buttonMostraIndietro, this);
+        crudRestaurantController.setListenerOn(buttonEliminaFotoSelezionate, this);
         crudRestaurantController.setListenerOnTableView(tableView);
-        crudRestaurantController.setListenerOnListView(listViewFotoPath);
-        crudRestaurantController.setViewsAsDefault();
+        crudRestaurantController.setListenerOnListView(listViewFotoPath, this);
+        crudRestaurantController.setViewsAsDefault(this);
     }
 
     public TableColumn<Object, String> getTableColumnTipoDiCucina() {

@@ -17,11 +17,14 @@ import java.util.Map;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class AccountDAO_Cognito implements AccountDAO {
+public class AccountDAO_Cognito extends RestDAO implements AccountDAO {
+    private static final String REPOSITORY = "cognito";
 
     @Override
     public boolean login(Account account) throws IOException, InterruptedException {
-        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/cognito/admin-login";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/admin-login");
 
         final Map<String, Object> values = new HashMap<>();
         values.put("key", account.getEmail());
@@ -41,26 +44,17 @@ public class AccountDAO_Cognito implements AccountDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        // System.out.println("Header:\n" +response.headers() + "\nBody:\n" + response.body()); // dbg
-
-        // CrudDialoger.showAlertDialog(account.toString()); // dbg
-
         return response.statusCode() == 200 && setAuthenticationResultIntoAccount(response, account);
     }
 
     private boolean setAuthenticationResultIntoAccount(HttpResponse<String> response, Account account) {
         JSONObject jsonObject = new JSONObject(response.body());
         JSONObject authenticationResult = (JSONObject) jsonObject.get("authenticationResult");
-
-        //CrudDialoger.showAlertDialog(authenticationResult.toString()); // dbg
-
         account.setIdToken(authenticationResult.getString("idToken"));
         account.setTokenType(authenticationResult.getString("tokenType"));
         account.setAccessToken(authenticationResult.getString("accessToken"));
         account.setTokenExpiresIn(authenticationResult.getInt("expiresIn"));
         account.setRefreshToken(authenticationResult.getString("refreshToken"));
-
-        // System.out.println(account.getAuthenticationResult().toString()); // dbg
         return true;
     }
 }

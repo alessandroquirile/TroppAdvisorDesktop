@@ -3,6 +3,7 @@ package dao_implementations;
 import dao_interfaces.ImageDAO;
 import models.Accomodation;
 import org.apache.http.HttpEntity;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -23,9 +24,8 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class ImageDAO_S3 implements ImageDAO {
-
-    private AuthenticationResult authenticationResult;
+public class ImageDAO_S3 extends RestDAO implements ImageDAO {
+    private static final String REPOSITORY = "s3";
 
     @Override
     public boolean deleteAllImages(Accomodation accomodation) throws IOException, InterruptedException {
@@ -41,10 +41,15 @@ public class ImageDAO_S3 implements ImageDAO {
 
     @Override
     public boolean delete(String imageS3Url) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/s3/delete-file?";
-        URL += "url=" + imageS3Url;
+        /*String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/s3/delete-file?";
+        URL += "url=" + imageS3Url;*/
 
-        authenticationResult = AuthenticationResult.getInstance();
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-file?");
+        URL = URL.concat("url=" + imageS3Url);
+
+        AuthenticationResult authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
@@ -57,8 +62,6 @@ public class ImageDAO_S3 implements ImageDAO {
 
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
-
-        // System.out.println(response.body()); // dbg
 
         return response.statusCode() == 200;
     }
@@ -73,8 +76,12 @@ public class ImageDAO_S3 implements ImageDAO {
                 .build();
         request.setEntity(entity);
         CloseableHttpResponse response = httpClient.execute(request);
-        //StatusLine statusLine = response.getStatusLine();
-        // System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
-        return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8); // response.body
+        StatusLine statusLine = response.getStatusLine(); // dbg
+        //System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase()); // dbg
+
+        if (statusLine.getStatusCode() == 200)
+            return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8); // response.body
+        else
+            throw new RuntimeException(String.valueOf(statusLine.getStatusCode()));
     }
 }

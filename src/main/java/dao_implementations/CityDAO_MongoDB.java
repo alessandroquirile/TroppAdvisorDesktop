@@ -17,8 +17,8 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class CityDAO_MongoDB implements CityDAO {
-    private final String nation = "Italia"; // Solo città italiane
+public class CityDAO_MongoDB extends RestDAO implements CityDAO {
+    private static final String NATION = "Italia"; // Solo città italiane
 
     @Override
     public boolean insert(Accomodation accomodation) throws IOException, InterruptedException {
@@ -48,7 +48,7 @@ public class CityDAO_MongoDB implements CityDAO {
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/" +
                 "insert-city-restaurant?";
 
-        URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&nation=" + nation + "&id=" + restaurant.getId();
+        URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&nation=" + NATION + "&id=" + restaurant.getId();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
@@ -86,7 +86,7 @@ public class CityDAO_MongoDB implements CityDAO {
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/" +
                 "insert-city-hotel?";
 
-        URL += "city=" + URLEncoder.encode(hotel.getCity(), StandardCharsets.UTF_8) + "&nation=" + nation + "&id=" + hotel.getId();
+        URL += "city=" + URLEncoder.encode(hotel.getCity(), StandardCharsets.UTF_8) + "&nation=" + NATION + "&id=" + hotel.getId();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest
@@ -124,7 +124,7 @@ public class CityDAO_MongoDB implements CityDAO {
         String URL = "http://Troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/" +
                 "insert-city-attraction?";
 
-        URL += "city=" + URLEncoder.encode(attraction.getCity(), StandardCharsets.UTF_8) + "&nation=" + nation + "&id=" + attraction.getId();
+        URL += "city=" + URLEncoder.encode(attraction.getCity(), StandardCharsets.UTF_8) + "&nation=" + NATION + "&id=" + attraction.getId();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest

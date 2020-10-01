@@ -21,21 +21,21 @@ public class CrudHotelView extends CrudView {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudHotelController crudHotelController = new CrudHotelController(this);
-        crudHotelController.setListenerOn(buttonInserisci);
-        crudHotelController.setListenerOn(buttonCerca);
-        crudHotelController.setListenerOn(buttonElimina);
-        crudHotelController.setListenerOn(buttonModifica);
-        crudHotelController.setListenerOn(buttonAnnulla);
-        crudHotelController.setListenerOn(buttonIndietro);
-        crudHotelController.setListenerOn(buttonConferma);
-        crudHotelController.setListenerOn(buttonAiuto);
-        crudHotelController.setListenerOn(buttonCaricaFoto);
-        crudHotelController.setListenerOn(buttonMostraAvanti);
-        crudHotelController.setListenerOn(buttonMostraIndietro);
-        crudHotelController.setListenerOn(buttonEliminaFotoSelezionate);
+        crudHotelController.setListenerOn(buttonInserisci, this);
+        crudHotelController.setListenerOn(buttonCerca, this);
+        crudHotelController.setListenerOn(buttonElimina, this);
+        crudHotelController.setListenerOn(buttonModifica, this);
+        crudHotelController.setListenerOn(buttonAnnulla, this);
+        crudHotelController.setListenerOn(buttonIndietro, this);
+        crudHotelController.setListenerOn(buttonConferma, this);
+        crudHotelController.setListenerOn(buttonAiuto, this);
+        crudHotelController.setListenerOn(buttonCaricaFoto, this);
+        crudHotelController.setListenerOn(buttonMostraAvanti, this);
+        crudHotelController.setListenerOn(buttonMostraIndietro, this);
+        crudHotelController.setListenerOn(buttonEliminaFotoSelezionate, this);
         crudHotelController.setListenerOnTableView(tableView);
-        crudHotelController.setListenerOnListView(listViewFotoPath);
-        crudHotelController.setViewsAsDefault();
+        crudHotelController.setListenerOnListView(listViewFotoPath, this);
+        crudHotelController.setViewsAsDefault(this);
     }
 
     public Button getButtonCerca() {

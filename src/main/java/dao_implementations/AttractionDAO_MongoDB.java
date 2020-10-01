@@ -1,6 +1,5 @@
 package dao_implementations;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers_utils.ObjectMapperCreator;
 import dao_interfaces.AttractionDAO;
@@ -29,15 +28,20 @@ import java.util.Map;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class AttractionDAO_MongoDB implements AttractionDAO {
+public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
     private DAOFactory daoFactory;
     private ImageDAO imageDAO;
     private CityDAO cityDAO;
     private AuthenticationResult authenticationResult;
+    private static final String REPOSITORY = "attraction";
 
     @Override
     public boolean add(Attraction attraction) throws IOException, InterruptedException {
-        final String URL = getUrlInsertFor(attraction);
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/insert?");
+        URL = URL.concat("latitude=" + attraction.getLatitude());
+        URL = URL.concat("&longitude=" + attraction.getLongitude());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("name", attraction.getName());
@@ -62,12 +66,8 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
-        //CrudDialoger.showAlertDialog(request.headers().toString()); // dbg
-
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
-
-        System.out.println(response.body() + " " + response.headers()); // dbg
 
         if (response.statusCode() != 200)
             return false;
@@ -77,18 +77,21 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
             daoFactory = DAOFactory.getInstance();
             imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
             String endpoint = imageDAO.load(file);
-            Attraction parsedAttraction = getParsedAttractionFromJson(objectMapper, response);
+            Attraction parsedAttraction = (Attraction) getParsedAccomodationFromJson(objectMapper, response, this);
             if (!updateImage(parsedAttraction, endpoint))
                 return false;
         }
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        return cityDAO.insert(getParsedAttractionFromJson(objectMapper, response));
+        return cityDAO.insert((Attraction) getParsedAccomodationFromJson(objectMapper, response, this));
     }
 
     @Override
     public List<Attraction> retrieveAt(int page, int size) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/find-all?";
-        URL += "page=" + page + "&size=" + size;
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/find-all?");
+        URL = URL.concat("page=" + page);
+        URL = URL.concat("&size=" + size);
 
         authenticationResult = AuthenticationResult.getInstance();
 
@@ -117,7 +120,10 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public List<Attraction> retrieveAt(String query, int page, int size) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/search-by-rsql-no-point?";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/search-by-rsql-no-point?");
+
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
         else
@@ -153,8 +159,6 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
             }
         }
 
-        //System.out.println("Response: " + httpResponses); // dbg
-
         return attractions;
     }
 
@@ -167,9 +171,13 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         if (!cityDAO.delete(attraction) || !imageDAO.deleteAllImages(attraction))
             return false;
 
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-by-id");
+        URL = URL.concat("/" + attraction.getId());
+
         authenticationResult = AuthenticationResult.getInstance();
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-by-id";
-        URL += "/" + attraction.getId();
+
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
@@ -189,7 +197,9 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
 
     @Override
     public boolean update(Attraction attraction) throws IOException, InterruptedException {
-        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/update";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/update");
 
         final Map<String, Object> values = new HashMap<>();
         values.put("id", attraction.getId());
@@ -219,18 +229,14 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println(attraction + "\n");
-        //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
-
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean deleteImage(Attraction attraction, String imageUrl) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/delete-image";
-        URL += "/" + attraction.getId();
-
-        System.out.println(attraction);
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-image");
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", imageUrl);
@@ -252,15 +258,15 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
-
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean updateImage(Attraction attraction, String endpoint) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/update-images";
-        URL += "/" + attraction.getId();
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/update-images");
+        URL = URL.concat("/" + attraction.getId());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", endpoint);
@@ -282,20 +288,6 @@ public class AttractionDAO_MongoDB implements AttractionDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
-
         return response.statusCode() == 200;
-    }
-
-    private String getUrlInsertFor(Attraction attraction) {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/attraction/insert?";
-        URL = URL.concat("latitude=" + attraction.getPoint().getX());
-        URL = URL.concat("&longitude=" + attraction.getPoint().getY());
-        return URL;
-    }
-
-    private Attraction getParsedAttractionFromJson(ObjectMapper objectMapper, HttpResponse<String> response) throws IOException {
-        return objectMapper.readValue(response.body(), new TypeReference<Attraction>() {
-        });
     }
 }

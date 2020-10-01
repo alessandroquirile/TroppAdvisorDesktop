@@ -1,12 +1,12 @@
 package dao_implementations;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import controllers_utils.ObjectMapperCreator;
 import dao_interfaces.CityDAO;
 import dao_interfaces.HotelDAO;
 import dao_interfaces.ImageDAO;
 import factories.DAOFactory;
+import models.Accomodation;
 import models.Hotel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,15 +29,20 @@ import java.util.Map;
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
-public class HotelDAO_MongoDB implements HotelDAO {
+public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
     private DAOFactory daoFactory;
     private ImageDAO imageDAO;
     private CityDAO cityDAO;
     private AuthenticationResult authenticationResult;
+    private static final String REPOSITORY = "hotel";
 
     @Override
     public boolean add(Hotel hotel) throws IOException, InterruptedException {
-        final String URL = getUrlInsertFor(hotel);
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/insert?");
+        URL = URL.concat("latitude=" + hotel.getLatitude());
+        URL = URL.concat("&longitude=" + hotel.getLongitude());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("name", hotel.getName());
@@ -73,18 +78,21 @@ public class HotelDAO_MongoDB implements HotelDAO {
             daoFactory = DAOFactory.getInstance();
             imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
             String endpoint = imageDAO.load(file);
-            Hotel parsedHotel = getParsedHotelFromJson(objectMapper, response);
+            Hotel parsedHotel = (Hotel) getParsedAccomodationFromJson(objectMapper, response, this);
             if (!updateImage(parsedHotel, endpoint))
                 return false;
         }
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        return cityDAO.insert(getParsedHotelFromJson(objectMapper, response));
+        return cityDAO.insert((Accomodation) getParsedAccomodationFromJson(objectMapper, response, this));
     }
 
     @Override
     public List<Hotel> retrieveAt(int page, int size) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/find-all?";
-        URL += "page=" + page + "&size=" + size;
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/find-all?");
+        URL = URL.concat("page=" + page);
+        URL = URL.concat("&size=" + size);
 
         authenticationResult = AuthenticationResult.getInstance();
 
@@ -113,7 +121,10 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public List<Hotel> retrieveAt(String query, int page, int size) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/search-by-rsql-no-point?";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/search-by-rsql-no-point?");
+
         if (query != null)
             URL += "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&page=" + page + "&size=" + size;
         else
@@ -149,8 +160,6 @@ public class HotelDAO_MongoDB implements HotelDAO {
             }
         }
 
-        //System.out.println("Response: " + httpResponses); // dbg
-
         return hotels;
     }
 
@@ -159,11 +168,16 @@ public class HotelDAO_MongoDB implements HotelDAO {
         daoFactory = DAOFactory.getInstance();
         imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
         cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+
         if (!cityDAO.delete(hotel) || !imageDAO.deleteAllImages(hotel))
             return false;
 
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-by-id";
-        URL += "/" + hotel.getId();
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-by-id");
+        URL = URL.concat("/" + hotel.getId());
+
+
         HttpClient httpClient = HttpClient.newHttpClient();
 
         authenticationResult = AuthenticationResult.getInstance();
@@ -186,7 +200,9 @@ public class HotelDAO_MongoDB implements HotelDAO {
 
     @Override
     public boolean update(Hotel hotel) throws IOException, InterruptedException {
-        final String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/update";
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/update");
 
         final Map<String, Object> values = new HashMap<>();
         values.put("id", hotel.getId());
@@ -216,18 +232,14 @@ public class HotelDAO_MongoDB implements HotelDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println(hotel + "\n");
-        //System.out.println(response.body() + "\n" + response.headers().toString()); // dbg
-
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean deleteImage(Hotel hotel, String imageUrl) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/delete-image";
-        URL += "/" + hotel.getId();
-
-        System.out.println(hotel);
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/delete-image");
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", imageUrl);
@@ -249,15 +261,15 @@ public class HotelDAO_MongoDB implements HotelDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println("putDeleteImage\n: " + response.body() + " " + response.headers()); // dbg
-
         return response.statusCode() == 200;
     }
 
     @Override
     public boolean updateImage(Hotel hotel, String endpoint) throws IOException, InterruptedException {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/update-images";
-        URL += "/" + hotel.getId();
+        String URL = getBaseUrl();
+        URL = URL.concat("/" + REPOSITORY);
+        URL = URL.concat("/update-images");
+        URL = URL.concat("/" + hotel.getId());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", endpoint);
@@ -279,20 +291,6 @@ public class HotelDAO_MongoDB implements HotelDAO {
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
 
-        //System.out.println("Update Response body: " + response.body() + " " + response.statusCode()); // dbg
-
         return response.statusCode() == 200;
-    }
-
-    private String getUrlInsertFor(Hotel hotel) {
-        String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/hotel/insert?";
-        URL = URL.concat("latitude=" + hotel.getPoint().getX());
-        URL = URL.concat("&longitude=" + hotel.getPoint().getY());
-        return URL;
-    }
-
-    private Hotel getParsedHotelFromJson(ObjectMapper objectMapper, HttpResponse<String> response) throws IOException {
-        return objectMapper.readValue(response.body(), new TypeReference<Hotel>() {
-        });
     }
 }
