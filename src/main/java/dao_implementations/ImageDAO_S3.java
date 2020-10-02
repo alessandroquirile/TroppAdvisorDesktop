@@ -63,6 +63,8 @@ public class ImageDAO_S3 extends RestDAO implements ImageDAO {
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
 
+        System.out.println("delete: " + response.headers() + " " + response.body()); // dbg
+
         return response.statusCode() == 200;
     }
 

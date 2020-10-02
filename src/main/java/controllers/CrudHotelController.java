@@ -114,6 +114,12 @@ public class CrudHotelController extends CrudController {
     }
 
     @Override
+    protected void buttonCercaClickedEvent(CrudView crudView) {
+        super.buttonCercaClickedEvent(crudView);
+        crudHotelView.getChoiceBoxNumeroStelle().getSelectionModel().clearSelection();
+    }
+
+    @Override
     public void buttonConfermaClicked() {
         crudHotelView.getButtonConferma().setOnAction(event -> {
             String telephoneNumber = getNumeroDiTelefono();

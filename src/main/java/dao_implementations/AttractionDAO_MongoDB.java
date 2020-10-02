@@ -237,6 +237,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
         String URL = getBaseUrl();
         URL = URL.concat("/" + REPOSITORY);
         URL = URL.concat("/delete-image");
+        URL = URL.concat("/" + attraction.getId());
 
         final Map<String, Object> values = new HashMap<>();
         values.put("url", imageUrl);
@@ -257,6 +258,8 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("deleteImage: " + response.headers() + " " + response.body());
 
         return response.statusCode() == 200;
     }

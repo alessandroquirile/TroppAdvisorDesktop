@@ -100,19 +100,21 @@ public abstract class CrudController extends Controller {
         crudView.getButtonIndietro().setOnAction(event -> showSelectTypeStage());
     }
 
-    protected void buttonInserisciClicked(CrudView crudView) {
-        crudView.getButtonInserisci().setOnAction(event -> {
-            enableAllTextFields(crudView);
-            enableAllChoiceBoxes(crudView);
-            disableCRUDButtons(crudView);
-            crudView.getTableView().setDisable(true);
-            crudView.getButtonConferma().setDisable(false);
-            crudView.getButtonAnnulla().setDisable(false);
-            crudView.getButtonIndietro().setDisable(true);
-            crudView.getButtonCaricaFoto().setDisable(false);
-            crudView.getTextFieldNumeroDiTelefono().setDisable(false);
-            crudView.getListViewFotoPath().setDisable(false);
-        });
+    private void buttonInserisciClicked(CrudView crudView) {
+        crudView.getButtonInserisci().setOnAction(event -> buttonInserisciClickedEvent(crudView));
+    }
+
+    protected void buttonInserisciClickedEvent(CrudView crudView) {
+        enableAllTextFields(crudView);
+        enableAllChoiceBoxes(crudView);
+        disableCRUDButtons(crudView);
+        crudView.getTableView().setDisable(true);
+        crudView.getButtonConferma().setDisable(false);
+        crudView.getButtonAnnulla().setDisable(false);
+        crudView.getButtonIndietro().setDisable(true);
+        crudView.getButtonCaricaFoto().setDisable(false);
+        crudView.getTextFieldNumeroDiTelefono().setDisable(false);
+        crudView.getListViewFotoPath().setDisable(false);
     }
 
     private void buttonModificaClicked(CrudView crudView) {
@@ -131,7 +133,7 @@ public abstract class CrudController extends Controller {
         });
     }
 
-    protected void buttonAnnullaClicked(CrudView crudView) {
+    private void buttonAnnullaClicked(CrudView crudView) {
         crudView.getButtonAnnulla().setOnAction(event -> {
             setViewsAsDefault(crudView);
             retrieving = false;
@@ -139,15 +141,15 @@ public abstract class CrudController extends Controller {
         });
     }
 
-    protected void buttonAiutoClicked(CrudView crudView) {
+    private void buttonAiutoClicked(CrudView crudView) {
         crudView.getButtonAiuto().setOnAction(event -> Dialoger.showHelpDialog());
     }
 
-    protected void buttonCaricaClicked(CrudView crudView) {
+    private void buttonCaricaClicked(CrudView crudView) {
         crudView.getButtonCaricaFoto().setOnAction(event -> multiFileSelectionFromFileSystem(crudView));
     }
 
-    protected void buttonEliminaFotoSelezionataClicked(CrudView crudView) {
+    private void buttonEliminaFotoSelezionataClicked(CrudView crudView) {
         crudView.getButtonEliminaFotoSelezionate().setOnAction(event -> {
             ObservableList<String> imagesSelectedToDelete2 = crudView.getListViewFotoPath().getSelectionModel().getSelectedItems();
             imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
@@ -155,22 +157,25 @@ public abstract class CrudController extends Controller {
         });
     }
 
-    protected void buttonCercaClicked(CrudView crudView) {
-        crudView.getButtonCerca().setOnAction(event -> {
-            retrieving = true;
-            enableAllTextFields(crudView);
-            enableAllChoiceBoxes(crudView);
-            disableCRUDButtons(crudView);
-            clearTextFields(crudView);
-            crudView.getTableView().setDisable(true);
-            crudView.getButtonConferma().setDisable(false);
-            crudView.getButtonAnnulla().setDisable(false);
-            crudView.getButtonIndietro().setDisable(true);
-            crudView.getButtonCaricaFoto().setDisable(false);
-            crudView.getListViewFotoPath().setDisable(false);
-            crudView.getButtonCaricaFoto().setDisable(true);
-            crudView.getListViewFotoPath().setDisable(true);
-        });
+    private void buttonCercaClicked(CrudView crudView) {
+        crudView.getButtonCerca().setOnAction(event -> buttonCercaClickedEvent(crudView));
+    }
+
+    protected void buttonCercaClickedEvent(CrudView crudView) {
+        retrieving = true;
+        enableAllTextFields(crudView);
+        enableAllChoiceBoxes(crudView);
+        disableCRUDButtons(crudView);
+        clearTextFields(crudView);
+        crudView.getTableView().setDisable(true);
+        crudView.getButtonConferma().setDisable(false);
+        crudView.getButtonAnnulla().setDisable(false);
+        crudView.getButtonIndietro().setDisable(true);
+        crudView.getButtonCaricaFoto().setDisable(false);
+        crudView.getListViewFotoPath().setDisable(false);
+        crudView.getButtonCaricaFoto().setDisable(true);
+        crudView.getListViewFotoPath().setDisable(true);
+        crudView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
     }
 
     public void setListenerOnTableView(TableView<Object> tableView) {
@@ -235,7 +240,7 @@ public abstract class CrudController extends Controller {
         getStage().close();
     }
 
-    protected void listViewFotoPathClicked(CrudView crudView) {
+    private void listViewFotoPathClicked(CrudView crudView) {
         crudView.getListViewFotoPath().setOnMouseClicked(event -> {
             if (!crudView.getListViewFotoPath().getSelectionModel().getSelectedItems().isEmpty())
                 crudView.getButtonEliminaFotoSelezionate().setDisable(false);

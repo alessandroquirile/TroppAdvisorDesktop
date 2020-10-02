@@ -48,40 +48,15 @@ public class CrudRestaurantController extends CrudController {
     }
 
     @Override
-    protected void buttonCercaClicked(CrudView crudView) {
-        crudRestaurantView.getButtonCerca().setOnAction(event -> {
-            retrieving = true;
-            enableAllTextFields(crudRestaurantView);
-            enableAllChoiceBoxes(crudRestaurantView);
-            disableCRUDButtons(crudRestaurantView);
-            clearTextFields(crudRestaurantView);
-            crudRestaurantView.getTableView().setDisable(true);
-            crudRestaurantView.getButtonConferma().setDisable(false);
-            crudRestaurantView.getButtonAnnulla().setDisable(false);
-            crudRestaurantView.getButtonIndietro().setDisable(true);
-            crudRestaurantView.getButtonCaricaFoto().setDisable(false);
-            crudRestaurantView.getListViewFotoPath().setDisable(false);
-            crudRestaurantView.getButtonCaricaFoto().setDisable(true);
-            crudRestaurantView.getListViewFotoPath().setDisable(true);
-            crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
-        });
+    protected void buttonCercaClickedEvent(CrudView crudView) {
+        super.buttonCercaClickedEvent(crudView);
+        crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
     }
 
     @Override
-    protected void buttonInserisciClicked(CrudView crudView) {
-        crudRestaurantView.getButtonInserisci().setOnAction(event -> {
-            enableAllTextFields(crudRestaurantView);
-            enableAllChoiceBoxes(crudRestaurantView);
-            disableCRUDButtons(crudRestaurantView);
-            crudRestaurantView.getTableView().setDisable(true);
-            crudRestaurantView.getButtonConferma().setDisable(false);
-            crudRestaurantView.getButtonAnnulla().setDisable(false);
-            crudRestaurantView.getButtonIndietro().setDisable(true);
-            crudRestaurantView.getButtonCaricaFoto().setDisable(false);
-            crudRestaurantView.getTextFieldNumeroDiTelefono().setDisable(false);
-            crudRestaurantView.getListViewFotoPath().setDisable(false);
-            crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
-        });
+    protected void buttonInserisciClickedEvent(CrudView crudView) {
+        super.buttonInserisciClickedEvent(crudView);
+        crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
     }
 
     @Override
