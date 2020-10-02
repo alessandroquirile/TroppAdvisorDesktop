@@ -27,37 +27,46 @@ public class Geocoder_APIPositionStack implements Geocoder {
 
     @Override
     public GeocodingResponse forward(String address) {
+        boolean correctlyCaught = false;
         String URL = "http://api.positionstack.com/v1/forward?";
         URL += "access_key=" + API_KEY + "&query=" + URLEncoder.encode(address, StandardCharsets.UTF_8) + "&limit=1";
 
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest httpRequest = HttpRequest
-                .newBuilder()
-                .GET()
-                .uri(URI.create(URL))
-                .header("Content-Type", "application/json")
-                .build();
+        // API Position Stack free tier pone dei limiti sul numero di richieste per secondo e alle volte se ci sono tante
+        // richieste, anziché restituire un file json ben formato, restituisce un array vuoto.
+        // È necessario quindi controllare che l'array non sia vuoto e restituire quell'oggetto ricavato.
+        do {
+            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpRequest httpRequest = HttpRequest
+                    .newBuilder()
+                    .GET()
+                    .uri(URI.create(URL))
+                    .header("Content-Type", "application/json")
+                    .build();
 
-        HttpResponse<String> response = null;
-        try {
-            response = httpClient.send(httpRequest,
-                    HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        GeocodingResponse geocodingResponse = null;
-        if (response != null && response.statusCode() == 200) {
-            JSONObject jsonObject = new JSONObject(response.body());
-            JSONArray jsonArray = jsonObject.getJSONArray("data");
-            ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
+            HttpResponse<String> response = null;
             try {
-                geocodingResponse = objectMapper.readValue(jsonArray.get(0).toString(), GeocodingResponse.class);
-            } catch (IOException e) {
+                response = httpClient.send(httpRequest,
+                        HttpResponse.BodyHandlers.ofString());
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-            //System.out.println(geocodingResponse); // dbg
-        }
-        return geocodingResponse;
+
+            if (response != null && response.statusCode() == 200) {
+                JSONObject jsonObject = new JSONObject(response.body());
+                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
+                try {
+                    if (jsonArray.length() > 0) {
+                        correctlyCaught = true;
+                        return objectMapper.readValue(jsonArray.get(0).toString(), GeocodingResponse.class);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //System.out.println(geocodingResponse); // dbg
+            }
+        } while (!correctlyCaught);
+
+        return null;
     }
 }
