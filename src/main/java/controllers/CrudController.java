@@ -45,15 +45,35 @@ public abstract class CrudController extends Controller {
     protected ObservableList<String> imagesSelectedToDelete;
     protected ImageDAO imageDAO;
 
-    protected abstract void tableViewClicked();
+    private void tableViewClicked(CrudView crudView) {
+        crudView.getTableView().setOnMouseClicked(event -> tableViewClickedEvent());
+    }
 
-    protected abstract void buttonMostraIndietroClicked();
+    protected abstract void tableViewClickedEvent();
 
-    protected abstract void buttonMostraAvantiClicked();
+    private void buttonMostraIndietroClicked(CrudView crudView) {
+        crudView.getButtonMostraIndietro().setOnAction(event -> buttonMostraIndietroClickedEvent());
+    }
 
-    protected abstract void buttonEliminaClicked();
+    protected abstract void buttonMostraIndietroClickedEvent();
 
-    protected abstract void buttonConfermaClicked();
+    private void buttonMostraAvantiClicked(CrudView crudView) {
+        crudView.getButtonMostraAvanti().setOnAction(event -> buttonMostraAvantiClickedEvent());
+    }
+
+    protected abstract void buttonMostraAvantiClickedEvent();
+
+    private void buttonEliminaClicked(CrudView crudView) {
+        crudView.getButtonElimina().setOnAction(event -> buttonEliminaClickedEvent());
+    }
+
+    protected abstract void buttonEliminaClickedEvent();
+
+    protected void buttonConfermaClicked(CrudView crudView) {
+        crudView.getButtonConferma().setOnAction(event -> buttonConfermaClickedEvent());
+    }
+
+    protected abstract void buttonConfermaClickedEvent();
 
     public void setListenerOn(Button button, CrudView crudView) {
         switch (button.getId()) {
@@ -67,10 +87,10 @@ public abstract class CrudController extends Controller {
                 buttonModificaClicked(crudView);
                 break;
             case "buttonElimina":
-                buttonEliminaClicked();
+                buttonEliminaClicked(crudView);
                 break;
             case "buttonConferma":
-                buttonConfermaClicked();
+                buttonConfermaClicked(crudView);
                 break;
             case "buttonAnnulla":
                 buttonAnnullaClicked(crudView);
@@ -85,10 +105,10 @@ public abstract class CrudController extends Controller {
                 buttonEliminaFotoSelezionataClicked(crudView);
                 break;
             case "buttonMostraIndietro":
-                buttonMostraIndietroClicked();
+                buttonMostraIndietroClicked(crudView);
                 break;
             case "buttonMostraAvanti":
-                buttonMostraAvantiClicked();
+                buttonMostraAvantiClicked(crudView);
                 break;
             case "buttonCerca":
                 buttonCercaClicked(crudView);
@@ -178,9 +198,9 @@ public abstract class CrudController extends Controller {
         crudView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
     }
 
-    public void setListenerOnTableView(TableView<Object> tableView) {
+    public void setListenerOnTableView(TableView<Object> tableView, CrudView crudView) {
         if (tableView.getId().equals("tableView"))
-            tableViewClicked();
+            tableViewClicked(crudView);
     }
 
     public void setViewsAsDefault(CrudView crudView) {
@@ -321,7 +341,7 @@ public abstract class CrudController extends Controller {
         setProperImagesIntoListView(accomodation, crudView);
     }
 
-    protected void multiFileSelectionFromFileSystem(CrudView crudView) {
+    private void multiFileSelectionFromFileSystem(CrudView crudView) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         FileChooser.ExtensionFilter imageFilter =
@@ -334,7 +354,7 @@ public abstract class CrudController extends Controller {
         }
     }
 
-    protected Address getAddressByFormData(CrudView crudView) {
+    private Address getAddressByFormData(CrudView crudView) {
         return new Address(
                 crudView.getChoiceBoxIndirizzo().getValue(),
                 crudView.getTextFieldStrada().getText(),
@@ -344,7 +364,7 @@ public abstract class CrudController extends Controller {
                 crudView.getTextFieldCAP().getText());
     }
 
-    protected String getEligibleStringAddressForGeocoding(CrudView crudView) {
+    private String getEligibleStringAddressForGeocoding(CrudView crudView) {
         return crudView.getChoiceBoxIndirizzo().getValue() + " " + crudView.getTextFieldStrada().getText() + ", " +
                 crudView.getTxtFieldNumeroCivico().getText() + ", " + crudView.getTextFieldCity().getText() + ", " + crudView.getTextFieldCAP().getText() +
                 ", " + crudView.getTextFieldProvincia().getText();

@@ -52,7 +52,7 @@ public class CrudHotelController extends CrudController {
     }
 
     @Override
-    public void buttonEliminaClicked() {
+    protected void buttonEliminaClickedEvent() {
         crudHotelView.getButtonElimina().setOnAction(event -> {
             daoFactory = DAOFactory.getInstance();
             hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
@@ -78,17 +78,15 @@ public class CrudHotelController extends CrudController {
     }
 
     @Override
-    public void tableViewClicked() {
-        crudHotelView.getTableView().setOnMouseClicked(event -> {
-            Hotel selectedHotel = (Hotel) getSelectedAccomodationFromTableView(crudHotelView);
-            if (selectedHotel != null) {
-                crudHotelView.getButtonAnnulla().setDisable(false);
-                crudHotelView.getButtonElimina().setDisable(false);
-                crudHotelView.getButtonModifica().setDisable(false);
-                crudHotelView.getListViewFotoPath().getItems().clear();
-                populateTextFieldsWithSelectedAccomodationData(selectedHotel, crudHotelView);
-            }
-        });
+    protected void tableViewClickedEvent() {
+        Hotel selectedHotel = (Hotel) getSelectedAccomodationFromTableView(crudHotelView);
+        if (selectedHotel != null) {
+            crudHotelView.getButtonAnnulla().setDisable(false);
+            crudHotelView.getButtonElimina().setDisable(false);
+            crudHotelView.getButtonModifica().setDisable(false);
+            crudHotelView.getListViewFotoPath().getItems().clear();
+            populateTextFieldsWithSelectedAccomodationData(selectedHotel, crudHotelView);
+        }
     }
 
     @Override
@@ -98,19 +96,15 @@ public class CrudHotelController extends CrudController {
     }
 
     @Override
-    public void buttonMostraAvantiClicked() {
-        crudHotelView.getButtonMostraAvanti().setOnAction(event -> {
-            if (!crudHotelView.getTableView().getItems().isEmpty())
-                loadHotelsIntoTableView(++currentPage, currentPageSize);
-        });
+    protected void buttonMostraAvantiClickedEvent() {
+        if (!crudHotelView.getTableView().getItems().isEmpty())
+            loadHotelsIntoTableView(++currentPage, currentPageSize);
     }
 
     @Override
-    public void buttonMostraIndietroClicked() {
-        crudHotelView.getButtonMostraIndietro().setOnAction(event -> {
-            if (currentPage != 0)
-                loadHotelsIntoTableView(--currentPage, currentPageSize);
-        });
+    protected void buttonMostraIndietroClickedEvent() {
+        if (currentPage != 0)
+            loadHotelsIntoTableView(--currentPage, currentPageSize);
     }
 
     @Override
@@ -120,46 +114,45 @@ public class CrudHotelController extends CrudController {
     }
 
     @Override
-    public void buttonConfermaClicked() {
-        crudHotelView.getButtonConferma().setOnAction(event -> {
-            String telephoneNumber = getNumeroDiTelefono();
-            String prezzoMedio = getPrezzoMedio();
-            String cap = getCAP();
+    protected void buttonConfermaClickedEvent() {
+        String telephoneNumber = getNumeroDiTelefono();
+        String prezzoMedio = getPrezzoMedio();
+        String cap = getCAP();
 
-            formCheckerFactory = FormCheckerFactory.getInstance();
-            formChecker = formCheckerFactory.getFormChecker(this);
+        formCheckerFactory = FormCheckerFactory.getInstance();
+        formChecker = formCheckerFactory.getFormChecker(this);
 
-            if (retrieving) {
-                try {
-                    doRetrieveByQuery();
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if (formChecker.formHasSomeEmptyField(this)) {
-                    Dialoger.showAlertDialog("Riempi tutti i campi");
-                } else {
-                    if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                Hotel hotel = (Hotel) getAccomodationByFormData(crudHotelView);
-                                daoFactory = DAOFactory.getInstance();
-                                hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
-                                if (modifying) {
-                                    doUpdate(hotel);
-                                    imagesSelectedToDelete = null;
-                                } else
-                                    doInsert(hotel);
-                            } else
-                                Dialoger.showAlertDialog("CAP non valido");
-                        } else
-                            Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
-                    } else
-                        Dialoger.showAlertDialog("Numero di telefono non valido");
-                }
+        if (retrieving) {
+            try {
+                doRetrieveByQuery();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
-        });
+        } else {
+            if (formChecker.formHasSomeEmptyField(this)) {
+                Dialoger.showAlertDialog("Riempi tutti i campi");
+            } else {
+                if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                            Hotel hotel = (Hotel) getAccomodationByFormData(crudHotelView);
+                            daoFactory = DAOFactory.getInstance();
+                            hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
+                            if (modifying) {
+                                doUpdate(hotel);
+                                imagesSelectedToDelete = null;
+                            } else
+                                doInsert(hotel);
+                        } else
+                            Dialoger.showAlertDialog("CAP non valido");
+                    } else
+                        Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                } else
+                    Dialoger.showAlertDialog("Numero di telefono non valido");
+            }
+        }
     }
+
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getQuery(crudHotelView);

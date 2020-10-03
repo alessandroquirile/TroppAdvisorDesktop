@@ -50,23 +50,21 @@ public class CrudAttractionController extends CrudController {
     }
 
     @Override
-    public void buttonEliminaClicked() {
-        crudAttractionView.getButtonElimina().setOnAction(event -> {
-            daoFactory = DAOFactory.getInstance();
-            attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
-            Attraction selectedAttraction = (Attraction) getSelectedAccomodationFromTableView(crudAttractionView);
-            if (selectedAttraction != null) {
-                if (Dialoger.areYouSureToDelete(selectedAttraction.getName())) {
-                    try {
-                        if (!attractionDAO.delete(selectedAttraction))
-                            Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    protected void buttonEliminaClickedEvent() {
+        daoFactory = DAOFactory.getInstance();
+        attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
+        Attraction selectedAttraction = (Attraction) getSelectedAccomodationFromTableView(crudAttractionView);
+        if (selectedAttraction != null) {
+            if (Dialoger.areYouSureToDelete(selectedAttraction.getName())) {
+                try {
+                    if (!attractionDAO.delete(selectedAttraction))
+                        Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-            setViewsAsDefault(crudAttractionView);
-        });
+        }
+        setViewsAsDefault(crudAttractionView);
     }
 
     @Override
@@ -76,17 +74,15 @@ public class CrudAttractionController extends CrudController {
     }
 
     @Override
-    public void tableViewClicked() {
-        crudAttractionView.getTableView().setOnMouseClicked(event -> {
-            Attraction selectedAttraction = (Attraction) getSelectedAccomodationFromTableView(crudAttractionView);
-            if (selectedAttraction != null) {
-                crudAttractionView.getButtonAnnulla().setDisable(false);
-                crudAttractionView.getButtonElimina().setDisable(false);
-                crudAttractionView.getButtonModifica().setDisable(false);
-                crudAttractionView.getListViewFotoPath().getItems().clear();
-                populateTextFieldsWithSelectedAccomodationData(selectedAttraction, crudAttractionView);
-            }
-        });
+    protected void tableViewClickedEvent() {
+        Attraction selectedAttraction = (Attraction) getSelectedAccomodationFromTableView(crudAttractionView);
+        if (selectedAttraction != null) {
+            crudAttractionView.getButtonAnnulla().setDisable(false);
+            crudAttractionView.getButtonElimina().setDisable(false);
+            crudAttractionView.getButtonModifica().setDisable(false);
+            crudAttractionView.getListViewFotoPath().getItems().clear();
+            populateTextFieldsWithSelectedAccomodationData(selectedAttraction, crudAttractionView);
+        }
     }
 
     @Override
@@ -96,65 +92,59 @@ public class CrudAttractionController extends CrudController {
     }
 
     @Override
-    public void buttonMostraAvantiClicked() {
-        crudAttractionView.getButtonMostraAvanti().setOnAction(event -> {
-            if (!crudAttractionView.getTableView().getItems().isEmpty())
-                loadAttractionsIntoTableView(++currentPage, currentPageSize);
-        });
+    protected void buttonMostraAvantiClickedEvent() {
+        if (!crudAttractionView.getTableView().getItems().isEmpty())
+            loadAttractionsIntoTableView(++currentPage, currentPageSize);
     }
 
     @Override
-    public void buttonMostraIndietroClicked() {
-        crudAttractionView.getButtonMostraIndietro().setOnAction(event -> {
-            if (currentPage != 0)
-                loadAttractionsIntoTableView(--currentPage, currentPageSize);
-        });
+    protected void buttonMostraIndietroClickedEvent() {
+        if (currentPage != 0)
+            loadAttractionsIntoTableView(--currentPage, currentPageSize);
     }
 
     @Override
-    public void buttonConfermaClicked() {
-        crudAttractionView.getButtonConferma().setOnAction(event -> {
-            String telephoneNumber = getNumeroDiTelefono();
-            String prezzoMedio = getPrezzoMedio();
-            String cap = getCAP();
-            String openingTime = getOpeningTimeByFormData();
+    protected void buttonConfermaClickedEvent() {
+        String telephoneNumber = getNumeroDiTelefono();
+        String prezzoMedio = getPrezzoMedio();
+        String cap = getCAP();
+        String openingTime = getOpeningTimeByFormData();
 
-            formCheckerFactory = FormCheckerFactory.getInstance();
-            formChecker = formCheckerFactory.getFormChecker(this);
+        formCheckerFactory = FormCheckerFactory.getInstance();
+        formChecker = formCheckerFactory.getFormChecker(this);
 
-            if (retrieving) {
-                try {
-                    doRetrieveByQuery();
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if (formChecker.formHasSomeEmptyField(this)) {
-                    Dialoger.showAlertDialog("Riempi i campi obbligatori");
-                } else {
-                    if (InputValidator.isValidTelephoneNumber(telephoneNumber) || telephoneNumber.isEmpty()) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                if (InputValidator.isValidOpeningTime(openingTime)) {
-                                    Attraction attraction = (Attraction) getAccomodationByFormData(crudAttractionView);
-                                    daoFactory = DAOFactory.getInstance();
-                                    attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
-                                    if (modifying) {
-                                        doUpdate(attraction);
-                                        imagesSelectedToDelete = null;
-                                    } else
-                                        doInsert(attraction);
-                                } else
-                                    Dialoger.showAlertDialog("Orario non valido");
-                            } else
-                                Dialoger.showAlertDialog("CAP non valido");
-                        } else
-                            Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
-                    } else
-                        Dialoger.showAlertDialog("Numero di telefono non valido");
-                }
+        if (retrieving) {
+            try {
+                doRetrieveByQuery();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
-        });
+        } else {
+            if (formChecker.formHasSomeEmptyField(this)) {
+                Dialoger.showAlertDialog("Riempi i campi obbligatori");
+            } else {
+                if (InputValidator.isValidTelephoneNumber(telephoneNumber) || telephoneNumber.isEmpty()) {
+                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                            if (InputValidator.isValidOpeningTime(openingTime)) {
+                                Attraction attraction = (Attraction) getAccomodationByFormData(crudAttractionView);
+                                daoFactory = DAOFactory.getInstance();
+                                attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
+                                if (modifying) {
+                                    doUpdate(attraction);
+                                    imagesSelectedToDelete = null;
+                                } else
+                                    doInsert(attraction);
+                            } else
+                                Dialoger.showAlertDialog("Orario non valido");
+                        } else
+                            Dialoger.showAlertDialog("CAP non valido");
+                    } else
+                        Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                } else
+                    Dialoger.showAlertDialog("Numero di telefono non valido");
+            }
+        }
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {

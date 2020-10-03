@@ -66,23 +66,21 @@ public class CrudRestaurantController extends CrudController {
     }
 
     @Override
-    public void buttonEliminaClicked() {
-        crudRestaurantView.getButtonElimina().setOnAction(event -> {
-            daoFactory = DAOFactory.getInstance();
-            restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-            Restaurant selectedRestaurant = (Restaurant) getSelectedAccomodationFromTableView(crudRestaurantView);
-            if (selectedRestaurant != null) {
-                if (Dialoger.areYouSureToDelete(selectedRestaurant.getName())) {
-                    try {
-                        if (!restaurantDAO.delete(selectedRestaurant))
-                            Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    protected void buttonEliminaClickedEvent() {
+        daoFactory = DAOFactory.getInstance();
+        restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+        Restaurant selectedRestaurant = (Restaurant) getSelectedAccomodationFromTableView(crudRestaurantView);
+        if (selectedRestaurant != null) {
+            if (Dialoger.areYouSureToDelete(selectedRestaurant.getName())) {
+                try {
+                    if (!restaurantDAO.delete(selectedRestaurant))
+                        Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-            setViewsAsDefault(crudRestaurantView);
-        });
+        }
+        setViewsAsDefault(crudRestaurantView);
     }
 
     @Override
@@ -98,18 +96,16 @@ public class CrudRestaurantController extends CrudController {
     }
 
     @Override
-    public void tableViewClicked() {
-        crudRestaurantView.getTableView().setOnMouseClicked(event -> {
-            Restaurant selectedRestaurant = (Restaurant) getSelectedAccomodationFromTableView(crudRestaurantView);
-            if (selectedRestaurant != null) {
-                crudRestaurantView.getButtonAnnulla().setDisable(false);
-                crudRestaurantView.getButtonElimina().setDisable(false);
-                crudRestaurantView.getButtonModifica().setDisable(false);
-                crudRestaurantView.getListViewFotoPath().getItems().clear();
-                clearTypeOfCuisineCheckBox();
-                populateTextFieldsWithSelectedAccomodationData(selectedRestaurant, crudRestaurantView);
-            }
-        });
+    protected void tableViewClickedEvent() {
+        Restaurant selectedRestaurant = (Restaurant) getSelectedAccomodationFromTableView(crudRestaurantView);
+        if (selectedRestaurant != null) {
+            crudRestaurantView.getButtonAnnulla().setDisable(false);
+            crudRestaurantView.getButtonElimina().setDisable(false);
+            crudRestaurantView.getButtonModifica().setDisable(false);
+            crudRestaurantView.getListViewFotoPath().getItems().clear();
+            clearTypeOfCuisineCheckBox();
+            populateTextFieldsWithSelectedAccomodationData(selectedRestaurant, crudRestaurantView);
+        }
     }
 
     @Override
@@ -121,65 +117,59 @@ public class CrudRestaurantController extends CrudController {
     }
 
     @Override
-    public void buttonMostraAvantiClicked() {
-        crudRestaurantView.getButtonMostraAvanti().setOnAction(event -> {
-            if (!crudRestaurantView.getTableView().getItems().isEmpty())
-                loadRestaurantsIntoTableView(++currentPage, currentPageSize);
-        });
+    protected void buttonMostraAvantiClickedEvent() {
+        if (!crudRestaurantView.getTableView().getItems().isEmpty())
+            loadRestaurantsIntoTableView(++currentPage, currentPageSize);
     }
 
     @Override
-    public void buttonMostraIndietroClicked() {
-        crudRestaurantView.getButtonMostraIndietro().setOnAction(event -> {
-            if (currentPage != 0)
-                loadRestaurantsIntoTableView(--currentPage, currentPageSize);
-        });
+    protected void buttonMostraIndietroClickedEvent() {
+        if (currentPage != 0)
+            loadRestaurantsIntoTableView(--currentPage, currentPageSize);
     }
 
     @Override
-    public void buttonConfermaClicked() {
-        crudRestaurantView.getButtonConferma().setOnAction(event -> {
-            String telephoneNumber = getNumeroDiTelefono();
-            String prezzoMedio = getPrezzoMedio();
-            String cap = getCAP();
-            String openingTime = getOpeningTimeByFormData();
+    protected void buttonConfermaClickedEvent() {
+        String telephoneNumber = getNumeroDiTelefono();
+        String prezzoMedio = getPrezzoMedio();
+        String cap = getCAP();
+        String openingTime = getOpeningTimeByFormData();
 
-            formCheckerFactory = FormCheckerFactory.getInstance();
-            formChecker = formCheckerFactory.getFormChecker(this);
+        formCheckerFactory = FormCheckerFactory.getInstance();
+        formChecker = formCheckerFactory.getFormChecker(this);
 
-            if (retrieving) {
-                try {
-                    doRetrieveByQuery();
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                if (formChecker.formHasSomeEmptyField(this)) {
-                    Dialoger.showAlertDialog("Riempi tutti i campi");
-                } else {
-                    if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                            if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
-                                if (InputValidator.isValidOpeningTime(openingTime)) {
-                                    Restaurant restaurant = (Restaurant) getAccomodationByFormData(crudRestaurantView);
-                                    daoFactory = DAOFactory.getInstance();
-                                    restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
-                                    if (modifying) {
-                                        doUpdate(restaurant);
-                                        imagesSelectedToDelete = null;
-                                    } else
-                                        doInsert(restaurant);
-                                } else
-                                    Dialoger.showAlertDialog("Orario non valido");
-                            } else
-                                Dialoger.showAlertDialog("CAP non valido");
-                        } else
-                            Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
-                    } else
-                        Dialoger.showAlertDialog("Numero di telefono non valido");
-                }
+        if (retrieving) {
+            try {
+                doRetrieveByQuery();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
-        });
+        } else {
+            if (formChecker.formHasSomeEmptyField(this)) {
+                Dialoger.showAlertDialog("Riempi tutti i campi");
+            } else {
+                if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
+                    if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
+                        if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                            if (InputValidator.isValidOpeningTime(openingTime)) {
+                                Restaurant restaurant = (Restaurant) getAccomodationByFormData(crudRestaurantView);
+                                daoFactory = DAOFactory.getInstance();
+                                restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
+                                if (modifying) {
+                                    doUpdate(restaurant);
+                                    imagesSelectedToDelete = null;
+                                } else
+                                    doInsert(restaurant);
+                            } else
+                                Dialoger.showAlertDialog("Orario non valido");
+                        } else
+                            Dialoger.showAlertDialog("CAP non valido");
+                    } else
+                        Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                } else
+                    Dialoger.showAlertDialog("Numero di telefono non valido");
+            }
+        }
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {

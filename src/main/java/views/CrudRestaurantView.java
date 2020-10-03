@@ -43,7 +43,7 @@ public class CrudRestaurantView extends CrudView {
         crudRestaurantController.setListenerOn(buttonMostraAvanti, this);
         crudRestaurantController.setListenerOn(buttonMostraIndietro, this);
         crudRestaurantController.setListenerOn(buttonEliminaFotoSelezionate, this);
-        crudRestaurantController.setListenerOnTableView(tableView);
+        crudRestaurantController.setListenerOnTableView(tableView, this);
         crudRestaurantController.setListenerOnListView(listViewFotoPath, this);
         crudRestaurantController.setViewsAsDefault(this);
     }

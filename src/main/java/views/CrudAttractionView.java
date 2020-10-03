@@ -32,7 +32,7 @@ public class CrudAttractionView extends CrudView {
         crudAttractionController.setListenerOn(buttonMostraIndietro, this);
         crudAttractionController.setListenerOn(buttonCerca, this);
         crudAttractionController.setListenerOn(buttonEliminaFotoSelezionate, this);
-        crudAttractionController.setListenerOnTableView(tableView);
+        crudAttractionController.setListenerOnTableView(tableView, this);
         crudAttractionController.setListenerOnListView(listViewFotoPath, this);
         crudAttractionController.setViewsAsDefault(this);
     }

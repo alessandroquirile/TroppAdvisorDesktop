@@ -33,7 +33,7 @@ public class CrudHotelView extends CrudView {
         crudHotelController.setListenerOn(buttonMostraAvanti, this);
         crudHotelController.setListenerOn(buttonMostraIndietro, this);
         crudHotelController.setListenerOn(buttonEliminaFotoSelezionate, this);
-        crudHotelController.setListenerOnTableView(tableView);
+        crudHotelController.setListenerOnTableView(tableView, this);
         crudHotelController.setListenerOnListView(listViewFotoPath, this);
         crudHotelController.setViewsAsDefault(this);
     }

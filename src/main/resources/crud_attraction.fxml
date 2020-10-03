@@ -60,7 +60,7 @@
     <Button fx:id="buttonCaricaFoto" disable="true" layoutX="883.0" layoutY="78.0" mnemonicParsing="false"
             text="Carica foto"/>
     <ListView fx:id="listViewFotoPath" disable="true" layoutX="883.0" layoutY="125.0" prefHeight="355.0"
-              prefWidth="393.0"/>
+              prefWidth="550.0"/>
     <TextField fx:id="textFieldPrezzoMedio" disable="true" layoutX="29.0" layoutY="321.0" prefHeight="26.0"
                prefWidth="701.0" promptText="Prezzo medio (numero intero)"/>
     <TextField fx:id="txtFieldNumeroCivico" disable="true" layoutX="359.0" layoutY="201.0" prefHeight="26.0"
@@ -75,5 +75,6 @@
             text="Elimina foto selezionate"/>
     <Button fx:id="buttonCerca" layoutX="248.0" layoutY="27.0" mnemonicParsing="false"
             style="-fx-background-color: #0078D7; -fx-text-fill: ffffff;" text="Cerca"/>
-    <TextField fx:id="textFieldOpeningTime" disable="true" layoutX="143.0" layoutY="408.0" promptText="hh:mm - hh:mm"/>
+    <TextField fx:id="textFieldOpeningTime" disable="true" layoutX="150.0" layoutY="408.0" prefHeight="26.0"
+               prefWidth="220.0" promptText="hh:mm - hh:mm"/>
 </AnchorPane>
