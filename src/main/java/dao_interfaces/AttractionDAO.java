@@ -14,7 +14,6 @@ public interface AttractionDAO {
     List<Attraction> retrieveAt(int page, int size) throws IOException, InterruptedException;
 
     List<Attraction> retrieveAt(String query, int page, int size) throws IOException, InterruptedException;
-    //List<Attraction> retrieveByQuery(String query, int page, int size) throws IOException, InterruptedException;
 
     boolean delete(Attraction attraction) throws IOException, InterruptedException;
 
@@ -22,5 +21,6 @@ public interface AttractionDAO {
 
     boolean deleteImage(Attraction attraction, String imageUrl) throws IOException, InterruptedException;
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean updateImage(Attraction attraction, String endpoint) throws IOException, InterruptedException;
 }

@@ -21,5 +21,6 @@ public interface HotelDAO {
 
     boolean deleteImage(Hotel hotel, String imageUrl) throws IOException, InterruptedException;
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean updateImage(Hotel hotel, String endpoint) throws IOException, InterruptedException;
 }

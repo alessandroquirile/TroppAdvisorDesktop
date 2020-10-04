@@ -21,5 +21,6 @@ public interface RestaurantDAO {
 
     boolean deleteImage(Restaurant restaurant, String imageUrl) throws IOException, InterruptedException;
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean updateImage(Restaurant restaurant, String imageHostUrl) throws IOException, InterruptedException;
 }
