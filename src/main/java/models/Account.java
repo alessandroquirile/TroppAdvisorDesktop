@@ -11,10 +11,10 @@ import java.util.Arrays;
 public class Account implements Serializable {
     private String email;
     private char[] password;
-    private AuthenticationResult authenticationResult;
+    private final AuthenticationResult authenticationResult;
 
     public Account() {
-
+        authenticationResult = AuthenticationResult.getInstance();
     }
 
     public Account(String email, char[] password) {
@@ -29,6 +29,10 @@ public class Account implements Serializable {
 
     public void setPassword(char[] password) {
         this.password = password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password.toCharArray();
     }
 
     public String getIdToken() {
