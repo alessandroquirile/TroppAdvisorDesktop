@@ -45,9 +45,8 @@ public abstract class Dialoger {
         alert.getDialogPane().setContentText("Per aggiornare o eliminare un record già esistente, selezionarlo dapprima dalla tabella");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
+            if (result.get() == ButtonType.OK)
                 alert.close();
-            }
         }
     }
 

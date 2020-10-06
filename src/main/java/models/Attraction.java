@@ -14,14 +14,6 @@ public class Attraction extends Accomodation {
         super(accomodation);
     }
 
-    /*public Attraction() {
-
-    }
-
-    public Attraction(Accomodation accomodation) {
-        super();
-    }*/
-
     public String getOpeningTime() {
         return openingTime;
     }

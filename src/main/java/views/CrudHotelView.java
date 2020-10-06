@@ -2,7 +2,6 @@ package views;
 
 import controllers.CrudHotelController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 
@@ -21,25 +20,21 @@ public class CrudHotelView extends CrudView {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudHotelController crudHotelController = new CrudHotelController(this);
-        crudHotelController.setListenerOn(buttonInserisci, this);
-        crudHotelController.setListenerOn(buttonCerca, this);
-        crudHotelController.setListenerOn(buttonElimina, this);
-        crudHotelController.setListenerOn(buttonModifica, this);
-        crudHotelController.setListenerOn(buttonAnnulla, this);
-        crudHotelController.setListenerOn(buttonIndietro, this);
-        crudHotelController.setListenerOn(buttonConferma, this);
-        crudHotelController.setListenerOn(buttonAiuto, this);
-        crudHotelController.setListenerOn(buttonCaricaFoto, this);
-        crudHotelController.setListenerOn(buttonMostraAvanti, this);
-        crudHotelController.setListenerOn(buttonMostraIndietro, this);
-        crudHotelController.setListenerOn(buttonEliminaFotoSelezionate, this);
+        crudHotelController.setListenerOnButton(buttonInserisci, this);
+        crudHotelController.setListenerOnButton(buttonCerca, this);
+        crudHotelController.setListenerOnButton(buttonElimina, this);
+        crudHotelController.setListenerOnButton(buttonModifica, this);
+        crudHotelController.setListenerOnButton(buttonAnnulla, this);
+        crudHotelController.setListenerOnButton(buttonIndietro, this);
+        crudHotelController.setListenerOnButton(buttonConferma, this);
+        crudHotelController.setListenerOnButton(buttonAiuto, this);
+        crudHotelController.setListenerOnButton(buttonCaricaFoto, this);
+        crudHotelController.setListenerOnButton(buttonMostraAvanti, this);
+        crudHotelController.setListenerOnButton(buttonMostraIndietro, this);
+        crudHotelController.setListenerOnButton(buttonEliminaFotoSelezionate, this);
         crudHotelController.setListenerOnTableView(tableView, this);
         crudHotelController.setListenerOnListView(listViewFotoPath, this);
         crudHotelController.setViewsAsDefault(this);
-    }
-
-    public Button getButtonCerca() {
-        return buttonCerca;
     }
 
     public ChoiceBox<Integer> getChoiceBoxNumeroStelle() {

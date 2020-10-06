@@ -45,37 +45,17 @@ public abstract class CrudController extends Controller {
     protected ObservableList<String> imagesSelectedToDelete;
     protected ImageDAO imageDAO;
 
-    private void tableViewClicked(CrudView crudView) {
-        crudView.getTableView().setOnMouseClicked(event -> tableViewClickedEvent());
-    }
-
     protected abstract void tableViewClickedEvent();
-
-    private void buttonMostraIndietroClicked(CrudView crudView) {
-        crudView.getButtonMostraIndietro().setOnAction(event -> buttonMostraIndietroClickedEvent());
-    }
 
     protected abstract void buttonMostraIndietroClickedEvent();
 
-    private void buttonMostraAvantiClicked(CrudView crudView) {
-        crudView.getButtonMostraAvanti().setOnAction(event -> buttonMostraAvantiClickedEvent());
-    }
-
     protected abstract void buttonMostraAvantiClickedEvent();
-
-    private void buttonEliminaClicked(CrudView crudView) {
-        crudView.getButtonElimina().setOnAction(event -> buttonEliminaClickedEvent());
-    }
 
     protected abstract void buttonEliminaClickedEvent();
 
-    protected void buttonConfermaClicked(CrudView crudView) {
-        crudView.getButtonConferma().setOnAction(event -> buttonConfermaClickedEvent());
-    }
-
     protected abstract void buttonConfermaClickedEvent();
 
-    public void setListenerOn(Button button, CrudView crudView) {
+    public void setListenerOnButton(Button button, CrudView crudView) {
         switch (button.getId()) {
             case "buttonIndietro":
                 buttonIndietroClicked(crudView);
@@ -116,8 +96,69 @@ public abstract class CrudController extends Controller {
         }
     }
 
+    public void setListenerOnTableView(TableView<Object> tableView, CrudView crudView) {
+        if (tableView.getId().equals("tableView"))
+            tableViewClicked(crudView);
+    }
+
+    public void setListenerOnListView(ListView<String> listViewFotoPath, CrudView crudView) {
+        if (listViewFotoPath.getId().equals("listViewFotoPath"))
+            listViewFotoPathClicked(crudView);
+    }
+
+    public void setViewsAsDefault(CrudView crudView) {
+        crudView.getButtonIndietro().setDisable(false);
+        crudView.getButtonInserisci().setDisable(false);
+        crudView.getButtonModifica().setDisable(true);
+        crudView.getTextFieldNumeroDiTelefono().setDisable(true);
+        crudView.getTextFieldStrada().setDisable(true);
+        crudView.getTxtFieldNumeroCivico().setDisable(true);
+        crudView.getTextFieldProvincia().setDisable(true);
+        crudView.getButtonElimina().setDisable(true);
+        crudView.getButtonConferma().setDisable(true);
+        crudView.getButtonAnnulla().setDisable(true);
+        crudView.getButtonAiuto().setDisable(false);
+        crudView.getTextFieldNome().setDisable(true);
+        crudView.getTextFieldPrezzoMedio().setDisable(true);
+        crudView.getChoiceBoxIndirizzo().setDisable(true);
+        crudView.getTextFieldCAP().setDisable(true);
+        crudView.getTextFieldCity().setDisable(true);
+        crudView.getCheckBoxCertificatoDiEccellenza().setDisable(true);
+        crudView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
+        crudView.getButtonCaricaFoto().setDisable(true);
+        crudView.getListViewFotoPath().setDisable(true);
+        crudView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        crudView.getListViewFotoPath().getItems().clear();
+        crudView.getButtonEliminaFotoSelezionate().setDisable(true);
+        crudView.getTableView().setDisable(false);
+        crudView.getButtonCerca().setDisable(false);
+        crudView.getCheckBoxCertificatoDiEccellenza().setSelected(false);
+        initializeBoxes(crudView);
+        clearTextFields(crudView);
+    }
+
+    private void tableViewClicked(CrudView crudView) {
+        crudView.getTableView().setOnMouseClicked(event -> tableViewClickedEvent());
+    }
+
+    private void buttonMostraIndietroClicked(CrudView crudView) {
+        crudView.getButtonMostraIndietro().setOnAction(event -> buttonMostraIndietroClickedEvent());
+    }
+
+    private void buttonMostraAvantiClicked(CrudView crudView) {
+        crudView.getButtonMostraAvanti().setOnAction(event -> buttonMostraAvantiClickedEvent());
+    }
+
+    private void buttonEliminaClicked(CrudView crudView) {
+        crudView.getButtonElimina().setOnAction(event -> buttonEliminaClickedEvent());
+    }
+
+    protected void buttonConfermaClicked(CrudView crudView) {
+        crudView.getButtonConferma().setOnAction(event -> buttonConfermaClickedEvent());
+    }
+
     private void buttonIndietroClicked(CrudView crudView) {
-        crudView.getButtonIndietro().setOnAction(event -> showSelectTypeStage());
+        crudView.getButtonIndietro().setOnAction(event -> showSelectCollectionTypeView());
     }
 
     private void buttonInserisciClicked(CrudView crudView) {
@@ -171,9 +212,9 @@ public abstract class CrudController extends Controller {
 
     private void buttonEliminaFotoSelezionataClicked(CrudView crudView) {
         crudView.getButtonEliminaFotoSelezionate().setOnAction(event -> {
-            ObservableList<String> imagesSelectedToDelete2 = crudView.getListViewFotoPath().getSelectionModel().getSelectedItems();
-            imagesSelectedToDelete = FXCollections.observableArrayList(imagesSelectedToDelete2);
-            crudView.getListViewFotoPath().getItems().removeAll(imagesSelectedToDelete2);
+            ObservableList<String> images = crudView.getListViewFotoPath().getSelectionModel().getSelectedItems();
+            imagesSelectedToDelete = FXCollections.observableArrayList(images);
+            crudView.getListViewFotoPath().getItems().removeAll(images);
         });
     }
 
@@ -198,52 +239,11 @@ public abstract class CrudController extends Controller {
         crudView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
     }
 
-    public void setListenerOnTableView(TableView<Object> tableView, CrudView crudView) {
-        if (tableView.getId().equals("tableView"))
-            tableViewClicked(crudView);
-    }
-
-    public void setViewsAsDefault(CrudView crudView) {
-        crudView.getButtonIndietro().setDisable(false);
-        crudView.getButtonInserisci().setDisable(false);
-        crudView.getButtonModifica().setDisable(true);
-        crudView.getTextFieldNumeroDiTelefono().setDisable(true);
-        crudView.getTextFieldStrada().setDisable(true);
-        crudView.getTxtFieldNumeroCivico().setDisable(true);
-        crudView.getTextFieldProvincia().setDisable(true);
-        crudView.getButtonElimina().setDisable(true);
-        crudView.getButtonConferma().setDisable(true);
-        crudView.getButtonAnnulla().setDisable(true);
-        crudView.getButtonAiuto().setDisable(false);
-        crudView.getTextFieldNome().setDisable(true);
-        crudView.getTextFieldPrezzoMedio().setDisable(true);
-        crudView.getChoiceBoxIndirizzo().setDisable(true);
-        crudView.getTextFieldCAP().setDisable(true);
-        crudView.getTextFieldCity().setDisable(true);
-        crudView.getCheckBoxCertificatoDiEccellenza().setDisable(true);
-        crudView.getChoiceBoxIndirizzo().getSelectionModel().clearSelection();
-        crudView.getButtonCaricaFoto().setDisable(true);
-        crudView.getListViewFotoPath().setDisable(true);
-        crudView.getListViewFotoPath().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        crudView.getListViewFotoPath().getItems().clear();
-        crudView.getButtonEliminaFotoSelezionate().setDisable(true);
-        crudView.getTableView().setDisable(false);
-        crudView.getButtonCerca().setDisable(false);
-        crudView.getCheckBoxCertificatoDiEccellenza().setSelected(false);
-        initializeBoxes(crudView);
-        clearTextFields(crudView);
-    }
-
     protected void initializeBoxes(CrudView crudView) {
         initializeChoiceBoxIndirizzo(crudView);
     }
 
-    public void setListenerOnListView(ListView<String> listViewFotoPath, CrudView crudView) {
-        if (listViewFotoPath.getId().equals("listViewFotoPath"))
-            listViewFotoPathClicked(crudView);
-    }
-
-    protected void showSelectTypeStage() {
+    protected void showSelectCollectionTypeView() {
         try {
             closeCurrentStage();
             Parent parent = FXMLLoader.load(getClass().getResource("/select_collection_type.fxml"));

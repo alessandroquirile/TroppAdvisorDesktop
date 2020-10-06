@@ -10,7 +10,7 @@ import java.util.Arrays;
  */
 public class Account implements Serializable {
     private String email;
-    private char[] password;
+    private char[] password; // un'istanza di String sarebbe immutabile e può essere pericoloso
     private final AuthenticationResult authenticationResult;
 
     public Account() {

@@ -41,9 +41,6 @@ public class ImageDAO_S3 extends RestDAO implements ImageDAO {
 
     @Override
     public boolean delete(String imageS3Url) throws IOException, InterruptedException {
-        /*String URL = "https://5il6dxqqm3.execute-api.us-east-1.amazonaws.com/Secondo/s3/delete-file?";
-        URL += "url=" + imageS3Url;*/
-
         String URL = getBaseUrl();
         URL = URL.concat("/" + REPOSITORY);
         URL = URL.concat("/delete-file?");
@@ -78,9 +75,8 @@ public class ImageDAO_S3 extends RestDAO implements ImageDAO {
                 .build();
         request.setEntity(entity);
         CloseableHttpResponse response = httpClient.execute(request);
-        StatusLine statusLine = response.getStatusLine(); // dbg
+        StatusLine statusLine = response.getStatusLine();
         //System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase()); // dbg
-
         if (statusLine.getStatusCode() == 200)
             return EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8); // response.body
         else

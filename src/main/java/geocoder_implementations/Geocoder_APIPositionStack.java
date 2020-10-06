@@ -63,7 +63,6 @@ public class Geocoder_APIPositionStack implements Geocoder {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //System.out.println(geocodingResponse); // dbg
             }
         } while (!correctlyCaught);
 

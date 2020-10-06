@@ -20,18 +20,18 @@ public class CrudAttractionView extends CrudView {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         CrudAttractionController crudAttractionController = new CrudAttractionController(this);
-        crudAttractionController.setListenerOn(buttonInserisci, this);
-        crudAttractionController.setListenerOn(buttonElimina, this);
-        crudAttractionController.setListenerOn(buttonModifica, this);
-        crudAttractionController.setListenerOn(buttonAnnulla, this);
-        crudAttractionController.setListenerOn(buttonIndietro, this);
-        crudAttractionController.setListenerOn(buttonConferma, this);
-        crudAttractionController.setListenerOn(buttonAiuto, this);
-        crudAttractionController.setListenerOn(buttonCaricaFoto, this);
-        crudAttractionController.setListenerOn(buttonMostraAvanti, this);
-        crudAttractionController.setListenerOn(buttonMostraIndietro, this);
-        crudAttractionController.setListenerOn(buttonCerca, this);
-        crudAttractionController.setListenerOn(buttonEliminaFotoSelezionate, this);
+        crudAttractionController.setListenerOnButton(buttonInserisci, this);
+        crudAttractionController.setListenerOnButton(buttonElimina, this);
+        crudAttractionController.setListenerOnButton(buttonModifica, this);
+        crudAttractionController.setListenerOnButton(buttonAnnulla, this);
+        crudAttractionController.setListenerOnButton(buttonIndietro, this);
+        crudAttractionController.setListenerOnButton(buttonConferma, this);
+        crudAttractionController.setListenerOnButton(buttonAiuto, this);
+        crudAttractionController.setListenerOnButton(buttonCaricaFoto, this);
+        crudAttractionController.setListenerOnButton(buttonMostraAvanti, this);
+        crudAttractionController.setListenerOnButton(buttonMostraIndietro, this);
+        crudAttractionController.setListenerOnButton(buttonCerca, this);
+        crudAttractionController.setListenerOnButton(buttonEliminaFotoSelezionate, this);
         crudAttractionController.setListenerOnTableView(tableView, this);
         crudAttractionController.setListenerOnListView(listViewFotoPath, this);
         crudAttractionController.setViewsAsDefault(this);
