@@ -2,7 +2,6 @@ package controllers;
 
 import controllers_utils.Dialoger;
 import controllers_utils.InputValidator;
-import dao_interfaces.CityDAO;
 import dao_interfaces.HotelDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
@@ -242,7 +241,7 @@ public class CrudHotelController extends CrudController {
 
         if (hasChangedCity(clickedHotel, hotel)) {
             daoFactory = DAOFactory.getInstance();
-            CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
                 if (!cityDAO.delete(clickedHotel))
                     Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg

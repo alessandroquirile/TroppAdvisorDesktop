@@ -3,7 +3,6 @@ package controllers;
 import controllers_utils.Dialoger;
 import controllers_utils.InputValidator;
 import dao_interfaces.AttractionDAO;
-import dao_interfaces.CityDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
 import javafx.collections.FXCollections;
@@ -229,7 +228,7 @@ public class CrudAttractionController extends CrudController {
 
         if (hasChangedCity(clickedAttraction, attraction)) {
             daoFactory = DAOFactory.getInstance();
-            CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
                 if (!cityDAO.delete(clickedAttraction))
                     Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg

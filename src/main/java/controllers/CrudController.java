@@ -1,6 +1,7 @@
 package controllers;
 
 import controllers_utils.Dialoger;
+import dao_interfaces.CityDAO;
 import dao_interfaces.ImageDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
@@ -34,6 +35,7 @@ import java.util.List;
  */
 public abstract class CrudController extends Controller {
     protected DAOFactory daoFactory;
+    protected CityDAO cityDAO;
     protected int currentPage = 0;
     protected int currentPageSize = 150;
     protected FormCheckerFactory formCheckerFactory;

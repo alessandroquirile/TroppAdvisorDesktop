@@ -3,7 +3,6 @@ package controllers;
 import controllers_utils.Dialoger;
 import controllers_utils.InputValidator;
 import controllers_utils.TypeOfCuisineItem;
-import dao_interfaces.CityDAO;
 import dao_interfaces.RestaurantDAO;
 import factories.DAOFactory;
 import factories.FormCheckerFactory;
@@ -257,7 +256,7 @@ public class CrudRestaurantController extends CrudController {
 
         if (hasChangedCity(clickedRestaurant, restaurant)) {
             daoFactory = DAOFactory.getInstance();
-            CityDAO cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
                 if (!cityDAO.delete(clickedRestaurant))
                     Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
