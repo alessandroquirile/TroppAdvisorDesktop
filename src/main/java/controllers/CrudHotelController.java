@@ -153,6 +153,24 @@ public class CrudHotelController extends CrudController {
         }
     }
 
+    @Override
+    protected Accomodation getAccomodationByFormData(CrudView crudView) {
+        Hotel hotel = new Hotel(super.getAccomodationByFormData(crudHotelView));
+        hotel.setStars(crudHotelView.getChoiceBoxNumeroStelle().getValue());
+        return hotel;
+    }
+
+    @Override
+    public String getQuery(CrudView crudView) {
+        String query = super.getQuery(crudView);
+        if (!query.isEmpty()) {
+            final Integer stars = getStars();
+            if (stars != null) {
+                query += ";stars==\"" + stars + "\"";
+            }
+        }
+        return query;
+    }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getQuery(crudHotelView);
@@ -173,18 +191,6 @@ public class CrudHotelController extends CrudController {
                     "&page=" + currentPage + "&size=" + currentPageSize);
         }
         disableCRUDButtons(crudHotelView);
-    }
-
-    @Override
-    public String getQuery(CrudView crudView) {
-        String query = super.getQuery(crudView);
-        if (!query.isEmpty()) {
-            final Integer stars = getStars();
-            if (stars != null) {
-                query += ";stars==\"" + stars + "\"";
-            }
-        }
-        return query;
     }
 
     private void doInsert(Hotel hotel) {
@@ -314,40 +320,8 @@ public class CrudHotelController extends CrudController {
                 if (!imageDAO.delete(imageUrl) || !hotelDAO.deleteImage(hotel, imageUrl))
                     Dialoger.showAlertDialog("Modifica non avvenuta");
             }
-            //CrudDialoger.showAlertDialog(this, "Modifica effettuata");
         }
     }
-
-    /*@Override
-    protected Accomodation getAccomodationByFormData(CrudView crudView) {
-        Hotel hotel = (Hotel) super.getAccomodationByFormData(crudView);
-        hotel.setStars(crudHotelView.getChoiceBoxNumeroStelle().getValue());
-        return hotel;
-    }*/
-
-    @Override
-    protected Accomodation getAccomodationByFormData(CrudView crudView) {
-        Hotel hotel = new Hotel(super.getAccomodationByFormData(crudHotelView));
-        hotel.setStars(crudHotelView.getChoiceBoxNumeroStelle().getValue());
-        return hotel;
-    }
-
-    /*private Hotel getHotelByFormData() {
-        Hotel hotel = new Hotel();
-        hotel.setName(crudHotelView.getTextFieldNome().getText());
-        hotel.setStars(crudHotelView.getChoiceBoxNumeroStelle().getValue());
-        hotel.setAddress(getAddressByFormData(crudHotelView));
-        hotel.setAvaragePrice(Integer.parseInt(crudHotelView.getTextFieldPrezzoMedio().getText()));
-        hotel.setPhoneNumber(crudHotelView.getTextFieldNumeroDiTelefono().getText());
-        hotel.setHasCertificateOfExcellence(crudHotelView.getCheckBoxCertificatoDiEccellenza().isSelected());
-        hotel.setImages(crudHotelView.getListViewFotoPath().getItems());
-        geocoderFactory = GeocoderFactory.getInstance();
-        geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
-        hotel.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding(crudHotelView)).getLatitude(),
-                geocoder.forward(getEligibleStringAddressForGeocoding(crudHotelView)).getLongitude()));
-        hotel.setAddedDate(getCurrentDate());
-        return hotel;
-    }*/
 
     public CrudHotelView getCrudHotelView() {
         return crudHotelView;

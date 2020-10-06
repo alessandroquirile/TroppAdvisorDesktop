@@ -147,6 +147,13 @@ public class CrudAttractionController extends CrudController {
         }
     }
 
+    @Override
+    protected Accomodation getAccomodationByFormData(CrudView crudView) {
+        Attraction attraction = new Attraction(super.getAccomodationByFormData(crudAttractionView));
+        attraction.setOpeningTime(getOpeningTimeByFormData());
+        return attraction;
+    }
+
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getQuery(crudAttractionView);
 
@@ -281,13 +288,6 @@ public class CrudAttractionController extends CrudController {
                     Dialoger.showAlertDialog("Modifica non avvenuta");
             }
         }
-    }
-
-    @Override
-    protected Accomodation getAccomodationByFormData(CrudView crudView) {
-        Attraction attraction = new Attraction(super.getAccomodationByFormData(crudAttractionView));
-        attraction.setOpeningTime(getOpeningTimeByFormData());
-        return attraction;
     }
 
     private String getOpeningTimeByFormData() {

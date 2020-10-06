@@ -172,6 +172,14 @@ public class CrudRestaurantController extends CrudController {
         }
     }
 
+    @Override
+    protected Accomodation getAccomodationByFormData(CrudView crudView) {
+        Restaurant restaurant = new Restaurant(super.getAccomodationByFormData(crudRestaurantView));
+        restaurant.setTypeOfCuisine(getTypeOfCuisineByFormData());
+        restaurant.setOpeningTime(getOpeningTimeByFormData());
+        return restaurant;
+    }
+
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getQuery(crudRestaurantView);
 
@@ -339,14 +347,6 @@ public class CrudRestaurantController extends CrudController {
     private void clearTypeOfCuisineCheckBox() {
         for (TypeOfCuisineItem typeOfCuisineItem : crudRestaurantView.getTableViewTypeOfCuisine().getItems())
             typeOfCuisineItem.getCheckBox().setSelected(false);
-    }
-
-    @Override
-    protected Accomodation getAccomodationByFormData(CrudView crudView) {
-        Restaurant restaurant = new Restaurant(super.getAccomodationByFormData(crudRestaurantView));
-        restaurant.setTypeOfCuisine(getTypeOfCuisineByFormData());
-        restaurant.setOpeningTime(getOpeningTimeByFormData());
-        return restaurant;
     }
 
     private List<String> getTypeOfCuisineByFormData() {
