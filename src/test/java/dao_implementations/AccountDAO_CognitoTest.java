@@ -189,7 +189,7 @@ public class AccountDAO_CognitoTest {
     @Test
     public void loginEmailVuotaPasswordMaggioreUgualeDi8CaratteriSoloCaratteriSpeciali() throws IOException, InterruptedException {
         account.setEmail("");
-        account.setPassword("@&@.$&€.");
+        account.setPassword("@&@.$&..");
         assertFalse(accountDAO_cognito.login(account));
     }
 
@@ -197,7 +197,7 @@ public class AccountDAO_CognitoTest {
     @Test
     public void loginEmailVuotaPasswordMaggioreUgualeDi8CaratteriSoloCaratteriSpecialiENumeri() throws IOException, InterruptedException {
         account.setEmail("");
-        account.setPassword("1&3.$&€.");
+        account.setPassword("1&3.$&..");
         assertFalse(accountDAO_cognito.login(account));
     }
 
@@ -472,7 +472,7 @@ public class AccountDAO_CognitoTest {
     @Test
     public void loginEmailNullPasswordMaggioreUgualeDi8CaratteriSoloCaratteriSpeciali() throws IOException, InterruptedException {
         account.setEmail(null);
-        account.setPassword("@&@.$&€.");
+        account.setPassword("@&@.$&..");
         assertFalse(accountDAO_cognito.login(account));
     }
 
@@ -480,7 +480,7 @@ public class AccountDAO_CognitoTest {
     @Test
     public void loginEmailNullPasswordMaggioreUgualeDi8CaratteriSoloCaratteriSpecialiENumeri() throws IOException, InterruptedException {
         account.setEmail(null);
-        account.setPassword("@&@.$&€8");
+        account.setPassword("@&@.$&.8");
         assertFalse(accountDAO_cognito.login(account));
     }
 
@@ -756,7 +756,7 @@ public class AccountDAO_CognitoTest {
     @Test
     public void loginEmailSintassiErrataPasswordMaggioreUgualeDi8CaratteriSoloCaratteriSpeciali() throws IOException, InterruptedException {
         account.setEmail("alessandro.quirile@.it");
-        account.setPassword("@&@.$&€.");
+        account.setPassword("@&@.$&..");
         assertFalse(accountDAO_cognito.login(account));
     }
 
@@ -765,7 +765,7 @@ public class AccountDAO_CognitoTest {
     public void loginEmailSintassiErrataPasswordMaggioreUgualeDi8CaratteriSoloCaratteriSpecialiENumeri()
             throws IOException, InterruptedException {
         account.setEmail("alessandro.quirile@.it");
-        account.setPassword("@&@.$&€8");
+        account.setPassword("@&@.$&.8");
         assertFalse(accountDAO_cognito.login(account));
     }
 
