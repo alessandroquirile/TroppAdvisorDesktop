@@ -392,7 +392,7 @@ public abstract class CrudController extends Controller {
         return accomodation;
     }
 
-    protected String getQuery(CrudView crudView) {
+    protected String getRESTQuery(CrudView crudView) {
         String query = "";
         final String nome = getNome(crudView);
         final String numeroDiTelefono = getNumeroDiTelefono(crudView);

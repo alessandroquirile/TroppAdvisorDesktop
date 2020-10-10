@@ -180,7 +180,7 @@ public class CrudRestaurantController extends CrudController {
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
-        String query = getQuery(crudRestaurantView);
+        String query = getRESTQuery(crudRestaurantView);
 
         Dialoger.showAlertDialog(query); // dbg - attenzione non deve tener conto dei tipi di cucina (verrà tenuto conto dopo)
 

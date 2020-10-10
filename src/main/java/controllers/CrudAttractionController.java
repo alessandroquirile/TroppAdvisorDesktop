@@ -154,7 +154,7 @@ public class CrudAttractionController extends CrudController {
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
-        String query = getQuery(crudAttractionView);
+        String query = getRESTQuery(crudAttractionView);
 
         Dialoger.showAlertDialog(query); // dbg
 

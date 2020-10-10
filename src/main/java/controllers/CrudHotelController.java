@@ -160,8 +160,8 @@ public class CrudHotelController extends CrudController {
     }
 
     @Override
-    public String getQuery(CrudView crudView) {
-        String query = super.getQuery(crudView);
+    public String getRESTQuery(CrudView crudView) {
+        String query = super.getRESTQuery(crudView);
         if (!query.isEmpty()) {
             final Integer stars = getStars();
             if (stars != null) {
@@ -172,7 +172,7 @@ public class CrudHotelController extends CrudController {
     }
 
     private void doRetrieveByQuery() throws IOException, InterruptedException {
-        String query = getQuery(crudHotelView);
+        String query = getRESTQuery(crudHotelView);
 
         daoFactory = DAOFactory.getInstance();
         hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
