@@ -47,6 +47,12 @@ public class CrudRestaurantController extends CrudController {
     }
 
     @Override
+    protected void enableAllChoiceBoxes(CrudView crudView) {
+        super.enableAllChoiceBoxes(crudView);
+        crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
+    }
+
+    @Override
     protected void buttonCercaClickedEvent(CrudView crudView) {
         super.buttonCercaClickedEvent(crudView);
         crudRestaurantView.getTableViewTypeOfCuisine().setDisable(false);
@@ -126,6 +132,7 @@ public class CrudRestaurantController extends CrudController {
         if (currentPage != 0)
             loadRestaurantsIntoTableView(--currentPage, currentPageSize);
     }
+
 
     @Override
     protected void buttonConfermaClickedEvent() {

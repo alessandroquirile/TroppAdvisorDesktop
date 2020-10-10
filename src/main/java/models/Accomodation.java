@@ -23,7 +23,7 @@ public class Accomodation implements Serializable {
     protected String lastModificationDate;
 
     public Accomodation() {
-        point = new Point();
+
     }
 
     public Accomodation(Accomodation accomodation) {
@@ -91,6 +91,19 @@ public class Accomodation implements Serializable {
         this.address = address;
     }
 
+    public void setAddressByString(String address) {
+        if (address != null && address.contains("#")) {
+            String[] substrings = address.split("# ");
+            this.address = new Address();
+            this.address.setType(substrings[0]);
+            this.address.setStreet(substrings[1]);
+            this.address.setHouseNumber(substrings[2]);
+            this.address.setCity(substrings[3]);
+            this.address.setProvince(substrings[4]);
+            this.address.setPostalCode(substrings[5]);
+        }
+    }
+
     public Long getTotalReviews() {
         return totalReviews;
     }
@@ -124,6 +137,7 @@ public class Accomodation implements Serializable {
     }
 
     public void setPoint(double x, double y) {
+        this.point = new Point();
         this.point.setX(x);
         this.point.setY(y);
     }

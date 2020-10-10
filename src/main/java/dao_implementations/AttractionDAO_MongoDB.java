@@ -108,6 +108,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         JSONObject jsonObject = new JSONObject(httpResponses.body());
         JSONArray jsonArray = jsonObject.getJSONArray("content");
+
         List<Attraction> attractions = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
             ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();

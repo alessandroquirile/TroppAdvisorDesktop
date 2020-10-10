@@ -20,7 +20,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Accomodation;
-import models.Address;
 import utils.ConfigFileReader;
 import views.CrudView;
 
@@ -355,20 +354,14 @@ public abstract class CrudController extends Controller {
         }
     }
 
-    private Address getAddressByFormData(CrudView crudView) {
-        return new Address(
-                crudView.getChoiceBoxIndirizzo().getValue(),
-                crudView.getTextFieldStrada().getText(),
-                crudView.getTxtFieldNumeroCivico().getText(),
-                crudView.getTextFieldCity().getText(),
-                crudView.getTextFieldProvincia().getText(),
-                crudView.getTextFieldCAP().getText());
-    }
-
-    private String getEligibleStringAddressForGeocoding(CrudView crudView) {
-        return crudView.getChoiceBoxIndirizzo().getValue() + " " + crudView.getTextFieldStrada().getText() + ", " +
-                crudView.getTxtFieldNumeroCivico().getText() + ", " + crudView.getTextFieldCity().getText() + ", " + crudView.getTextFieldCAP().getText() +
-                ", " + crudView.getTextFieldProvincia().getText();
+    private String getAddressByFormData(CrudView crudView) {
+        return
+                crudView.getChoiceBoxIndirizzo().getValue() + "# " +
+                        crudView.getTextFieldStrada().getText() + "# " +
+                        crudView.getTxtFieldNumeroCivico().getText() + "# " +
+                        crudView.getTextFieldCity().getText() + "# " +
+                        crudView.getTextFieldProvincia().getText() + "# " +
+                        crudView.getTextFieldCAP().getText();
     }
 
     protected Accomodation getSelectedAccomodationFromTableView(CrudView crudView) {
@@ -378,7 +371,7 @@ public abstract class CrudController extends Controller {
     protected Accomodation getAccomodationByFormData(CrudView crudView) {
         Accomodation accomodation = new Accomodation();
         accomodation.setName(crudView.getTextFieldNome().getText());
-        accomodation.setAddress(getAddressByFormData(crudView));
+        accomodation.setAddressByString(getAddressByFormData(crudView));
         accomodation.setAvaragePrice(Integer.parseInt(crudView.getTextFieldPrezzoMedio().getText()));
         accomodation.setPhoneNumber(crudView.getTextFieldNumeroDiTelefono().getText());
         accomodation.setHasCertificateOfExcellence(crudView.getCheckBoxCertificatoDiEccellenza().isSelected());
@@ -386,8 +379,8 @@ public abstract class CrudController extends Controller {
         geocoderFactory = GeocoderFactory.getInstance();
         geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
         accomodation.setPoint(
-                geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLatitude(),
-                geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLongitude()
+                geocoder.forward(getAddressByFormData(crudView)).getLatitude(),
+                geocoder.forward(getAddressByFormData(crudView)).getLongitude()
         );
         accomodation.setAddedDate(getCurrentDate());
         return accomodation;
