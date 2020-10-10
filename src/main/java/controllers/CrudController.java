@@ -21,7 +21,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Accomodation;
 import models.Address;
-import models.Point;
 import utils.ConfigFileReader;
 import views.CrudView;
 
@@ -386,8 +385,10 @@ public abstract class CrudController extends Controller {
         accomodation.setImages(crudView.getListViewFotoPath().getItems());
         geocoderFactory = GeocoderFactory.getInstance();
         geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
-        accomodation.setPoint(new Point(geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLatitude(),
-                geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLongitude()));
+        accomodation.setPoint(
+                geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLatitude(),
+                geocoder.forward(getEligibleStringAddressForGeocoding(crudView)).getLongitude()
+        );
         accomodation.setAddedDate(getCurrentDate());
         return accomodation;
     }

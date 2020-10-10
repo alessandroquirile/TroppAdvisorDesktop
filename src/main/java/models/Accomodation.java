@@ -23,7 +23,7 @@ public class Accomodation implements Serializable {
     protected String lastModificationDate;
 
     public Accomodation() {
-
+        point = new Point();
     }
 
     public Accomodation(Accomodation accomodation) {
@@ -121,6 +121,11 @@ public class Accomodation implements Serializable {
 
     public void setPoint(Point point) {
         this.point = point;
+    }
+
+    public void setPoint(double x, double y) {
+        this.point.setX(x);
+        this.point.setY(y);
     }
 
     public List<Review> getReviews() {
