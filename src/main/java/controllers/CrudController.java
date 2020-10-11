@@ -354,11 +354,11 @@ public abstract class CrudController extends Controller {
 
     private String getAddressByFormData(CrudView crudView) {
         return
-                crudView.getChoiceBoxIndirizzo().getValue() + "# " +
-                        crudView.getTextFieldStrada().getText() + "# " +
-                        crudView.getTxtFieldNumeroCivico().getText() + "# " +
-                        crudView.getTextFieldCity().getText() + "# " +
-                        crudView.getTextFieldProvincia().getText() + "# " +
+                crudView.getChoiceBoxIndirizzo().getValue() + ", " +
+                        crudView.getTextFieldStrada().getText() + ", " +
+                        crudView.getTxtFieldNumeroCivico().getText() + ", " +
+                        crudView.getTextFieldCity().getText() + ", " +
+                        crudView.getTextFieldProvincia().getText() + ", " +
                         crudView.getTextFieldCAP().getText();
     }
 

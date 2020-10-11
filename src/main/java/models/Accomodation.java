@@ -92,8 +92,8 @@ public class Accomodation implements Serializable {
     }
 
     public void setAddressByString(String address) {
-        if (address != null && address.contains("#")) {
-            String[] substrings = address.split("# ");
+        if (address != null && address.contains(", ")) {
+            String[] substrings = address.split(", ");
             this.address = new Address();
             this.address.setType(substrings[0]);
             this.address.setStreet(substrings[1]);

@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  * @author Alessandro Quirile, Mauro Telese
  */
 public class Geocoder_APIPositionStack implements Geocoder {
-    private static final String API_KEY = "3986e2581d9bf3b4767b73a37e478373";
+    private static final StringBuffer API_KEY = new StringBuffer("3986e2581d9bf3b4767b73a37e478373");
 
     public Geocoder_APIPositionStack() {
 
