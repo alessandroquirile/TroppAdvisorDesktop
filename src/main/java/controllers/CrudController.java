@@ -380,8 +380,7 @@ public abstract class CrudController extends Controller {
         geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
         accomodation.setPoint(
                 geocoder.forward(getAddressByFormData(crudView)).getLatitude(),
-                geocoder.forward(getAddressByFormData(crudView)).getLongitude()
-        );
+                geocoder.forward(getAddressByFormData(crudView)).getLongitude());
         accomodation.setAddedDate(getCurrentDate());
         return accomodation;
     }

@@ -15,7 +15,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException, InterruptedException {
+    public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(Main.class.getResource("/login_home_page_form.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
