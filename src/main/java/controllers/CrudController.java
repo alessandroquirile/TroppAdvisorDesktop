@@ -276,7 +276,6 @@ public abstract class CrudController extends Controller {
         crudView.getTextFieldStrada().setDisable(false);
         crudView.getTxtFieldNumeroCivico().setDisable(false);
         crudView.getTextFieldProvincia().setDisable(false);
-        crudView.getTextFieldNumeroDiTelefono().setDisable(false);
     }
 
     protected void enableAllChoiceBoxes(CrudView crudView) {
