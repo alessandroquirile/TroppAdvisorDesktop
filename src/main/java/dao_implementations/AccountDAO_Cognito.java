@@ -53,7 +53,7 @@ public class AccountDAO_Cognito extends RestDAO implements AccountDAO {
 
         final Map<String, Object> values = new HashMap<>();
         values.put("key", account.getEmail());
-        values.put("password", String.valueOf(account.getPassword()));
+        values.put("password", account.getPassword());
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
@@ -73,6 +73,7 @@ public class AccountDAO_Cognito extends RestDAO implements AccountDAO {
     }
 
     private boolean respectPattern(String password) {
+        // Provare a fare con char[]
         Pattern passwordPattern = Pattern.compile(
                 "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[.@$!%*?&])[A-Za-z\\d@$!%*?&.]{8,}$",
                 Pattern.CASE_INSENSITIVE);
