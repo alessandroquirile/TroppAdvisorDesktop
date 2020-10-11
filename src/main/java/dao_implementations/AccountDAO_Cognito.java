@@ -44,7 +44,7 @@ public class AccountDAO_Cognito extends RestDAO implements AccountDAO {
         if (account.getPassword() == null)
             return false;
 
-        if (!respectPattern(String.valueOf(account.getPassword())))
+        if (!respectPattern(account.getPassword()))
             return false;
 
         String URL = getBaseUrl();
@@ -72,12 +72,13 @@ public class AccountDAO_Cognito extends RestDAO implements AccountDAO {
         return response.statusCode() == 200 && setAuthenticationResultIntoAccount(response, account);
     }
 
-    private boolean respectPattern(String password) {
-        // Provare a fare con char[]
+    private boolean respectPattern(char[] password) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(password);
         Pattern passwordPattern = Pattern.compile(
                 "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[.@$!%*?&])[A-Za-z\\d@$!%*?&.]{8,}$",
                 Pattern.CASE_INSENSITIVE);
-        Matcher matcher = passwordPattern.matcher(password);
+        Matcher matcher = passwordPattern.matcher(stringBuffer);
         return matcher.find();
     }
 
