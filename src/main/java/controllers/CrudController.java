@@ -174,7 +174,6 @@ public abstract class CrudController extends Controller {
         crudView.getButtonAnnulla().setDisable(false);
         crudView.getButtonIndietro().setDisable(true);
         crudView.getButtonCaricaFoto().setDisable(false);
-        crudView.getTextFieldNumeroDiTelefono().setDisable(false);
         crudView.getListViewFotoPath().setDisable(false);
     }
 
