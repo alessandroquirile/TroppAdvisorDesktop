@@ -76,7 +76,7 @@ public class SelectCollectionTypeController extends Controller {
             stage.setTitle("CRUD Ristoranti");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -97,7 +97,7 @@ public class SelectCollectionTypeController extends Controller {
             stage.setTitle("CRUD Hotel");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -118,7 +118,7 @@ public class SelectCollectionTypeController extends Controller {
             stage.setTitle("CRUD Attrazioni");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

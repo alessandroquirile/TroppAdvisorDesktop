@@ -58,7 +58,7 @@ public class AccountDAO_Cognito extends RestDAO implements AccountDAO {
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))

@@ -50,7 +50,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
 
         URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&nation=" + NATION + "&id=" + restaurant.getId();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -68,7 +68,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
         String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-restaurant-by-id/?";
         URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&id=" + restaurant.getId();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .DELETE()
@@ -88,7 +88,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
 
         URL += "city=" + URLEncoder.encode(hotel.getCity(), StandardCharsets.UTF_8) + "&nation=" + NATION + "&id=" + hotel.getId();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -106,7 +106,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
         String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-hotel-by-id/?";
         URL += "city=" + URLEncoder.encode(hotel.getCity(), StandardCharsets.UTF_8) + "&id=" + hotel.getId();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .DELETE()
@@ -126,7 +126,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
 
         URL += "city=" + URLEncoder.encode(attraction.getCity(), StandardCharsets.UTF_8) + "&nation=" + NATION + "&id=" + attraction.getId();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -144,7 +144,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
         String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-attraction-by-id/?";
         URL += "city=" + URLEncoder.encode(attraction.getCity(), StandardCharsets.UTF_8) + "&id=" + attraction.getId();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .DELETE()

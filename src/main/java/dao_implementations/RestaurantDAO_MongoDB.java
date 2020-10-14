@@ -59,7 +59,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -97,7 +97,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -135,7 +135,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -178,7 +178,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
         URL = URL.concat("/delete-by-id");
         URL = URL.concat("/" + restaurant.getId());
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
 
         authenticationResult = AuthenticationResult.getInstance();
 
@@ -220,7 +220,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -250,7 +250,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -280,7 +280,7 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))

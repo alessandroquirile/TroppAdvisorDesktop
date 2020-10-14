@@ -58,7 +58,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -96,7 +96,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -134,7 +134,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -178,7 +178,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
         URL = URL.concat("/" + hotel.getId());
 
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
 
         authenticationResult = AuthenticationResult.getInstance();
 
@@ -220,7 +220,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -249,7 +249,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -279,7 +279,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))

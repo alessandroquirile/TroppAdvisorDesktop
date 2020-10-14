@@ -59,7 +59,7 @@ public class CrudAttractionController extends CrudController {
                     if (!attractionDAO.delete(selectedAttraction))
                         Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -116,7 +116,7 @@ public class CrudAttractionController extends CrudController {
             try {
                 doRetrieveByQuery();
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         } else {
             if (formChecker.formHasSomeEmptyField(this)) {
@@ -186,7 +186,7 @@ public class CrudAttractionController extends CrudController {
             else
                 Dialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         setViewsAsDefault(crudAttractionView);
     }
@@ -203,17 +203,17 @@ public class CrudAttractionController extends CrudController {
                 Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-                String imageHostUrl = null;
+                String imageHostUrl;
                 try {
                     imageHostUrl = imageDAO.load(file);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
                 try {
                     if (!attractionDAO.updateImage(attraction, imageHostUrl) || imageHostUrl == null)
                         Dialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -223,7 +223,7 @@ public class CrudAttractionController extends CrudController {
             else
                 updateImages(attraction, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         if (hasChangedCity(clickedAttraction, attraction)) {
@@ -235,7 +235,7 @@ public class CrudAttractionController extends CrudController {
                 if (!cityDAO.insert(attraction))
                     Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -269,7 +269,7 @@ public class CrudAttractionController extends CrudController {
                 crudAttractionView.getTableView().setItems(data);
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

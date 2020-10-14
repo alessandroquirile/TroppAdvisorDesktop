@@ -62,7 +62,7 @@ public class CrudHotelController extends CrudController {
                         if (!hotelDAO.delete(selectedHotel))
                             Dialoger.showAlertDialog("Qualcosa è andato storto durante la cancellazione");
                     } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -125,7 +125,7 @@ public class CrudHotelController extends CrudController {
             try {
                 doRetrieveByQuery();
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         } else {
             if (formChecker.formHasSomeEmptyField(this)) {
@@ -199,7 +199,7 @@ public class CrudHotelController extends CrudController {
             else
                 Dialoger.showAlertDialog("Inserimento avvenuto");
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         setViewsAsDefault(crudHotelView);
     }
@@ -216,17 +216,17 @@ public class CrudHotelController extends CrudController {
                 Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-                String imageHostUrl = null;
+                String imageHostUrl;
                 try {
                     imageHostUrl = imageDAO.load(file);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
                 try {
                     if (!hotelDAO.updateImage(hotel, imageHostUrl) || imageHostUrl == null)
                         Dialoger.showAlertDialog("Qualcosa è andato storto");
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -236,7 +236,7 @@ public class CrudHotelController extends CrudController {
             else
                 updateImages(hotel, imagesSelectedToDelete);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         if (hasChangedCity(clickedHotel, hotel)) {
@@ -248,7 +248,7 @@ public class CrudHotelController extends CrudController {
                 if (!cityDAO.insert(hotel))
                     Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
 
@@ -290,7 +290,7 @@ public class CrudHotelController extends CrudController {
                 crudHotelView.getTableView().setItems(data);
             }
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

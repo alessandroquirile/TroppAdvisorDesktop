@@ -14,7 +14,7 @@ public class ConfigFileReader {
             InputStream inputStream = ConfigFileReader.class.getResourceAsStream("/config.properties");
             properties.load(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return properties.getProperty(key);
     }

@@ -57,7 +57,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -95,7 +95,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -134,7 +134,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .GET()
@@ -179,7 +179,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .DELETE()
@@ -218,7 +218,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -248,7 +248,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))
@@ -280,7 +280,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest request = HttpRequest
                 .newBuilder()
                 .uri(URI.create(URL))

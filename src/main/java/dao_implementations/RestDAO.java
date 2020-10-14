@@ -8,6 +8,7 @@ import models.Restaurant;
 import utils.ConfigFileReader;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 
 /**
@@ -28,6 +29,13 @@ public abstract class RestDAO {
         URL = URL.concat("." + CLOUD_HOST + ".com/");
         URL = URL.concat(STAGE_NAME);
         return URL;
+    }
+
+    protected HttpClient getHttpClient() {
+        return HttpClient
+                .newBuilder()
+                .version(HttpClient.Version.HTTP_1_1)
+                .build();
     }
 
     protected Object getParsedAccomodationFromJson(ObjectMapper objectMapper,

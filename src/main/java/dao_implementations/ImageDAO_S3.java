@@ -48,7 +48,7 @@ public class ImageDAO_S3 extends RestDAO implements ImageDAO {
 
         AuthenticationResult authenticationResult = AuthenticationResult.getInstance();
 
-        HttpClient httpClient = HttpClient.newHttpClient();
+        HttpClient httpClient = getHttpClient();
         HttpRequest httpRequest = HttpRequest
                 .newBuilder()
                 .DELETE()

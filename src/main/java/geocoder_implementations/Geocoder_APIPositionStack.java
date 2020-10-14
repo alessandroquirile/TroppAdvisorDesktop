@@ -27,15 +27,18 @@ public class Geocoder_APIPositionStack implements Geocoder {
 
     @Override
     public GeocodingResponse forward(String address) {
-        boolean correctlyCaught = false;
         String URL = "http://api.positionstack.com/v1/forward?";
         URL += "access_key=" + API_KEY + "&query=" + URLEncoder.encode(address, StandardCharsets.UTF_8) + "&limit=1";
 
         // API Position Stack free tier pone dei limiti sul numero di richieste per secondo e alle volte se ci sono tante
         // richieste, anziché restituire un file json ben formato, restituisce un array vuoto.
-        // È necessario quindi controllare che l'array non sia vuoto e restituire quell'oggetto ricavato.
+        // È necessario quindi controllare che l'array non sia vuoto e restituire quell'oggetto ricavato; altrimenti rifare
         do {
-            HttpClient httpClient = HttpClient.newHttpClient();
+            HttpClient httpClient = HttpClient
+                    .newBuilder()
+                    .version(HttpClient.Version.HTTP_1_1)
+                    .build();
+
             HttpRequest httpRequest = HttpRequest
                     .newBuilder()
                     .GET()
@@ -43,12 +46,12 @@ public class Geocoder_APIPositionStack implements Geocoder {
                     .header("Content-Type", "application/json")
                     .build();
 
-            HttpResponse<String> response = null;
+            HttpResponse<String> response;
             try {
                 response = httpClient.send(httpRequest,
                         HttpResponse.BodyHandlers.ofString());
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
             if (response != null && response.statusCode() == 200) {
@@ -57,15 +60,13 @@ public class Geocoder_APIPositionStack implements Geocoder {
                 ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
                 try {
                     if (jsonArray.length() > 0) {
-                        correctlyCaught = true;
                         return objectMapper.readValue(jsonArray.get(0).toString(), GeocodingResponse.class);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
-        } while (!correctlyCaught);
+        } while (true);
 
-        return null;
     }
 }

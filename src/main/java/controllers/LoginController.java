@@ -60,7 +60,7 @@ public class LoginController extends Controller {
                         else
                             loadSelectTypeScene();
                     } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     } finally {
                         Arrays.fill(password, '\0'); // password protection
                     }
