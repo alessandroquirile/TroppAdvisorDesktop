@@ -370,7 +370,7 @@ public abstract class CrudController extends Controller {
         Accomodation accomodation = new Accomodation();
         accomodation.setName(crudView.getTextFieldNome().getText());
         accomodation.setAddressByString(getAddressByFormData(crudView));
-        accomodation.setAvaragePrice(Integer.parseInt(crudView.getTextFieldPrezzoMedio().getText()));
+        accomodation.setAvaragePrice(Double.parseDouble(crudView.getTextFieldPrezzoMedio().getText()));
         accomodation.setPhoneNumber(crudView.getTextFieldNumeroDiTelefono().getText());
         accomodation.setHasCertificateOfExcellence(crudView.getCheckBoxCertificatoDiEccellenza().isSelected());
         accomodation.setImages(crudView.getListViewFotoPath().getItems());

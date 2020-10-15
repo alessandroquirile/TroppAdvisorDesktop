@@ -9,8 +9,8 @@ import java.util.List;
 public class Accomodation implements Serializable {
     protected String id;
     protected String name;
-    protected Integer avarageRating;
-    protected Integer avaragePrice;
+    protected Double avarageRating;
+    protected Double avaragePrice;
     protected String phoneNumber;
     protected Address address;
     protected Point point;
@@ -59,19 +59,19 @@ public class Accomodation implements Serializable {
         this.name = name;
     }
 
-    public Integer getAvarageRating() {
+    public Double getAvarageRating() {
         return avarageRating;
     }
 
-    public void setAvarageRating(Integer avarageRating) {
+    public void setAvarageRating(Double avarageRating) {
         this.avarageRating = avarageRating;
     }
 
-    public Integer getAvaragePrice() {
+    public Double getAvaragePrice() {
         return avaragePrice;
     }
 
-    public void setAvaragePrice(Integer avaragePrice) {
+    public void setAvaragePrice(Double avaragePrice) {
         this.avaragePrice = avaragePrice;
     }
 
