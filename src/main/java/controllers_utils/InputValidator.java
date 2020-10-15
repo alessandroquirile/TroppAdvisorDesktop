@@ -17,6 +17,21 @@ public abstract class InputValidator {
     }
 
     public static boolean isNumberGreaterOrEqualToZero(String number) {
+        return isNumeric(number) && Double.parseDouble(number) >= 0;
+    }
+
+    public static boolean isNumeric(String number) {
+        if (number == null)
+            throw new IllegalArgumentException("Null arg");
+        try {
+            double d = Double.parseDouble(number);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isIntegerGreaterOrEqualToZero(String number) {
         String numberRegExp = "^[0-9]+$";
         Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
         Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);

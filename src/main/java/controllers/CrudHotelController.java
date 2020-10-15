@@ -134,7 +134,7 @@ public class CrudHotelController extends CrudController {
             } else {
                 if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                     if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                        if (InputValidator.isIntegerGreaterOrEqualToZero(cap)) {
                             Hotel hotel = (Hotel) getAccomodationByFormData(crudHotelView);
                             daoFactory = DAOFactory.getInstance();
                             hotelDAO = daoFactory.getHotelDAO(ConfigFileReader.getProperty("hotel_storage_technology"));
@@ -146,7 +146,7 @@ public class CrudHotelController extends CrudController {
                         } else
                             Dialoger.showAlertDialog("CAP non valido");
                     } else
-                        Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                        Dialoger.showAlertDialog("Prezzo medio non valido");
                 } else
                     Dialoger.showAlertDialog("Numero di telefono non valido");
             }

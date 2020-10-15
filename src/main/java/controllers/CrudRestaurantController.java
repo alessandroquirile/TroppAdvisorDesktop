@@ -157,7 +157,7 @@ public class CrudRestaurantController extends CrudController {
             } else {
                 if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                     if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
-                        if (InputValidator.isNumberGreaterOrEqualToZero(cap)) {
+                        if (InputValidator.isIntegerGreaterOrEqualToZero(cap)) {
                             if (InputValidator.isValidOpeningTime(openingTime)) {
                                 Restaurant restaurant = (Restaurant) getAccomodationByFormData(crudRestaurantView);
                                 daoFactory = DAOFactory.getInstance();
@@ -172,7 +172,7 @@ public class CrudRestaurantController extends CrudController {
                         } else
                             Dialoger.showAlertDialog("CAP non valido");
                     } else
-                        Dialoger.showAlertDialog("Prezzo medio non valido. Inserire un intero");
+                        Dialoger.showAlertDialog("Prezzo medio non valido");
                 } else
                     Dialoger.showAlertDialog("Numero di telefono non valido");
             }
