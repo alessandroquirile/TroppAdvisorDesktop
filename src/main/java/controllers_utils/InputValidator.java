@@ -16,25 +16,32 @@ public abstract class InputValidator {
         return matcher.find();
     }
 
-    public static boolean isNumberGreaterOrEqualToZero(String number) {
-        return isNumeric(number) && Double.parseDouble(number) >= 0;
+    public static boolean isNumberGreaterOrEqualToZero(String s) {
+        return isNumeric(s) && Double.parseDouble(s) >= 0;
     }
 
-    public static boolean isNumeric(String number) {
-        if (number == null)
+    /**
+     * Metodo testato con JUnit4.
+     * Verifica se la stringa passata in input rappresenta un numero (reale)
+     *
+     * @param s la stringa
+     * @return vero se la stringa è un numero (reale); false altrimenti
+     */
+    public static boolean isNumeric(String s) {
+        if (s == null)
             throw new IllegalArgumentException("Null arg");
         try {
-            Double.parseDouble(number);
+            Double.parseDouble(s);
         } catch (NumberFormatException e) {
             return false;
         }
         return true;
     }
 
-    public static boolean isIntegerGreaterOrEqualToZero(String number) {
+    public static boolean isIntegerGreaterOrEqualToZero(String s) {
         String numberRegExp = "^[0-9]+$";
         Pattern numberGreaterOrEqualToZeroPattern = Pattern.compile(numberRegExp, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(number);
+        Matcher matcher = numberGreaterOrEqualToZeroPattern.matcher(s);
         return matcher.find();
     }
 
