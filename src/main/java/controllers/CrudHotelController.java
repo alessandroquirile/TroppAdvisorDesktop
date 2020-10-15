@@ -130,7 +130,7 @@ public class CrudHotelController extends CrudController {
             }
         } else {
             if (formChecker.formHasSomeEmptyField(this)) {
-                Dialoger.showAlertDialog("Riempi tutti i campi");
+                Dialoger.showAlertDialog("Riempi i campi");
             } else {
                 if (InputValidator.isValidTelephoneNumber(telephoneNumber)) {
                     if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {

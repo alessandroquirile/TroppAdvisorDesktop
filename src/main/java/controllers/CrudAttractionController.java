@@ -121,7 +121,7 @@ public class CrudAttractionController extends CrudController {
             }
         } else {
             if (formChecker.formHasSomeEmptyField(this)) {
-                Dialoger.showAlertDialog("Riempi i campi obbligatori");
+                Dialoger.showAlertDialog("Riempi i campi");
             } else {
                 if (InputValidator.isValidTelephoneNumber(telephoneNumber) || telephoneNumber.isEmpty()) {
                     if (InputValidator.isNumberGreaterOrEqualToZero(prezzoMedio)) {
