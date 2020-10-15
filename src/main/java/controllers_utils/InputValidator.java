@@ -24,7 +24,7 @@ public abstract class InputValidator {
         if (number == null)
             throw new IllegalArgumentException("Null arg");
         try {
-            double d = Double.parseDouble(number);
+            Double.parseDouble(number);
         } catch (NumberFormatException e) {
             return false;
         }
