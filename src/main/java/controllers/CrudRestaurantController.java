@@ -107,6 +107,7 @@ public class CrudRestaurantController extends CrudController {
             crudRestaurantView.getButtonAnnulla().setDisable(false);
             crudRestaurantView.getButtonElimina().setDisable(false);
             crudRestaurantView.getButtonModifica().setDisable(false);
+            crudRestaurantView.getButtonInserisci().setDisable(true);
             crudRestaurantView.getListViewFotoPath().getItems().clear();
             clearTypeOfCuisineCheckBox();
             populateTextFieldsWithSelectedAccomodationData(selectedRestaurant, crudRestaurantView);

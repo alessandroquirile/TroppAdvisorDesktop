@@ -72,17 +72,20 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
         if (response.statusCode() != 200)
             return false;
 
-        for (String imagePath : attraction.getImages()) {
-            File file = new File(imagePath);
-            daoFactory = DAOFactory.getInstance();
-            imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
-            String endpoint = imageDAO.load(file);
-            Attraction parsedAttraction = (Attraction) getParsedAccomodationFromJson(objectMapper, response, this);
-            if (!updateImage(parsedAttraction, endpoint))
-                return false;
+        if (!attraction.getImages().isEmpty()) {
+            for (String imagePath : attraction.getImages()) {
+                File file = new File(imagePath);
+                daoFactory = DAOFactory.getInstance();
+                imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
+                String endpoint = imageDAO.load(file);
+                Attraction parsedAttraction = (Attraction) getParsedAccomodationFromJson(objectMapper, response, this);
+                if (!updateImage(parsedAttraction, endpoint))
+                    return false;
+            }
+            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+            return cityDAO.insert((Attraction) getParsedAccomodationFromJson(objectMapper, response, this));
         }
-        cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-        return cityDAO.insert((Attraction) getParsedAccomodationFromJson(objectMapper, response, this));
+        return true;
     }
 
     @Override
@@ -191,7 +194,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
 
-        System.out.println("delete (attraction) response: " + response);
+        System.out.println("delete (attraction) response: " + response); // dbg
 
         return response.statusCode() == 200;
     }

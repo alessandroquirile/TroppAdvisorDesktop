@@ -3,7 +3,6 @@ package form_checker_implementations;
 import controllers.Controller;
 import controllers.CrudAttractionController;
 import form_checker_interfaces.FormChecker;
-import javafx.beans.binding.Bindings;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
@@ -19,8 +18,7 @@ public class FormChecker_AttractionCrud implements FormChecker {
                 crudAttractionController.getCity().isEmpty() ||
                 crudAttractionController.getPrezzoMedio().isEmpty() ||
                 crudAttractionController.getTipoIndirizzo() == null ||
-                crudAttractionController.getOpeningTime().isEmpty() ||
-                Bindings.isEmpty(crudAttractionController.getImagesFromListView()).get();
-
+                crudAttractionController.getOpeningTime().isEmpty();
+        //Bindings.isEmpty(crudAttractionController.getImagesFromListView()).get();
     }
 }

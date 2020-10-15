@@ -4,7 +4,6 @@ import controllers.Controller;
 import controllers.CrudRestaurantController;
 import controllers_utils.TypeOfCuisineItem;
 import form_checker_interfaces.FormChecker;
-import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 
 /**
@@ -23,7 +22,7 @@ public class FormChecker_RestaurantCrud implements FormChecker {
                 crudRestaurantController.getNumeroDiTelefono().isEmpty() ||
                 crudRestaurantController.getOpeningTime().isEmpty() ||
                 crudRestaurantController.getTipoIndirizzo() == null ||
-                Bindings.isEmpty(crudRestaurantController.getImagesFromListView()).get() ||
+                //Bindings.isEmpty(crudRestaurantController.getImagesFromListView()).get() ||
                 !hasAtLeastOneTypeOfCuisineSelected(crudRestaurantController.getTypesOfCuisine());
     }
 

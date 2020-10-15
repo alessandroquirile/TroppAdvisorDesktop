@@ -82,6 +82,7 @@ public class CrudHotelController extends CrudController {
         if (selectedHotel != null) {
             crudHotelView.getButtonAnnulla().setDisable(false);
             crudHotelView.getButtonElimina().setDisable(false);
+            crudHotelView.getButtonInserisci().setDisable(true);
             crudHotelView.getButtonModifica().setDisable(false);
             crudHotelView.getListViewFotoPath().getItems().clear();
             populateTextFieldsWithSelectedAccomodationData(selectedHotel, crudHotelView);

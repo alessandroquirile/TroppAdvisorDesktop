@@ -79,6 +79,7 @@ public class CrudAttractionController extends CrudController {
             crudAttractionView.getButtonAnnulla().setDisable(false);
             crudAttractionView.getButtonElimina().setDisable(false);
             crudAttractionView.getButtonModifica().setDisable(false);
+            crudAttractionView.getButtonInserisci().setDisable(true);
             crudAttractionView.getListViewFotoPath().getItems().clear();
             populateTextFieldsWithSelectedAccomodationData(selectedAttraction, crudAttractionView);
         }
