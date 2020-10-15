@@ -9,7 +9,7 @@ public class Review implements Serializable {
     private String id;
     private String title;
     private String description;
-    private Integer rating;
+    private Double rating;
     private String user;
     private Boolean isAnonymous;
     private String accomodationId;
@@ -40,11 +40,11 @@ public class Review implements Serializable {
         this.description = description;
     }
 
-    public Integer getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
