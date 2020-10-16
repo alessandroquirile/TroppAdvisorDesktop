@@ -15,7 +15,6 @@ import utils.ConfigFileReader;
 import views.LoginView;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
@@ -42,7 +41,7 @@ public class LoginController extends Controller {
     public void buttonLoginClicked() {
         loginView.getButtonLogin().setOnAction(event -> {
             String email = getEmail();
-            char[] password = getPassword().toCharArray();
+            String password = getPassword();
 
             formCheckerFactory = FormCheckerFactory.getInstance();
             formChecker = formCheckerFactory.getFormChecker(this);
@@ -61,8 +60,6 @@ public class LoginController extends Controller {
                             loadSelectTypeScene();
                     } catch (IOException | InterruptedException e) {
                         throw new RuntimeException(e);
-                    } finally {
-                        Arrays.fill(password, '\0'); // password protection
                     }
                 } else
                     Dialoger.showAlertDialog("Pattern email non valido");

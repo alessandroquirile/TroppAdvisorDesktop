@@ -3,36 +3,31 @@ package models;
 import utils.AuthenticationResult;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * @author Alessandro Quirile, Mauro Telese
  */
 public class Account implements Serializable {
     private String email;
-    private char[] password; // un'istanza di String sarebbe immutabile e può essere pericoloso
+    private String password;
     private final AuthenticationResult authenticationResult;
 
     public Account() {
         authenticationResult = AuthenticationResult.getInstance();
     }
 
-    public Account(String email, char[] password) {
+    public Account(String email, String password) {
         this.email = email;
         this.password = password;
         authenticationResult = AuthenticationResult.getInstance();
     }
 
-    public char[] getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(char[] password) {
-        this.password = password;
-    }
-
     public void setPassword(String password) {
-        this.password = password.toCharArray();
+        this.password = password;
     }
 
     public String getIdToken() {
@@ -75,7 +70,7 @@ public class Account implements Serializable {
     public String toString() {
         return "Account{" +
                 "email='" + email + '\'' +
-                ", password=" + Arrays.toString(password) +
+                ", password='" + password + '\'' +
                 ", authenticationResult=" + authenticationResult +
                 '}';
     }
