@@ -301,7 +301,8 @@ public abstract class CrudController extends Controller {
     }
 
     protected void initializeChoiceBoxIndirizzo(CrudView crudView) {
-        ObservableList<String> observableList = FXCollections.observableArrayList("Via", "Viale", "Vico", "Piazza", "Largo");
+        ObservableList<String> observableList = FXCollections.observableArrayList(
+                "Via", "Viale", "Vico", "Piazza", "Largo", "Piazzale", "Piazzetta", "Traversa");
         crudView.getChoiceBoxIndirizzo().setItems(observableList);
     }
 
@@ -316,6 +317,12 @@ public abstract class CrudController extends Controller {
             crudView.getChoiceBoxIndirizzo().getSelectionModel().select(3);
         if (accomodation.getTypeOfAddress().equals("Largo"))
             crudView.getChoiceBoxIndirizzo().getSelectionModel().select(4);
+        if (accomodation.getTypeOfAddress().equals("Piazzale"))
+            crudView.getChoiceBoxIndirizzo().getSelectionModel().select(5);
+        if (accomodation.getTypeOfAddress().equals("Piazzetta"))
+            crudView.getChoiceBoxIndirizzo().getSelectionModel().select(6);
+        if (accomodation.getTypeOfAddress().equals("Traversa"))
+            crudView.getChoiceBoxIndirizzo().getSelectionModel().select(7);
     }
 
     protected void setProperImagesIntoListView(Accomodation accomodation, CrudView crudView) {
