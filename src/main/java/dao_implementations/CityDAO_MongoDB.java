@@ -65,7 +65,7 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
     }
 
     private boolean deleteRestaurant(Restaurant restaurant) throws IOException, InterruptedException {
-        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-restaurant-by-id/?";
+        String URL = "http://troppadvisorserver-env.eba-pfsmp3kx.us-east-1.elasticbeanstalk.com/city/delete-restaurant-by-id?";
         URL += "city=" + URLEncoder.encode(restaurant.getCity(), StandardCharsets.UTF_8) + "&id=" + restaurant.getId();
 
         HttpClient httpClient = getHttpClient();
@@ -78,6 +78,8 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
 
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.toString()); // dbg
 
         return response.statusCode() == 200;
     }

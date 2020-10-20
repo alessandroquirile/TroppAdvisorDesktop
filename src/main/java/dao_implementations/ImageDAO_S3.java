@@ -32,9 +32,11 @@ public class ImageDAO_S3 extends RestDAO implements ImageDAO {
         if (accomodation.getImages() == null)
             return false;
 
-        for (String imageS3Url : accomodation.getImages())
-            if (!delete(imageS3Url))
-                return false;
+        if (!accomodation.getImages().isEmpty()) {
+            for (String imageS3Url : accomodation.getImages())
+                if (!delete(imageS3Url))
+                    return false;
+        }
 
         return true;
     }
@@ -59,8 +61,6 @@ public class ImageDAO_S3 extends RestDAO implements ImageDAO {
 
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
-
-        System.out.println("delete: " + response.headers() + " " + response.body()); // dbg
 
         return response.statusCode() == 200;
     }

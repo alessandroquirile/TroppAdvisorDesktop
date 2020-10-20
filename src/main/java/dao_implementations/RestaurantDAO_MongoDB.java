@@ -84,10 +84,10 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
                 if (!updateImage(parsedRestaurant, endpoint))
                     return false;
             }
-            cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
-            return cityDAO.insert((Accomodation) getParsedAccomodationFromJson(objectMapper, response, this));
         }
-        return true;
+        daoFactory = DAOFactory.getInstance();
+        cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
+        return cityDAO.insert((Accomodation) getParsedAccomodationFromJson(objectMapper, response, this));
     }
 
     @Override
