@@ -133,8 +133,6 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
         else
             URL += "page=" + page + "&size=" + size;
 
-        System.out.println("URL: " + URL);
-
         authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = getHttpClient();
@@ -195,8 +193,6 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
 
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
-
-        System.out.println(response.body());
 
         return response.statusCode() == 200;
     }

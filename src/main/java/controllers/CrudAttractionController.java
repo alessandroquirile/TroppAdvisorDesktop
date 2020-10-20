@@ -157,8 +157,6 @@ public class CrudAttractionController extends CrudController {
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getRESTQuery(crudAttractionView);
 
-        Dialoger.showAlertDialog(query); // dbg
-
         daoFactory = DAOFactory.getInstance();
         attractionDAO = daoFactory.getAttractionDAO(ConfigFileReader.getProperty("attraction_storage_technology"));
 
@@ -201,7 +199,6 @@ public class CrudAttractionController extends CrudController {
         for (String image : getImagesFromListView()) {
             File file = new File(image);
             if (hasToBeInserted(file)) {
-                Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl;
@@ -231,10 +228,8 @@ public class CrudAttractionController extends CrudController {
             daoFactory = DAOFactory.getInstance();
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
-                if (!cityDAO.delete(clickedAttraction))
-                    Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
-                if (!cityDAO.insert(attraction))
-                    Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
+                if (!cityDAO.delete(clickedAttraction) || !cityDAO.insert(attraction))
+                    Dialoger.showAlertDialog("Qualcosa è andato storto");
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }

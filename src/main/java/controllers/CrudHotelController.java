@@ -214,7 +214,6 @@ public class CrudHotelController extends CrudController {
         for (String image : getImagesFromListView()) {
             File file = new File(image);
             if (hasToBeInserted(file)) {
-                Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl;
@@ -244,10 +243,8 @@ public class CrudHotelController extends CrudController {
             daoFactory = DAOFactory.getInstance();
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
-                if (!cityDAO.delete(clickedHotel))
-                    Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
-                if (!cityDAO.insert(hotel))
-                    Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
+                if (!cityDAO.delete(clickedHotel) || !cityDAO.insert(hotel))
+                    Dialoger.showAlertDialog("Qualcosa è andato storto");
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }

@@ -190,8 +190,6 @@ public class CrudRestaurantController extends CrudController {
     private void doRetrieveByQuery() throws IOException, InterruptedException {
         String query = getRESTQuery(crudRestaurantView);
 
-        Dialoger.showAlertDialog(query); // dbg - attenzione non deve tener conto dei tipi di cucina (verrà tenuto conto dopo)
-
         daoFactory = DAOFactory.getInstance();
         restaurantDAO = daoFactory.getRestaurantDAO(ConfigFileReader.getProperty("restaurant_storage_technology"));
 
@@ -209,8 +207,7 @@ public class CrudRestaurantController extends CrudController {
             crudRestaurantView.getTableView().setItems(data);
             crudRestaurantView.getTableView().setDisable(false);
         } else {
-            Dialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri: " + query +
-                    "&page=" + currentPage + "&size=" + currentPageSize);
+            Dialoger.showAlertDialog("Non sono stati trovati ristoranti con questi criteri");
         }
         disableCRUDButtons(crudRestaurantView);
     }
@@ -236,7 +233,6 @@ public class CrudRestaurantController extends CrudController {
         for (String image : getImagesFromListView()) {
             File file = new File(image);
             if (hasToBeInserted(file)) {
-                Dialoger.showAlertDialog(image + " da inserire"); // dbg
                 daoFactory = DAOFactory.getInstance();
                 imageDAO = daoFactory.getImageDAO(ConfigFileReader.getProperty("image_storage_technology"));
                 String imageHostUrl;
@@ -266,10 +262,8 @@ public class CrudRestaurantController extends CrudController {
             daoFactory = DAOFactory.getInstance();
             cityDAO = daoFactory.getCityDAO(ConfigFileReader.getProperty("city_storage_technology"));
             try {
-                if (!cityDAO.delete(clickedRestaurant))
-                    Dialoger.showAlertDialog("Non è stato possibile eliminare"); // dbg
-                if (!cityDAO.insert(restaurant))
-                    Dialoger.showAlertDialog("Non è stato possibile inserire"); // dbg
+                if (!cityDAO.delete(clickedRestaurant) || !cityDAO.insert(restaurant))
+                    Dialoger.showAlertDialog("Qualcosa è andato storto");
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }

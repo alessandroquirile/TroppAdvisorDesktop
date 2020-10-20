@@ -133,8 +133,6 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
         else
             URL += "page=" + page + "&size=" + size;
 
-        System.out.println("URL: " + URL);
-
         authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = getHttpClient();
@@ -193,8 +191,6 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
-
-        System.out.println("delete (attraction) response: " + response); // dbg
 
         return response.statusCode() == 200;
     }
@@ -262,8 +258,6 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
 
         HttpResponse<String> response = httpClient.send(request,
                 HttpResponse.BodyHandlers.ofString());
-
-        System.out.println("deleteImage: " + response.headers() + " " + response.body());
 
         return response.statusCode() == 200;
     }

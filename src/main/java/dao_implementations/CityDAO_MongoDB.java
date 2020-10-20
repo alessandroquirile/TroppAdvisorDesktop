@@ -79,8 +79,6 @@ public class CityDAO_MongoDB extends RestDAO implements CityDAO {
         HttpResponse<String> response = httpClient.send(httpRequest,
                 HttpResponse.BodyHandlers.ofString());
 
-        System.out.println(response.toString()); // dbg
-
         return response.statusCode() == 200;
     }
 
