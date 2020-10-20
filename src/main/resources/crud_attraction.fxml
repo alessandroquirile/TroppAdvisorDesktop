@@ -62,12 +62,12 @@
     <ListView fx:id="listViewFotoPath" disable="true" layoutX="883.0" layoutY="125.0" prefHeight="355.0"
               prefWidth="550.0"/>
     <TextField fx:id="textFieldPrezzoMedio" disable="true" layoutX="29.0" layoutY="321.0" prefHeight="26.0"
-               prefWidth="701.0" promptText="Prezzo medio (numero intero)"/>
+               prefWidth="701.0" promptText="Prezzo medio"/>
     <TextField fx:id="txtFieldNumeroCivico" disable="true" layoutX="359.0" layoutY="201.0" prefHeight="26.0"
                prefWidth="69.0" promptText="Civico"/>
     <TextField fx:id="textFieldProvincia" disable="true" layoutX="27.0" layoutY="266.0" prefHeight="26.0"
                prefWidth="701.0" promptText="Provincia  di"/>
-    <Label layoutX="19.0" layoutY="413.0" text="Orario lavorativo"/>
+    <Label layoutX="19.0" layoutY="413.0" text="Orario disponibilità"/>
     <Button fx:id="buttonMostraAvanti" layoutX="728.0" layoutY="421.0" mnemonicParsing="false" text="Mostra avanti"/>
     <Button fx:id="buttonMostraIndietro" layoutX="586.0" layoutY="422.0" mnemonicParsing="false"
             text="Mostra indietro"/>

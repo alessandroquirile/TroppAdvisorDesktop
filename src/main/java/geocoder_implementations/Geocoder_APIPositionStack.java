@@ -59,11 +59,9 @@ public class Geocoder_APIPositionStack implements Geocoder {
                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                 ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
                 try {
-                    if (jsonArray.length() > 0) {
+                    if (jsonArray.length() > 0)
                         return objectMapper.readValue(jsonArray.get(0).toString(), GeocodingResponse.class);
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } catch (IOException ignored) {
                 }
             }
         } while (true);

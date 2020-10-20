@@ -68,7 +68,7 @@
     </TableView>
     <Label layoutX="1496.0" layoutY="127.0" text="Tipologia di cucina proposta"/>
     <TextField fx:id="textFieldPrezzoMedio" layoutX="29.0" layoutY="321.0" prefHeight="26.0" prefWidth="701.0"
-               promptText="Prezzo medio (numero intero)"/>
+               promptText="Prezzo medio"/>
     <TextField fx:id="txtFieldNumeroCivico" layoutX="359.0" layoutY="201.0" prefHeight="26.0" prefWidth="69.0"
                promptText="Civico"/>
     <TextField fx:id="textFieldProvincia" layoutX="27.0" layoutY="266.0" prefHeight="26.0" prefWidth="701.0"

@@ -12,7 +12,7 @@ public class FormChecker_AttractionCrud implements FormChecker {
         CrudAttractionController crudAttractionController = (CrudAttractionController) controller;
         return crudAttractionController.getNome().isEmpty() ||
                 crudAttractionController.getStrada().isEmpty() ||
-                crudAttractionController.getNumeroCivico().isEmpty() ||
+                //crudAttractionController.getNumeroCivico().isEmpty() || // spesso manca il civico nelle attrazioni
                 crudAttractionController.getProvincia().isEmpty() ||
                 crudAttractionController.getCAP().isEmpty() ||
                 crudAttractionController.getCity().isEmpty() ||
