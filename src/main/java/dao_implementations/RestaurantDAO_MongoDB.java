@@ -134,8 +134,6 @@ public class RestaurantDAO_MongoDB extends RestDAO implements RestaurantDAO {
         else
             URL += "page=" + page + "&size=" + size;
 
-        System.out.println("URL: " + URL);
-
         authenticationResult = AuthenticationResult.getInstance();
 
         HttpClient httpClient = getHttpClient();
