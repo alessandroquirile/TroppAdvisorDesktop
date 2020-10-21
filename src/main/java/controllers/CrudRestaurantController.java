@@ -299,11 +299,19 @@ public class CrudRestaurantController extends CrudController {
     private void initializeTableViewTypeOfCuisine() {
         crudRestaurantView.getTableViewTypeOfCuisine().setDisable(true);
         ObservableList<TypeOfCuisineItem> list = FXCollections.observableArrayList();
+        list.add(new TypeOfCuisineItem("Adatto ai bambini", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Bar", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Cucina locale", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Da asporto", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Di mare", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Gourmet", new CheckBox()));
         list.add(new TypeOfCuisineItem("Mediterranea", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Per gruppi", new CheckBox()));
         list.add(new TypeOfCuisineItem("Pizzeria", new CheckBox()));
         list.add(new TypeOfCuisineItem("Ristorante", new CheckBox()));
         list.add(new TypeOfCuisineItem("Rosticceria", new CheckBox()));
         list.add(new TypeOfCuisineItem("Vegana", new CheckBox()));
+        list.add(new TypeOfCuisineItem("Vegetariana", new CheckBox()));
         crudRestaurantView.getTableViewTypeOfCuisine().setItems(list);
         crudRestaurantView.getTypeOfCuisineNameColumn().setCellValueFactory(new PropertyValueFactory<>("name"));
         crudRestaurantView.getTypeOfCuisineSelectColumn().setCellValueFactory(new PropertyValueFactory<>("checkBox"));
