@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<AnchorPane
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:id="rootPane" fx:controller="views.SelectCollectionTypeView" maxHeight="-Infinity"
-        maxWidth="-Infinity"
-        minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0"
-        xmlns="http://javafx.com/javafx/11.0.1">
+
+<?import javafx.scene.image.Image?>
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.SelectCollectionTypeView">
     <ImageView fitHeight="800.0" fitWidth="1280.0" pickOnBounds="true">
         <Image url="images/3156482.jpg"/>
     </ImageView>
     <Pane layoutX="440.0" layoutY="307.0" opacity="0.8" prefHeight="200.0" prefWidth="400.0"
           style="-fx-background-color: #06BCAD; -fx-background-radius: 20;"/>
     <Pane layoutX="336.0" layoutY="206.0" prefHeight="336.0" prefWidth="608.0">
-        <Button fx:id="buttonVai" layoutX="260.0" layoutY="250.0" mnemonicParsing="false"
-                style="-fx-background-color: #0078D7;" text="Vai" textFill="white"/>
+        <Button fx:id="buttonVai" layoutX="254.0" layoutY="251.0" mnemonicParsing="false" prefHeight="25.0"
+                prefWidth="100.0" style="-fx-background-color: #0078D7;" text="Continua" textFill="white"/>
+        <ComboBox fx:id="comboBox" layoutX="169.0" layoutY="150.0" prefHeight="30.0" prefWidth="292.0"
+                  promptText="Seleziona una tipologia"/>
     </Pane>
-    <ComboBox fx:id="comboBox" layoutX="500.0" layoutY="371.0" prefHeight="30.0" prefWidth="292.0"
-              promptText="Seleziona una tipologia"/>
 
 </AnchorPane>
-
