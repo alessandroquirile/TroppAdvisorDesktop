@@ -107,6 +107,7 @@ public abstract class CrudController extends Controller {
     }
 
     public void setViewsAsDefault(CrudView crudView) {
+        crudView.getTableView().setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         crudView.getButtonIndietro().setDisable(false);
         crudView.getButtonInserisci().setDisable(false);
         crudView.getButtonModifica().setDisable(true);
