@@ -286,43 +286,43 @@ public class CrudAttractionController extends CrudController {
     }
 
     private String getOpeningTimeByFormData() {
-        return crudAttractionView.getTextFieldOpeningTime().getText();
+        return crudAttractionView.getTextFieldOpeningTime().getText().trim();
     }
 
     public String getNome() {
-        return this.crudAttractionView.getTextFieldNome().getText();
+        return this.crudAttractionView.getTextFieldNome().getText().trim();
     }
 
     public String getStrada() {
-        return this.crudAttractionView.getTextFieldStrada().getText();
+        return this.crudAttractionView.getTextFieldStrada().getText().trim();
     }
 
     public String getNumeroCivico() {
-        return this.crudAttractionView.getTxtFieldNumeroCivico().getText();
+        return this.crudAttractionView.getTxtFieldNumeroCivico().getText().trim();
     }
 
     public String getTipoIndirizzo() {
-        return this.crudAttractionView.getChoiceBoxIndirizzo().getValue();
+        return this.crudAttractionView.getChoiceBoxIndirizzo().getValue().trim();
     }
 
     public String getProvincia() {
-        return this.crudAttractionView.getTextFieldProvincia().getText();
+        return this.crudAttractionView.getTextFieldProvincia().getText().trim();
     }
 
     public String getCAP() {
-        return this.crudAttractionView.getTextFieldCAP().getText();
+        return this.crudAttractionView.getTextFieldCAP().getText().trim();
     }
 
     public String getCity() {
-        return this.crudAttractionView.getTextFieldCity().getText();
+        return this.crudAttractionView.getTextFieldCity().getText().trim();
     }
 
     public String getPrezzoMedio() {
-        return this.crudAttractionView.getTextFieldPrezzoMedio().getText();
+        return this.crudAttractionView.getTextFieldPrezzoMedio().getText().trim();
     }
 
     public String getNumeroDiTelefono() {
-        return this.crudAttractionView.getTextFieldNumeroDiTelefono().getText();
+        return this.crudAttractionView.getTextFieldNumeroDiTelefono().getText().trim();
     }
 
     public ObservableList<String> getImagesFromListView() {
@@ -334,6 +334,6 @@ public class CrudAttractionController extends CrudController {
     }
 
     public String getOpeningTime() {
-        return this.crudAttractionView.getTextFieldOpeningTime().getText();
+        return this.crudAttractionView.getTextFieldOpeningTime().getText().trim();
     }
 }

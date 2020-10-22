@@ -512,38 +512,38 @@ public abstract class CrudController extends Controller {
     }
 
     public String getNome(CrudView crudView) {
-        return crudView.getTextFieldNome().getText();
+        return crudView.getTextFieldNome().getText().trim();
     }
 
     public String getStrada(CrudView crudView) {
-        return crudView.getTextFieldStrada().getText();
+        return crudView.getTextFieldStrada().getText().trim();
     }
 
     public String getNumeroCivico(CrudView crudView) {
-        return crudView.getTxtFieldNumeroCivico().getText();
+        return crudView.getTxtFieldNumeroCivico().getText().trim();
     }
 
     public String getTipoIndirizzo(CrudView crudView) {
-        return crudView.getChoiceBoxIndirizzo().getValue();
+        return crudView.getChoiceBoxIndirizzo().getValue().trim();
     }
 
     public String getProvincia(CrudView crudView) {
-        return crudView.getTextFieldProvincia().getText();
+        return crudView.getTextFieldProvincia().getText().trim();
     }
 
     public String getCAP(CrudView crudView) {
-        return crudView.getTextFieldCAP().getText();
+        return crudView.getTextFieldCAP().getText().trim();
     }
 
     public String getCity(CrudView crudView) {
-        return crudView.getTextFieldCity().getText();
+        return crudView.getTextFieldCity().getText().trim();
     }
 
     public String getPrezzoMedio(CrudView crudView) {
-        return crudView.getTextFieldPrezzoMedio().getText();
+        return crudView.getTextFieldPrezzoMedio().getText().trim();
     }
 
     public String getNumeroDiTelefono(CrudView crudView) {
-        return crudView.getTextFieldNumeroDiTelefono().getText();
+        return crudView.getTextFieldNumeroDiTelefono().getText().trim();
     }
 }

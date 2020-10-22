@@ -325,23 +325,23 @@ public class CrudHotelController extends CrudController {
     }
 
     public String getNome() {
-        return this.crudHotelView.getTextFieldNome().getText();
+        return this.crudHotelView.getTextFieldNome().getText().trim();
     }
 
     public String getStrada() {
-        return this.crudHotelView.getTextFieldStrada().getText();
+        return this.crudHotelView.getTextFieldStrada().getText().trim();
     }
 
     public String getNumeroCivico() {
-        return this.crudHotelView.getTxtFieldNumeroCivico().getText();
+        return this.crudHotelView.getTxtFieldNumeroCivico().getText().trim();
     }
 
     public String getTipoIndirizzo() {
-        return this.crudHotelView.getChoiceBoxIndirizzo().getValue();
+        return this.crudHotelView.getChoiceBoxIndirizzo().getValue().trim();
     }
 
     public String getProvincia() {
-        return this.crudHotelView.getTextFieldProvincia().getText();
+        return this.crudHotelView.getTextFieldProvincia().getText().trim();
     }
 
     public Integer getStars() {
@@ -349,19 +349,19 @@ public class CrudHotelController extends CrudController {
     }
 
     public String getCAP() {
-        return this.crudHotelView.getTextFieldCAP().getText();
+        return this.crudHotelView.getTextFieldCAP().getText().trim();
     }
 
     public String getCity() {
-        return this.crudHotelView.getTextFieldCity().getText();
+        return this.crudHotelView.getTextFieldCity().getText().trim();
     }
 
     public String getPrezzoMedio() {
-        return this.crudHotelView.getTextFieldPrezzoMedio().getText();
+        return this.crudHotelView.getTextFieldPrezzoMedio().getText().trim();
     }
 
     public String getNumeroDiTelefono() {
-        return this.crudHotelView.getTextFieldNumeroDiTelefono().getText();
+        return this.crudHotelView.getTextFieldNumeroDiTelefono().getText().trim();
     }
 
     public ObservableList<String> getImagesFromListView() {

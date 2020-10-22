@@ -368,11 +368,11 @@ public class CrudRestaurantController extends CrudController {
     }
 
     public String getTipoIndirizzo() {
-        return this.crudRestaurantView.getChoiceBoxIndirizzo().getValue();
+        return this.crudRestaurantView.getChoiceBoxIndirizzo().getValue().trim();
     }
 
     private String getOpeningTimeByFormData() {
-        return crudRestaurantView.getTextFieldOpeningTime().getText();
+        return crudRestaurantView.getTextFieldOpeningTime().getText().trim();
     }
 
     public CrudRestaurantView getCrudRestaurantView() {
@@ -380,35 +380,35 @@ public class CrudRestaurantController extends CrudController {
     }
 
     public String getNome() {
-        return this.crudRestaurantView.getTextFieldNome().getText();
+        return this.crudRestaurantView.getTextFieldNome().getText().trim();
     }
 
     public String getStrada() {
-        return this.crudRestaurantView.getTextFieldStrada().getText();
+        return this.crudRestaurantView.getTextFieldStrada().getText().trim();
     }
 
     public String getNumeroCivico() {
-        return this.crudRestaurantView.getTxtFieldNumeroCivico().getText();
+        return this.crudRestaurantView.getTxtFieldNumeroCivico().getText().trim();
     }
 
     public String getProvincia() {
-        return this.crudRestaurantView.getTextFieldProvincia().getText();
+        return this.crudRestaurantView.getTextFieldProvincia().getText().trim();
     }
 
     public String getCAP() {
-        return this.crudRestaurantView.getTextFieldCAP().getText();
+        return this.crudRestaurantView.getTextFieldCAP().getText().trim();
     }
 
     public String getCity() {
-        return this.crudRestaurantView.getTextFieldCity().getText();
+        return this.crudRestaurantView.getTextFieldCity().getText().trim();
     }
 
     public String getPrezzoMedio() {
-        return this.crudRestaurantView.getTextFieldPrezzoMedio().getText();
+        return this.crudRestaurantView.getTextFieldPrezzoMedio().getText().trim();
     }
 
     public String getNumeroDiTelefono() {
-        return this.crudRestaurantView.getTextFieldNumeroDiTelefono().getText();
+        return this.crudRestaurantView.getTextFieldNumeroDiTelefono().getText().trim();
     }
 
     public ObservableList<String> getImagesFromListView() {
@@ -420,6 +420,6 @@ public class CrudRestaurantController extends CrudController {
     }
 
     public String getOpeningTime() {
-        return this.crudRestaurantView.getTextFieldOpeningTime().getText();
+        return this.crudRestaurantView.getTextFieldOpeningTime().getText().trim();
     }
 }
