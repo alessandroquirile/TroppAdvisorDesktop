@@ -172,8 +172,7 @@ public class CrudAttractionController extends CrudController {
             crudAttractionView.getTableView().setItems(data);
             crudAttractionView.getTableView().setDisable(false);
         } else {
-            Dialoger.showAlertDialog("Non sono state trovate attrazioni con questi criteri: " + query +
-                    "&page=" + currentPage + "&size=" + currentPageSize);
+            Dialoger.showAlertDialog("Non sono state trovate attrazioni con questi criteri");
         }
         disableCRUDButtons(crudAttractionView);
     }
@@ -246,7 +245,7 @@ public class CrudAttractionController extends CrudController {
         crudAttractionView.getTableColumnPrezzoMedio().setCellValueFactory(new PropertyValueFactory<>("avaragePrice"));
         crudAttractionView.getTableColumnNumeroDiTelefono().setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         crudAttractionView.getTableColumnTotalReview().setCellValueFactory(new PropertyValueFactory<>("totalReviews"));
-        crudAttractionView.getTableColumnHasCertificateOfExcellence().setCellValueFactory(new PropertyValueFactory<>("hasCertificateOfExcellence"));
+        crudAttractionView.getTableColumnHasCertificateOfExcellence().setCellValueFactory(new PropertyValueFactory<>("certificateOfExcellence"));
         crudAttractionView.getTableColumnAddedDate().setCellValueFactory(new PropertyValueFactory<>("addedDate"));
         crudAttractionView.getTableColumnLastModificationDate().setCellValueFactory(new PropertyValueFactory<>("lastModificationDate"));
         crudAttractionView.getTableColumnIndirizzo().setCellValueFactory(new PropertyValueFactory<>("address"));

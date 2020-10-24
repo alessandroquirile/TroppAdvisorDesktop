@@ -187,8 +187,7 @@ public class CrudHotelController extends CrudController {
             crudHotelView.getTableView().setItems(data);
             crudHotelView.getTableView().setDisable(false);
         } else {
-            Dialoger.showAlertDialog("Non sono stati trovati hotel con questi criteri: " + query +
-                    "&page=" + currentPage + "&size=" + currentPageSize);
+            Dialoger.showAlertDialog("Non sono stati trovati hotel con questi criteri");
         }
         disableCRUDButtons(crudHotelView);
     }
@@ -300,7 +299,7 @@ public class CrudHotelController extends CrudController {
         crudHotelView.getTableColumnPrezzoMedio().setCellValueFactory(new PropertyValueFactory<>("avaragePrice"));
         crudHotelView.getTableColumnNumeroDiTelefono().setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         crudHotelView.getTableColumnTotalReview().setCellValueFactory(new PropertyValueFactory<>("totalReviews"));
-        crudHotelView.getTableColumnHasCertificateOfExcellence().setCellValueFactory(new PropertyValueFactory<>("hasCertificateOfExcellence"));
+        crudHotelView.getTableColumnHasCertificateOfExcellence().setCellValueFactory(new PropertyValueFactory<>("certificateOfExcellence"));
         crudHotelView.getTableColumnAddedDate().setCellValueFactory(new PropertyValueFactory<>("addedDate"));
         crudHotelView.getTableColumnLastModificationDate().setCellValueFactory(new PropertyValueFactory<>("lastModificationDate"));
         crudHotelView.getTableColumnIndirizzo().setCellValueFactory(new PropertyValueFactory<>("address"));

@@ -212,7 +212,7 @@ public class HotelDAO_MongoDB extends RestDAO implements HotelDAO {
         values.put("phoneNumber", hotel.getPhoneNumber());
         values.put("address", hotel.getAddress());
         values.put("point", hotel.getPoint());
-        values.put("certificateOfExcellence", hotel.isHasCertificateOfExcellence());
+        values.put("certificateOfExcellence", hotel.isCertificateOfExcellence());
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
         String requestBody = objectMapper.writeValueAsString(values);

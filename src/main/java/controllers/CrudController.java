@@ -343,7 +343,7 @@ public abstract class CrudController extends Controller {
         crudView.getTextFieldCAP().setText(accomodation.getPostalCode());
         crudView.getTextFieldProvincia().setText(accomodation.getProvince());
         crudView.getTextFieldPrezzoMedio().setText(String.valueOf(accomodation.getAvaragePrice()));
-        crudView.getCheckBoxCertificatoDiEccellenza().setSelected(accomodation.isHasCertificateOfExcellence());
+        crudView.getCheckBoxCertificatoDiEccellenza().setSelected(accomodation.isCertificateOfExcellence());
         setProperImagesIntoListView(accomodation, crudView);
     }
 
@@ -380,7 +380,7 @@ public abstract class CrudController extends Controller {
         accomodation.setAddressByString(getAddressByFormData(crudView));
         accomodation.setAvaragePrice(Double.parseDouble(crudView.getTextFieldPrezzoMedio().getText()));
         accomodation.setPhoneNumber(crudView.getTextFieldNumeroDiTelefono().getText());
-        accomodation.setHasCertificateOfExcellence(crudView.getCheckBoxCertificatoDiEccellenza().isSelected());
+        accomodation.setCertificateOfExcellence(crudView.getCheckBoxCertificatoDiEccellenza().isSelected());
         accomodation.setImages(crudView.getListViewFotoPath().getItems());
         geocoderFactory = GeocoderFactory.getInstance();
         geocoder = geocoderFactory.getGeocoder(ConfigFileReader.getProperty("geocoder_technology"));
@@ -520,11 +520,11 @@ public abstract class CrudController extends Controller {
     }
 
     public String getNumeroCivico(CrudView crudView) {
-        return crudView.getTxtFieldNumeroCivico().getText().trim();
+        return crudView.getTxtFieldNumeroCivico().getText();
     }
 
     public String getTipoIndirizzo(CrudView crudView) {
-        return crudView.getChoiceBoxIndirizzo().getValue().trim();
+        return crudView.getChoiceBoxIndirizzo().getValue();
     }
 
     public String getProvincia(CrudView crudView) {

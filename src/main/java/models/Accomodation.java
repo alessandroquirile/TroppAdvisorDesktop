@@ -18,7 +18,7 @@ public class Accomodation implements Serializable {
     protected Long totalReviews;
     protected Long totalRating;
     protected List<String> images;
-    protected boolean hasCertificateOfExcellence;
+    protected boolean certificateOfExcellence;
     protected String addedDate;
     protected String lastModificationDate;
 
@@ -38,7 +38,7 @@ public class Accomodation implements Serializable {
         this.totalReviews = accomodation.totalReviews;
         this.totalRating = accomodation.totalRating;
         this.images = accomodation.images;
-        this.hasCertificateOfExcellence = accomodation.hasCertificateOfExcellence;
+        this.certificateOfExcellence = accomodation.certificateOfExcellence;
         this.addedDate = accomodation.addedDate;
         this.lastModificationDate = accomodation.lastModificationDate;
     }
@@ -158,12 +158,12 @@ public class Accomodation implements Serializable {
         this.images = images;
     }
 
-    public boolean isHasCertificateOfExcellence() {
-        return hasCertificateOfExcellence;
+    public boolean isCertificateOfExcellence() {
+        return certificateOfExcellence;
     }
 
-    public void setHasCertificateOfExcellence(boolean hasCertificateOfExcellence) {
-        this.hasCertificateOfExcellence = hasCertificateOfExcellence;
+    public void setCertificateOfExcellence(boolean certificateOfExcellence) {
+        this.certificateOfExcellence = certificateOfExcellence;
     }
 
     public String getAddedDate() {

@@ -209,7 +209,7 @@ public class AttractionDAO_MongoDB extends RestDAO implements AttractionDAO {
         values.put("phoneNumber", attraction.getPhoneNumber());
         values.put("address", attraction.getAddress());
         values.put("point", attraction.getPoint());
-        values.put("certificateOfExcellence", attraction.isHasCertificateOfExcellence());
+        values.put("certificateOfExcellence", attraction.isCertificateOfExcellence());
         values.put("openingTime", attraction.getOpeningTime());
 
         ObjectMapper objectMapper = ObjectMapperCreator.getNewObjectMapper();
